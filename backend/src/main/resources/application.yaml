@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: headblog
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/headblog
+    username: headblog
+    password: headblog
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/headblog
+    user: headblog
+    password: headblog
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+
+server:
+  port: 8080

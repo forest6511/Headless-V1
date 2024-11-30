@@ -40,3 +40,9 @@ After setting up the database, run the backend application using Gradle:
 ```bash
 ./gradlew bootRun
 ```
+
+### 6. Start the Frontend Development Server
+In a separate terminal, navigate to the frontend directory and start the Next.js development server:
+```bash
+cd frontend && npm run dev
+```

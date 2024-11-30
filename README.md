@@ -33,6 +33,12 @@ GRANT ALL PRIVILEGES ON DATABASE headblog TO headblog;
 
 \c headblog
 GRANT ALL PRIVILEGES ON SCHEMA public TO headblog;
+
+CREATE DATABASE "headblog-test";
+GRANT ALL PRIVILEGES ON DATABASE "headblog-test" TO headblog;
+
+\c "headblog-test"
+GRANT ALL PRIVILEGES ON SCHEMA public TO headblog;
 ```
 
 ### 5. Run the Application

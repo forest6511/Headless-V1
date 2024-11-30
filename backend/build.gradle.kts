@@ -55,6 +55,7 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	systemProperty("spring.profiles.active", "test")
 }
 
 tasks.test {
@@ -74,9 +75,9 @@ project.ext {
 }
 
 flyway {
-	url = project.ext["db.url"] as String
-	user = project.ext["db.user"] as String
-	password = project.ext["db.password"] as String
+	url = System.getProperty("spring.datasource.url", project.ext["db.url"] as String)
+	user = System.getProperty("spring.datasource.username", project.ext["db.user"] as String)
+	password = System.getProperty("spring.datasource.password", project.ext["db.password"] as String)
 	locations = arrayOf("filesystem:src/main/resources/db/migration")
 }
 
@@ -84,15 +85,15 @@ jooq {
 	configuration {
 		jdbc {
 			driver = "org.postgresql.Driver"
-			url = project.ext["db.url"] as String
-			user = project.ext["db.user"] as String
-			password = project.ext["db.password"] as String
+			url = System.getProperty("spring.datasource.url", project.ext["db.url"] as String)
+			user = System.getProperty("spring.datasource.username", project.ext["db.user"] as String)
+			password = System.getProperty("spring.datasource.password", project.ext["db.password"] as String)
 		}
 		generator {
 			name = "org.jooq.codegen.KotlinGenerator"
 			database {
 				name = "org.jooq.meta.postgres.PostgresDatabase"
-				inputSchema = project.ext["db.schema"] as String
+				inputSchema = System.getProperty("spring.datasource.schema", project.ext["db.schema"] as String)
 				includes = ".*"
 				excludes = """
                     flyway_schema_history | 

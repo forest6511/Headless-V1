@@ -1,5 +1,7 @@
 # HeadBlog
 
+![Build Status](https://github.com/yourusername/HeadBlog/actions/workflows/ci.yml/badge.svg) 
+
 **HeadBlog** is a blogging platform leveraging PostgreSQL as the database and Redis for caching. This project is designed for developers looking to quickly set up a scalable and efficient blogging environment using Docker Compose.
 
 ---

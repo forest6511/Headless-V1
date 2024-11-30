@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: headblog
+          POSTGRES_PASSWORD: headblog
+          POSTGRES_DB: headblog-test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U headblog -d headblog-test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set environment variables
+        run: |
+          echo "DB_URL=jdbc:postgresql://localhost:5432/headblog-test" >> $GITHUB_ENV
+          echo "DB_USER=headblog" >> $GITHUB_ENV
+          echo "DB_PASSWORD=headblog" >> $GITHUB_ENV
+          echo "DB_SCHEMA=public" >> $GITHUB_ENV
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run tests
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: ./gradlew clean test --info

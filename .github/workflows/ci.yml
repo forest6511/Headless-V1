@@ -16,9 +16,10 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_USER: ${{ secrets.DB_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_USER: headblog
+          POSTGRES_PASSWORD: headblog
           POSTGRES_DB: headblog-test
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -39,9 +40,9 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "DB_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_URL=jdbc:postgresql://localhost:5432/headblog-test" >> $GITHUB_ENV
+          echo "DB_USER=headblog" >> $GITHUB_ENV
+          echo "DB_PASSWORD=headblog" >> $GITHUB_ENV
           echo "DB_SCHEMA=public" >> $GITHUB_ENV
 
       - name: Cache Gradle dependencies
@@ -72,10 +73,11 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Deploy to Vercel
+      - name: Deploy to Vercel (Preview)
+        if: success() && github.event_name == 'pull_request'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           cd frontend
           npm install -g vercel
-          vercel --token $VERCEL_TOKEN --prod --confirm
+          vercel --token $VERCEL_TOKEN --confirm

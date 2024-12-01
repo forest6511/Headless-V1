@@ -43,8 +43,13 @@ dependencies {
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation("org.testcontainers:junit-jupiter")
 
-	"jooqCodegen"("org.jooq:jooq-codegen:3.19.15")
-	"jooqCodegen"("org.postgresql:postgresql:42.7.3")
+	implementation("org.jooq:jooq-meta")
+	implementation("org.jooq:jooq-codegen")
+	implementation("org.jooq:jooq-postgres-extensions:3.19.15")
+	jooqCodegen("org.postgresql:postgresql:42.7.3")
+
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+	implementation("com.github.f4b6a3:uuid-creator:6.0.0")
 }
 
 kotlin {

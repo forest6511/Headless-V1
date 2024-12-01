@@ -1,9 +1,9 @@
 package com.headblog.backend.infra.api.taxonomy
 
-import com.headblog.backend.application.usecase.taxonomy.command.CreateTaxonomyCommand
-import com.headblog.backend.application.usecase.taxonomy.command.CreateTaxonomyUseCase
-import com.headblog.backend.application.usecase.taxonomy.query.GetTaxonomyQueryService
-import com.headblog.backend.application.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyCommand
+import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyUseCase
+import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
 import org.springframework.http.ResponseEntity
@@ -26,9 +26,10 @@ class TaxonomyController(
 
     @GetMapping("/{id}")
     suspend fun getById(@PathVariable id: UUID): ResponseEntity<TaxonomyDto> =
-        getTaxonomyQueryService.findById(id)?.let { ResponseEntity.ok(it) }
+        getTaxonomyQueryService.findById(TaxonomyId(id))?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
 
+    // toCommand メソッド
     private fun CreateTaxonomyRequest.toCommand(): CreateTaxonomyCommand {
         return CreateTaxonomyCommand(
             name = this.name,

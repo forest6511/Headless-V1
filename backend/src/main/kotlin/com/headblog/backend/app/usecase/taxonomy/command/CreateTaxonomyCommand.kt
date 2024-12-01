@@ -1,4 +1,4 @@
-package com.headblog.backend.application.usecase.taxonomy.command
+package com.headblog.backend.app.usecase.taxonomy.command
 
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType

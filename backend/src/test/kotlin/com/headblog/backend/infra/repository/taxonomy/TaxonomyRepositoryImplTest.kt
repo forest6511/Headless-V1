@@ -4,7 +4,8 @@ import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
-import com.headblog.backend.shared.id.domain.UuidV7Generator
+import com.headblog.backend.shared.id.domain.EntityId
+import com.headblog.backend.shared.id.domain.IdGenerator
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ class TaxonomyRepositoryImplTest {
     lateinit var taxonomyRepository: TaxonomyRepository
 
     @Autowired
-    lateinit var uuidV7Generator: UuidV7Generator
+    lateinit var idGenerator: IdGenerator<EntityId>
 
     @Test
     @DisplayName("単一のタクソノミーを保存して取得できる")
@@ -89,7 +90,7 @@ class TaxonomyRepositoryImplTest {
     }
 
     private fun createTaxonomy(name: String, slug: String, parentId: TaxonomyId? = null): Taxonomy =
-        Taxonomy.create(uuidV7Generator, name, TaxonomyType.CATEGORY, slug, "Test description for $name", parentId)
+        Taxonomy.create(idGenerator, name, TaxonomyType.CATEGORY, slug, "Test description for $name", parentId)
 
     private fun assertTaxonomyEquals(expected: Taxonomy, actual: Taxonomy?) {
         assertNotNull(actual)

@@ -2,6 +2,7 @@ package com.headblog.backend.infra.repository.user
 
 import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.User
+import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.infra.jooq.tables.references.USERS
 import org.jooq.DSLContext
@@ -27,6 +28,14 @@ class UserRepositoryImpl(
     override fun findByEmail(email: Email): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.EMAIL.eq(email.value))
+            .fetchOne()
+
+        return result?.into(User::class.java)
+    }
+
+    override fun findById(userId: UserId): User? {
+        val result = dsl.selectFrom(USERS)
+            .where(USERS.ID.eq(userId.value))
             .fetchOne()
 
         return result?.into(User::class.java)

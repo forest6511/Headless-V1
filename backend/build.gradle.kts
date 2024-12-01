@@ -40,8 +40,7 @@ dependencies {
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("org.testcontainers:postgresql")
-	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("io.mockk:mockk:1.12.0")
 
 	implementation("org.jooq:jooq-meta")
 	implementation("org.jooq:jooq-codegen")

@@ -2,6 +2,9 @@ package com.headblog.backend.domain.model.user
 
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 
@@ -12,7 +15,7 @@ class User private constructor(
     val role: UserRole,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
-) {
+) : UserDetails {
 
     companion object {
         fun create(
@@ -45,13 +48,33 @@ class User private constructor(
         updatedAt = LocalDateTime.now()
     )
 
-    fun validatePassword(rawPassword: String, passwordEncoder: PasswordEncoder): Boolean {
-        return passwordEncoder.matches(rawPassword, passwordHash.value)
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return listOf(SimpleGrantedAuthority(role.name)) // UserRoleに基づく権限を返す
     }
 
-    fun isAdmin(): Boolean = role == UserRole.ADMIN
+    override fun getPassword(): String {
+        // ハッシュ化されたパスワード
+        return passwordHash.value
+    }
 
-    fun hasEmailChanged(newEmail: String): Boolean {
-        return email.value != Email.of(newEmail).value
+    override fun getUsername(): String {
+        // ユーザー名としてemailを使用
+        return email.value
+    }
+
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isEnabled(): Boolean {
+        return true
     }
 }

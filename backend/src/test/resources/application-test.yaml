@@ -15,9 +15,13 @@ spring:
       connection-timeout: 20000
       max-lifetime: 1200000
 
+  flyway:
+    locations:
+      - classpath:db/migration
+      - classpath:db/test-data
 jwt:
-  secret: "U2FsdGVkX1+qv3Rj91C3jKM3jsRPT8JMKZ0wv3RPkxGkv0aF2JRvs9JTPX8="
-  expiration: 1800000 # 30分（ミリ秒単位で設定）
+  secret: "BzFwqL2+1XKvNmL9RzGv3J0RwskKPJ4JmC3TPwmKS0v3JK9L4Km6RX3JL="
+  expiration: 86400000
 
 logging:
   level:

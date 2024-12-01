@@ -15,6 +15,10 @@ spring:
       connection-timeout: 20000
       max-lifetime: 1200000
 
+jwt:
+  secret: "U2FsdGVkX1+qv3Rj91C3jKM3jsRPT8JMKZ0wv3RPkxGkv0aF2JRvs9JTPX8="
+  expiration: 1800000 # 30分（ミリ秒単位で設定）
+
 logging:
   level:
     org.flywaydb: DEBUG

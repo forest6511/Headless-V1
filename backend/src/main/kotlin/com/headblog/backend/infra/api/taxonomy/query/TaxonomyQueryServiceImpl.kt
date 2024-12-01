@@ -1,7 +1,8 @@
 package com.headblog.backend.infra.api.taxonomy.query
 
-import com.headblog.backend.application.usecase.taxonomy.query.GetTaxonomyQueryService
-import com.headblog.backend.application.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.infra.jooq.tables.references.TAXONOMIES
 import kotlinx.coroutines.Dispatchers
@@ -9,17 +10,16 @@ import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class TaxonomyQueryServiceImpl(
     private val dsl: DSLContext
 ) : GetTaxonomyQueryService {
-    override suspend fun findById(id: UUID): TaxonomyDto? {
+    override suspend fun findById(id: TaxonomyId): TaxonomyDto? {
         return withContext(Dispatchers.IO) {
             dsl.select()
                 .from(TAXONOMIES)
-                .where(TAXONOMIES.ID.eq(id))
+                .where(TAXONOMIES.ID.eq(id.value))
                 .fetchOne()
         }?.toDto()
     }
@@ -49,7 +49,7 @@ class TaxonomyQueryServiceImpl(
      */
     private fun Record.toDto(): TaxonomyDto {
         return TaxonomyDto(
-            id = get(TAXONOMIES.ID)!!,
+            id = TaxonomyId(get(TAXONOMIES.ID)!!),
             name = get(TAXONOMIES.NAME)!!,
             taxonomyType = TaxonomyType.valueOf(get(TAXONOMIES.TAXONOMY_TYPE)!!),
             slug = get(TAXONOMIES.SLUG)!!,

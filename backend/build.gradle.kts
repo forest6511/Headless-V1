@@ -49,7 +49,10 @@ dependencies {
 	jooqCodegen("org.postgresql:postgresql:42.7.3")
 
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+	// https://github.com/f4b6a3/uuid-creator
 	implementation("com.github.f4b6a3:uuid-creator:6.0.0")
+	// https://github.com/auth0/java-jwt
+	implementation("com.auth0:java-jwt:4.4.0")
 }
 
 kotlin {

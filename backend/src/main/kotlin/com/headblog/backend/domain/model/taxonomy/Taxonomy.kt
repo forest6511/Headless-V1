@@ -15,7 +15,7 @@ class Taxonomy private constructor(
 ) {
     companion object {
         fun create(
-            idGenerator: IdGenerator<EntityId>,
+            id: IdGenerator<EntityId>,
             name: String,
             taxonomyType: TaxonomyType,
             slug: String,
@@ -25,7 +25,7 @@ class Taxonomy private constructor(
             validateSlug(slug)
 
             return Taxonomy(
-                id = TaxonomyId(idGenerator.generate().value),
+                id = TaxonomyId(id.generate().value),
                 name = name,
                 taxonomyType = taxonomyType,
                 slug = slug,

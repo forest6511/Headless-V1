@@ -1,4 +1,4 @@
-package com.headblog.backend.application.usecase.taxonomy.command
+package com.headblog.backend.app.usecase.taxonomy.command
 
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
@@ -14,14 +14,16 @@ class CreateTaxonomyService(
     private val taxonomyRepository: TaxonomyRepository,
     private val idGenerator: IdGenerator<EntityId>
 ) : CreateTaxonomyUseCase {
-    override suspend fun execute(command: CreateTaxonomyCommand): TaxonomyId {
+
+    override fun execute(command: CreateTaxonomyCommand): TaxonomyId {
         command.parentId?.let { parentId ->
             if (taxonomyRepository.existsByParentId(parentId)) {
                 throw ParentTaxonomyHasChildException("The parent taxonomy with ID $parentId already has a child.")
             }
         }
+        // ドメインの集約メソッドを呼び出してタクソノミーを作成
         val taxonomy = Taxonomy.create(
-            idGenerator = idGenerator,
+            id = idGenerator,
             name = command.name,
             taxonomyType = command.taxonomyType,
             slug = command.slug,
@@ -32,4 +34,5 @@ class CreateTaxonomyService(
     }
 }
 
+// TODO: Refactor or review this exception class for better handling and clarity in the future.
 class ParentTaxonomyHasChildException(message: String) : RuntimeException(message)

@@ -23,5 +23,7 @@ data class CreateTaxonomyRequest(
     @field:Size(max = 1000, message = "Description must be less than 1000 characters")
     val description: String?,
 
+    // Requestクラスでは、外部システムとの通信を簡潔に保つために、ValueObjectは使用しません
+    // UUIDはドメイン層でValueObjectに変換します
     val parentId: UUID?
 )

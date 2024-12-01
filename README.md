@@ -4,6 +4,13 @@
 
 **HeadBlog** is a blogging platform leveraging PostgreSQL as the database and Redis for caching. This project is designed for developers looking to quickly set up a scalable and efficient blogging environment using Docker Compose.
 
+
+## Vercel Deployment
+
+You can view the live project at the following URL:
+
+- [Vercel Deployment](https://head-blog.vercel.app/)
+
 ---
 
 ## Setup Instructions

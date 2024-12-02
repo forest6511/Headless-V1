@@ -1,12 +1,24 @@
-import { cookies } from 'next/headers'
+import Cookies from 'js-cookie'
 import { AuthPayload } from '@/types/auth'
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
   method: HttpMethod
   headers?: HeadersInit
   body?: any
+}
+
+const logRequest = (url: string, method: string, body: any) => {
+  console.log(`Request - ${method} ${url}`, body)
+}
+
+const logResponse = (url: string, response: any) => {
+  console.log(`Response - ${url}`, response)
+}
+
+const logError = (url: string, error: any) => {
+  console.error(`Error - ${url}`, error.message || error)
 }
 
 class ApiError extends Error {
@@ -20,20 +32,19 @@ class ApiError extends Error {
 
 export const apiClient = {
   setAuthToken(authPayload: AuthPayload) {
-    cookies().set('auth_token', authPayload.jwtResult.token, {
-      httpOnly: true,
+    Cookies.set('auth_token', authPayload.jwtResult.token, {
+      expires: new Date(authPayload.jwtResult.expiresAt),
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      expires: new Date(authPayload.jwtResult.expiresAt),
     })
   },
 
   getAuthToken(): string | null {
-    return cookies().get('auth_token')?.value ?? null
+    return Cookies.get('auth_token') ?? null
   },
 
   removeAuthToken() {
-    cookies().delete('auth_token')
+    Cookies.remove('auth_token')
   },
 
   async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
@@ -47,12 +58,17 @@ export const apiClient = {
       ...config.headers,
     }
 
+    logRequest(url, config.method, config.body)
+
     try {
       const response = await fetch(url, {
         ...config,
         headers,
         body: config.body ? JSON.stringify(config.body) : undefined,
       })
+
+      const responseData = await response.json()
+      logResponse(url, responseData)
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -61,8 +77,9 @@ export const apiClient = {
         throw new ApiError(response.status, 'API request failed')
       }
 
-      return response.json()
+      return responseData
     } catch (error) {
+      logError(url, error)
       if (error instanceof ApiError) {
         throw error
       }

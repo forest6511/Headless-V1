@@ -13,10 +13,12 @@ spring:
       idle-timeout: 300000
       connection-timeout: 20000
       max-lifetime: 1200000
+  jackson:
+    property-naming-strategy: LOWER_CAMEL_CASE
 
 jwt:
   secret: "BzFwqL2+1XKvNmL9RzGv3J0RwskKPJ4JmC3TPwmKS0v3JK9L4Km6RX3JL="
-  expiration: 86400000
+  expiration: 86400000 # 1 day
 
 logging:
   level:

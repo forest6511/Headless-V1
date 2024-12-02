@@ -33,6 +33,7 @@ class SecurityConfig(
                 auth
                     // GETリクエストは認証なし
                     .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
                     // POST, PUT, DELETEは認証必須
                     .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/**").authenticated()

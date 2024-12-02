@@ -28,6 +28,7 @@ class UserRepositoryImpl(
     override fun findByEmail(email: Email): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.EMAIL.eq(email.value))
+            // TODO add condition enable=true. changing the default value to 'FALSE'.
             .fetchOne()
 
         return result?.into(User::class.java)
@@ -36,6 +37,7 @@ class UserRepositoryImpl(
     override fun findById(userId: UserId): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.ID.eq(userId.value))
+            // TODO add condition enable=true. changing the default value to 'FALSE'.
             .fetchOne()
 
         return result?.into(User::class.java)

@@ -1,8 +1,9 @@
 export default function Home() {
   return (
-      <div>Hell World!!!!!
-          <br/>
-          How is going????????
-      </div>
-  );
+    <div>
+      Hell World!!!!!
+      <br />
+      How is going????????
+    </div>
+  )
 }

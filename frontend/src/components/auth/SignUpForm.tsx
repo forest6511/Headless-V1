@@ -33,7 +33,7 @@ export default function SignUpForm() {
       apiClient.setAuthToken(response)
 
       // TODO メール確認などは省略。将来的にサインアップ機能は削除予定(バックエンドのデプロイ前)
-      router.push('/dashboard')
+      router.push('/admin/dashboard')
     } catch (error) {
       console.error('Signup failed:', error)
     }

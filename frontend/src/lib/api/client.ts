@@ -1,5 +1,4 @@
-import Cookies from 'js-cookie'
-import { AuthPayload } from '@/types/auth'
+import { API_ENDPOINTS } from '@/config/endpoints'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
@@ -31,30 +30,12 @@ class ApiError extends Error {
 }
 
 export const apiClient = {
-  setAuthToken(authPayload: AuthPayload) {
-    Cookies.set('auth_token', authPayload.jwtResult.token, {
-      expires: new Date(authPayload.jwtResult.expiresAt),
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    })
-  },
-
-  getAuthToken(): string | null {
-    return Cookies.get('auth_token') ?? null
-  },
-
-  removeAuthToken() {
-    Cookies.remove('auth_token')
-  },
-
   async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
     const url = `${baseUrl}${endpoint}`
 
-    const authToken = this.getAuthToken()
     const headers = {
       'Content-Type': 'application/json',
-      ...(authToken && { Authorization: `Bearer ${authToken}` }),
       ...config.headers,
     }
 
@@ -65,15 +46,21 @@ export const apiClient = {
         ...config,
         headers,
         body: config.body ? JSON.stringify(config.body) : undefined,
+        credentials: 'include',
       })
 
       const responseData = await response.json()
       logResponse(url, responseData)
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          this.removeAuthToken()
+      if (response.status === 401) {
+        const refreshed = await this.refreshToken()
+        if (refreshed) {
+          // リフレッシュ成功したら、元のリクエストを再試行
+          return this.request<T>(endpoint, config)
         }
+      }
+
+      if (!response.ok) {
         throw new ApiError(response.status, 'API request failed')
       }
 
@@ -85,5 +72,12 @@ export const apiClient = {
       }
       throw new Error('Network error')
     }
+  },
+
+  async refreshToken() {
+    return await fetch(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
+      method: 'POST',
+      credentials: 'include',
+    })
   },
 }

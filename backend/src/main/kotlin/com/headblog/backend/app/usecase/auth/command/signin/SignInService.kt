@@ -1,9 +1,9 @@
 package com.headblog.backend.app.usecase.auth.command.signin
 
+import com.headblog.backend.domain.model.user.UserRepository
+import com.headblog.backend.infra.service.auth.TokenService
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
-import com.headblog.backend.domain.model.user.UserRepository
-import com.headblog.backend.app.service.JwtService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional
 class SignInService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtService: JwtService,
+    private val tokenService: TokenService,
 ) : SignInUseCase {
 
     private val logger = LoggerFactory.getLogger(SignInService::class.java)
 
-    override fun execute(command: SignInCommand): SignInResult {
+    override fun execute(command: SignInCommand): SignInResponse {
         logger.info("signing in user with email: ${command.email.value}")
 
         // ユーザーを取得
@@ -36,14 +36,12 @@ class SignInService(
 
         // JWTトークン生成
         logger.info("generating JWT token for user with email: ${command.email.value}")
-        val jwtAuthenticationResult = jwtService.generateJwtAuthenticationResult(user)
+        val authTokens = tokenService.createAuthTokens(user)
 
-        // 結果返却（リフレッシュトークンを保存せず、JWTトークンだけを返す）
         logger.info("sign-in successful for email: ${command.email.value}")
-        return SignInResult(
+        return SignInResponse(
             email = user.email,
-            role = user.role,
-            jwtResult = jwtAuthenticationResult
+            authTokens = authTokens
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.headblog.backend.app.service
+package com.headblog.backend.infra.service.auth
 
 import com.headblog.backend.domain.model.auth.JwtToken
 import com.headblog.backend.domain.model.user.User
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserAuthenticationService(
-    private val jwtService: JwtService,
+    private val tokenService: TokenService,
     private val userRepository: UserRepository
 ) {
     private val logger = LoggerFactory.getLogger(UserAuthenticationService::class.java)
@@ -17,7 +17,7 @@ class UserAuthenticationService(
         logger.info("validating token: ${token.value}")
 
         // トークンを検証し、メールアドレスを取得
-        val email = jwtService.validateToken(token)
+        val email = tokenService.validateAccessToken(token)
         logger.info("token validated successfully, extracted email: $email")
 
         // ユーザーをリポジトリから取得

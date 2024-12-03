@@ -1,14 +1,24 @@
-export interface AuthToken {
-  token: string
+export interface AuthTokens {
+  accessToken: string
+  refreshToken: string
   expiresAt: string
+  refreshExpiresAt: string
 }
 
-export interface UserId {
-  value: string
+export interface Email {
+  email: string
 }
 
 // Auth Response
-export interface AuthPayload {
-  userId: UserId
-  jwtResult: AuthToken
+export interface AuthResponse {
+  email: Email
+  authTokens: AuthTokens
+}
+
+export interface JwtPayload {
+  exp: number
+  email: string
+  role: string
+  sub: string
+  iat: number
 }

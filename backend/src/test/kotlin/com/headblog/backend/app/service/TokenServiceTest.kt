@@ -1,10 +1,11 @@
 package com.headblog.backend.app.service
 
 import com.auth0.jwt.JWT
-import com.headblog.backend.domain.model.auth.JwtToken
+import com.headblog.backend.domain.model.auth.AuthTokens
 import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserRole
+import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime
@@ -19,12 +20,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @SpringBootTest
-class JwtServiceTest {
+class TokenServiceTest {
 
     @Autowired
     lateinit var idGenerator: IdGenerator<EntityId>
     @Autowired
-    private lateinit var jwtService: JwtService
+    private lateinit var tokenService: TokenService
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 
@@ -44,18 +45,18 @@ class JwtServiceTest {
 
     @Test
     @DisplayName("JWT Tokenを生成し、返却すること")
-    fun `generateToken should return a valid JwtToken`() {
-        // generateTokenを呼び出してトークンを生成
-        val jwtToken: JwtToken = jwtService.generateToken(user)
+    fun `createAuthTokens should return a valid JwtToken`() {
+        // createAuthTokensを呼び出してトークンを生成
+        val authTokens: AuthTokens = tokenService.createAuthTokens(user)
         // トークンがnullでないことを確認
-        assertNotNull(jwtToken)
+        assertNotNull(authTokens)
         // トークンが文字列として返されることを確認
-        val tokenValue = jwtToken.value
-        assertNotNull(tokenValue)
-        assert(tokenValue.isNotEmpty())
+        val accessToken = authTokens.accessToken.value
+        assertNotNull(accessToken)
+        assert(accessToken.isNotEmpty())
 
         // トークンの構造や有効期限の確認（必要に応じてデコードして確認）
-        val decodedJWT = JWT.decode(tokenValue)
+        val decodedJWT = JWT.decode(accessToken)
         assertEquals(user.id.value.toString(), decodedJWT.subject)
         assertEquals(user.email.value, decodedJWT.getClaim("email").asString())
         assertEquals(user.role.name, decodedJWT.getClaim("role").asString())
@@ -63,13 +64,13 @@ class JwtServiceTest {
 
     @Test
     @DisplayName("有効期限が妥当なJWT Tokenを返却すること")
-    fun `should return JwtAuthenticationResult with valid token`() {
-        val result = jwtService.generateJwtAuthenticationResult(user)
+    fun `should return valid token`() {
+        val result = tokenService.createAuthTokens(user)
 
-        // JwtAuthenticationResultのtokenが有効か確認
-        assertNotNull(result.token)
-        assertNotNull(result.token.value)
-        assert(result.token.value.isNotEmpty())
+        // authTokensが有効か確認
+        assertNotNull(result.accessToken)
+        assertNotNull(result.accessToken.value)
+        assert(result.accessToken.value.isNotEmpty())
 
         // トークンの有効期限も確認
         assertNotNull(result.expiresAt)

@@ -1,17 +1,17 @@
 package com.headblog.backend.infra.api.auth
 
-import com.headblog.backend.app.usecase.auth.command.signin.SignInRequest
-import com.headblog.backend.domain.model.user.UserRole
+import com.headblog.backend.infra.api.auth.request.SignInRequest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.security.test.context.support.WithMockUser
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,10 +32,14 @@ class AuthControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
             .contentType("application/json")
             .content("""{"email": "${request.email}", "password": "${request.password}"}"""))
+            .andDo(MockMvcResultHandlers.print()) // リクエストとレスポンスを出力
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(request.email))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.role").value(UserRole.ADMIN.name))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.jwtResult.token").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.authTokens.accessToken").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.authTokens.refreshToken").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.authTokens.expiresAt").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.authTokens.refreshExpiresAt").isNotEmpty)
+
     }
 
     @Test

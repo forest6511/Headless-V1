@@ -1,12 +1,12 @@
 package com.headblog.backend.app.usecase.auth.command.signup
 
-import org.slf4j.LoggerFactory
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserRepository
-import com.headblog.backend.app.service.JwtService
+import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
+import org.slf4j.LoggerFactory
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,12 +17,12 @@ class SignUpService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val idGenerator: IdGenerator<EntityId>,
-    private val jwtService: JwtService
+    private val tokenService: TokenService
 ) : SignUpUseCase {
 
     private val logger = LoggerFactory.getLogger(SignUpService::class.java)
 
-    override fun execute(command: SignUpCommand): SignUpResult {
+    override fun execute(command: SignUpCommand): SignUpResponse {
         logger.info("attempting to sign up user with email: ${command.email.value}")
 
         // check if the email already exists
@@ -44,13 +44,13 @@ class SignUpService(
 
         // generate JWT token
         logger.info("generating jwt token for user with email: ${command.email.value}")
-        val jwtAuthenticationResult = jwtService.generateJwtAuthenticationResult(savedUser)
+        val authTokens = tokenService.createAuthTokens(savedUser)
 
         // return result with user id and JWT token
         logger.info("sign-up successful for email: ${command.email.value}")
-        return SignUpResult(
-            userId = savedUser.id,
-            jwtResult = jwtAuthenticationResult
+        return SignUpResponse(
+            email = savedUser.email,
+            authTokens = authTokens
         )
     }
 }

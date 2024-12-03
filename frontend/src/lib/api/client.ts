@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '@/config/endpoints'
+
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
@@ -50,6 +52,14 @@ export const apiClient = {
       const responseData = await response.json()
       logResponse(url, responseData)
 
+      if (response.status === 401) {
+        const refreshed = await this.refreshToken()
+        if (refreshed) {
+          // リフレッシュ成功したら、元のリクエストを再試行
+          return this.request<T>(endpoint, config)
+        }
+      }
+
       if (!response.ok) {
         throw new ApiError(response.status, 'API request failed')
       }
@@ -62,5 +72,12 @@ export const apiClient = {
       }
       throw new Error('Network error')
     }
+  },
+
+  async refreshToken() {
+    return await fetch(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
+      method: 'POST',
+      credentials: 'include',
+    })
   },
 }

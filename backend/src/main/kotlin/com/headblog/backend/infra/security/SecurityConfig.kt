@@ -39,6 +39,8 @@ class SecurityConfig(
                     // GETリクエストは認証なし
                     .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
                     // POST, PUT, DELETEは認証必須
                     .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
@@ -50,12 +52,14 @@ class SecurityConfig(
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val corsConfiguration = CorsConfiguration()
-        // 許可するドメイン
-        corsConfiguration.allowedOrigins = listOf("http://localhost:3000")
-        corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH")
-        corsConfiguration.allowedHeaders = listOf("*")
-        corsConfiguration.allowCredentials = true
+        val corsConfiguration = CorsConfiguration().apply {
+            // TODO 許可するドメイン
+            allowedOrigins = listOf("http://localhost:3000")
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH")
+            allowedHeaders = listOf("*")
+            allowCredentials = true
+            exposedHeaders = listOf("Set-Cookie")
+        }
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", corsConfiguration)
         return source

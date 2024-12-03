@@ -1,13 +1,14 @@
 package com.headblog.backend.app.usecase.auth.command.signin
 
 import com.headblog.backend.domain.model.user.Email
-import com.headblog.backend.domain.model.user.UserRole
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
-import org.junit.jupiter.api.Assertions.*
 
 @SpringBootTest
 @Transactional
@@ -30,9 +31,8 @@ class SignInServiceTest {
 
         // Then
         assertNotNull(result)
-        assertNotNull(result.jwtResult.token)
+        assertNotNull(result.authTokens.accessToken)
         assertEquals(Email.of("admin@example.com"), result.email)
-        assertEquals(UserRole.ADMIN, result.role)
     }
 
     @Test

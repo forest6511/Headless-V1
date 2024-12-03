@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.security
 
-import com.headblog.backend.app.service.UserAuthenticationService
 import com.headblog.backend.domain.model.auth.JwtToken
+import com.headblog.backend.infra.service.auth.UserAuthenticationService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

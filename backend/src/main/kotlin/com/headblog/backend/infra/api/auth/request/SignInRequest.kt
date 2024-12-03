@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.auth.command.signin
+package com.headblog.backend.infra.api.auth.request
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank

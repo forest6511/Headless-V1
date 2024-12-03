@@ -29,9 +29,6 @@ export default function SignUpForm() {
         password: data.password,
       })
 
-      // トークンをクッキーに保存
-      apiClient.setAuthToken(response)
-
       // TODO メール確認などは省略。将来的にサインアップ機能は削除予定(バックエンドのデプロイ前)
       router.push('/admin/dashboard')
     } catch (error) {

@@ -63,16 +63,26 @@ cd frontend && npm run dev
 ```
 ---
 
-## Signup API
+## Signup and Signin API
 
-To sign up a new user, you can use the following `curl` command. This will send a POST request to the backend API to create a new user.
+To sign up a new user or sign in an existing user, use the following `curl` command. This will send a POST request to the backend API to create or authenticate a user and return access tokens.
 
 ### Request
 
+For signup:
 ```bash
 curl --location 'http://localhost:8080/api/auth/signup' \
 --header 'Content-Type: application/json' \
---header 'Cookie: JSESSIONID=C5C8D0F5428AC01612C681BCB9F582A6' \
+--data-raw '{
+    "email": "<your_email>",
+    "password" : "<password>"
+}'
+```
+
+For signin:
+```bash
+curl --location 'http://localhost:8080/api/auth/signin' \
+--header 'Content-Type: application/json' \
 --data-raw '{
     "email": "<your_email>",
     "password" : "<password>"
@@ -81,16 +91,16 @@ curl --location 'http://localhost:8080/api/auth/signup' \
 
 ### Payload Example
 
-Here is an example of the payload response you will receive upon successful signup:
+Upon successful signup or signin, you will receive a response payload similar to the following:
 
 ```json
 {
-    "userId": {
-        "value": "0193862e-08bf-7887-822e-177553c21c18"
-    },
-    "jwtResult": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTkzODYyZS0wOGJmLTc4ODctODIyZS0xNzc1NTNjMjFjMTgiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzMxMjI5ODQsImV4cCI6MTczMzIwOTM4NH0.ZLUnXmIg-7mdn7Gmxp911j41XxC3X-OtMpg1KXsL47U",
-        "expiresAt": "2024-12-03T07:03:04.234+00:00"
+    "email": "<your_email>",
+    "authTokens": {
+        "accessToken": "<access_token>",
+        "refreshToken": "<refresh_token>",
+        "expiresAt": "2024-12-04T15:33:08.142+00:00",
+        "refreshExpiresAt": "2024-12-04T15:34:08.142+00:00"
     }
 }
 ```

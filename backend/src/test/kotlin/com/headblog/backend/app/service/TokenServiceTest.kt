@@ -24,8 +24,10 @@ class TokenServiceTest {
 
     @Autowired
     lateinit var idGenerator: IdGenerator<EntityId>
+
     @Autowired
     private lateinit var tokenService: TokenService
+
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
 

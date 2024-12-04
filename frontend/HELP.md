@@ -6,6 +6,13 @@ Before pushing your changes to GitHub, please make sure to run the following com
 npm run format
 ```
 
+## UI Libraries
+
+This project uses the following UI libraries:
+
+- **NextUI**: A modern React UI library for building responsive interfaces.
+- **lucide-react**: A collection of beautifully simple and consistent React icons.
+
 ## Resolving Compatibility Issue
 
 This error occurs because Next.js 15 depends on the React 19 release candidate (RC).

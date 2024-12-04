@@ -6,9 +6,14 @@ import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
 import java.util.*
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/taxonomies")
@@ -26,7 +31,7 @@ class TaxonomyController(
 
     @GetMapping("/{id}")
     suspend fun getById(@PathVariable id: UUID): ResponseEntity<TaxonomyDto> =
-        getTaxonomyQueryService.findById(TaxonomyId(id))?.let { ResponseEntity.ok(it) }
+        getTaxonomyQueryService.findById(TaxonomyId(id))?.let { ResponseEntity.notFound().build() }
             ?: ResponseEntity.notFound().build()
 
     // toCommand メソッド

@@ -2,11 +2,11 @@ package com.headblog.backend.domain.model.user
 
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
+import java.time.LocalDateTime
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.LocalDateTime
 
 class User private constructor(
     val id: UserId,
@@ -34,19 +34,6 @@ class User private constructor(
             updatedAt = currentTime
         )
     }
-
-    fun copyWith(
-        email: Email = this.email,
-        passwordHash: PasswordHash = this.passwordHash,
-        role: UserRole = this.role
-    ): User = User(
-        id = this.id,
-        email = email,
-        passwordHash = passwordHash,
-        role = role,
-        createdAt = this.createdAt,
-        updatedAt = LocalDateTime.now()
-    )
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return listOf(SimpleGrantedAuthority(role.name)) // UserRoleに基づく権限を返す

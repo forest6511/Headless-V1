@@ -1,13 +1,13 @@
 -- Users table
 CREATE TABLE users
 (
-	id            UUID PRIMARY KEY,
-	email         VARCHAR(255) NOT NULL UNIQUE,
-	password_hash VARCHAR(255),
-	enabled       BOOLEAN      NOT NULL DEFAULT true,
-	role          VARCHAR(50)  NOT NULL,
-	created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id            uuid PRIMARY KEY,
+    email         varchar(255) NOT NULL UNIQUE,
+    password_hash varchar(255),
+    enabled       boolean      NOT NULL DEFAULT TRUE,
+    role          varchar(50)  NOT NULL,
+    created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE users IS 'Table for storing user authentication details';
@@ -22,12 +22,12 @@ COMMENT ON COLUMN users.updated_at IS 'Timestamp when the user was last updated'
 -- Social Connections table
 CREATE TABLE social_connections
 (
-	user_id          UUID REFERENCES users (id),
-	provider         VARCHAR(50)  NOT NULL,
-	provider_user_id VARCHAR(255) NOT NULL,
-	created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (user_id, provider),
-	CONSTRAINT unique_provider_user UNIQUE (provider, provider_user_id)
+    user_id          uuid REFERENCES users (id),
+    provider         varchar(50)  NOT NULL,
+    provider_user_id varchar(255) NOT NULL,
+    created_at       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, provider),
+    CONSTRAINT unique_provider_user UNIQUE (provider, provider_user_id)
 );
 
 COMMENT ON TABLE social_connections IS 'Table for storing social login connections';
@@ -39,11 +39,11 @@ COMMENT ON COLUMN social_connections.created_at IS 'Timestamp when the social co
 -- Refresh Tokens table
 CREATE TABLE refresh_tokens
 (
-	id         UUID PRIMARY KEY,
-	user_id    UUID REFERENCES users (id),
-	token      VARCHAR(255) NOT NULL UNIQUE,
-	expires_at TIMESTAMP    NOT NULL,
-	created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id         uuid PRIMARY KEY,
+    user_id    uuid REFERENCES users (id),
+    token      varchar(255) NOT NULL UNIQUE,
+    expires_at timestamp    NOT NULL,
+    created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE refresh_tokens IS 'Table for storing refresh tokens for authentication';
@@ -56,25 +56,25 @@ COMMENT ON COLUMN refresh_tokens.created_at IS 'Timestamp when the refresh token
 -- Posts table
 CREATE TABLE posts
 (
-	id                UUID PRIMARY KEY,
-	author_id         UUID REFERENCES users (id),
-	title             VARCHAR(255) NOT NULL,
-	slug              VARCHAR(255) NOT NULL UNIQUE,
-	content           TEXT,
-	excerpt           TEXT,
-	status            VARCHAR(50)  NOT NULL,
-	post_type         VARCHAR(50)  NOT NULL,
-	featured_image_id UUID,
-	created_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	meta_title        VARCHAR(255), -- SEO: ページタイトル
-	meta_description  TEXT,         -- SEO: ページ説明
-	meta_keywords     TEXT,         -- SEO: メタキーワード
-	robots_meta_tag   VARCHAR(50),  -- SEO: robotsメタタグ
-	canonical_url     VARCHAR(255), -- SEO: 正規URL
-	og_title          VARCHAR(255), -- SEO: Open Graphタイトル
-	og_description    TEXT,         -- SEO: Open Graph説明
-	og_image          VARCHAR(255)  -- SEO: Open Graph画像
+    id                uuid PRIMARY KEY,
+    author_id         uuid REFERENCES users (id),
+    title             varchar(255) NOT NULL,
+    slug              varchar(255) NOT NULL UNIQUE,
+    content           text,
+    excerpt           text,
+    status            varchar(50)  NOT NULL,
+    post_type         varchar(50)  NOT NULL,
+    featured_image_id uuid,
+    created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    meta_title        varchar(255), -- SEO: ページタイトル
+    meta_description  text,         -- SEO: ページ説明
+    meta_keywords     text,         -- SEO: メタキーワード
+    robots_meta_tag   varchar(50),  -- SEO: robotsメタタグ
+    canonical_url     varchar(255), -- SEO: 正規URL
+    og_title          varchar(255), -- SEO: Open Graphタイトル
+    og_description    text,         -- SEO: Open Graph説明
+    og_image          varchar(255)  -- SEO: Open Graph画像
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
@@ -101,13 +101,13 @@ COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated'
 -- Revisions table
 CREATE TABLE revisions
 (
-	id              UUID PRIMARY KEY,
-	post_id         UUID REFERENCES posts (id),
-	content         TEXT      NOT NULL,
-	revision_number INTEGER   NOT NULL,
-	created_by      UUID REFERENCES users (id),
-	created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT unique_revision UNIQUE (post_id, revision_number)
+    id              uuid PRIMARY KEY,
+    post_id         uuid REFERENCES posts (id),
+    content         text      NOT NULL,
+    revision_number integer   NOT NULL,
+    created_by      uuid REFERENCES users (id),
+    created_at      timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_revision UNIQUE (post_id, revision_number)
 );
 
 COMMENT ON TABLE revisions IS 'Table for storing revisions of blog posts';
@@ -121,14 +121,14 @@ COMMENT ON COLUMN revisions.created_at IS 'Timestamp when the revision was creat
 -- Taxonomies table
 CREATE TABLE taxonomies
 (
-	id            UUID PRIMARY KEY,
-	name          VARCHAR(255) NOT NULL,
-	taxonomy_type VARCHAR(50)  NOT NULL,
-	slug          VARCHAR(255) NOT NULL UNIQUE,
-	description   TEXT,
-	parent_id     UUID REFERENCES taxonomies (id),
-	created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT unique_parent_id UNIQUE (parent_id)
+    id            uuid PRIMARY KEY,
+    name          varchar(255) NOT NULL,
+    taxonomy_type varchar(50)  NOT NULL,
+    slug          varchar(255) NOT NULL UNIQUE,
+    description   text,
+    parent_id     uuid REFERENCES taxonomies (id),
+    created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_parent_id UNIQUE (parent_id)
 );
 
 COMMENT ON TABLE taxonomies IS 'Table for storing taxonomies like categories and tags';
@@ -143,7 +143,9 @@ COMMENT ON COLUMN taxonomies.created_at IS 'Timestamp when the taxonomy was crea
 -- Post-Taxonomies Relationship table
 CREATE TABLE post_taxonomies
 (
-	post_id UUID REFERENCES posts (id), taxonomy_id UUID REFERENCES taxonomies (id), PRIMARY KEY (post_id, taxonomy_id)
+    post_id     uuid REFERENCES posts (id),
+    taxonomy_id uuid REFERENCES taxonomies (id),
+    PRIMARY KEY (post_id, taxonomy_id)
 );
 
 COMMENT ON TABLE post_taxonomies IS 'Table for storing many-to-many relationships between posts and taxonomies';
@@ -153,14 +155,14 @@ COMMENT ON COLUMN post_taxonomies.taxonomy_id IS 'Reference to the taxonomy in t
 -- Media table
 CREATE TABLE media
 (
-	id          UUID PRIMARY KEY,
-	file_path   VARCHAR(255) NOT NULL,
-	file_type   VARCHAR(50)  NOT NULL,
-	file_size   BIGINT       NOT NULL,
-	title       VARCHAR(255),
-	alt_text    VARCHAR(255),
-	uploaded_by UUID REFERENCES users (id),
-	created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id          uuid PRIMARY KEY,
+    file_path   varchar(255) NOT NULL,
+    file_type   varchar(50)  NOT NULL,
+    file_size   bigint       NOT NULL,
+    title       varchar(255),
+    alt_text    varchar(255),
+    uploaded_by uuid REFERENCES users (id),
+    created_at  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE media IS 'Table for storing media files like images and videos';

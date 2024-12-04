@@ -56,7 +56,7 @@ jobs:
       - name: Run tests
         env:
           SPRING_PROFILES_ACTIVE: test
-        run: ./gradlew clean test --info
+        run: ./gradlew test
 
       - name: Set up Node.js
         uses: actions/setup-node@v3

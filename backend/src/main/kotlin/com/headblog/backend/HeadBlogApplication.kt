@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class HeadBlogApplication
 
 fun main(args: Array<String>) {
-	runApplication<HeadBlogApplication>(*args)
+    runApplication<HeadBlogApplication>(*args)
 }

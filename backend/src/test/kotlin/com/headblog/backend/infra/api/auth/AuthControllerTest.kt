@@ -29,9 +29,11 @@ class AuthControllerTest {
             password = "correct_password"
         )
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-            .contentType("application/json")
-            .content("""{"email": "${request.email}", "password": "${request.password}"}"""))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/signin")
+                .contentType("application/json")
+                .content("""{"email": "${request.email}", "password": "${request.password}"}""")
+        )
             .andDo(MockMvcResultHandlers.print()) // リクエストとレスポンスを出力
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(request.email))
@@ -50,9 +52,11 @@ class AuthControllerTest {
             password = "bad_password"
         )
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-            .contentType("application/json")
-            .content("""{"email": "${request.email}", "password": "${request.password}"}"""))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/signin")
+                .contentType("application/json")
+                .content("""{"email": "${request.email}", "password": "${request.password}"}""")
+        )
             .andExpect(status().isForbidden)
     }
 
@@ -64,9 +68,11 @@ class AuthControllerTest {
             password = "some_password"
         )
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-            .contentType("application/json")
-            .content("""{"email": "${request.email}", "password": "${request.password}"}"""))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/auth/signin")
+                .contentType("application/json")
+                .content("""{"email": "${request.email}", "password": "${request.password}"}""")
+        )
             .andExpect(status().isForbidden)
     }
 }

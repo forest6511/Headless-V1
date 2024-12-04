@@ -31,8 +31,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.flywaydb:flyway-core")
-	implementation("org.flywaydb:flyway-database-postgresql")
+	implementation("org.flywaydb:flyway-core:10.19.0")
+	implementation("org.flywaydb:flyway-database-postgresql:10.19.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -75,10 +75,10 @@ tasks.asciidoctor {
 }
 
 project.ext {
-	set("db.url", System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:5432/headblog")
-	set("db.user", System.getenv("DB_USER") ?: "headblog")
-	set("db.password", System.getenv("DB_PASSWORD") ?: "headblog")
-	set("db.schema", System.getenv("DB_SCHEMA") ?: "public")
+	extra["db.url"] = System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:5432/headblog"
+	extra["db.user"] = System.getenv("DB_USER") ?: "headblog"
+	extra["db.password"] = System.getenv("DB_PASSWORD") ?: "headblog"
+	extra["db.schema"] = System.getenv("DB_SCHEMA") ?: "public"
 }
 
 flyway {

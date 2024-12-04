@@ -66,15 +66,15 @@ CREATE TABLE posts
 	post_type         VARCHAR(50)  NOT NULL,
 	featured_image_id UUID,
 	created_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	meta_title       VARCHAR(255), -- SEO: ページタイトル
-	meta_description TEXT,         -- SEO: ページ説明
-	meta_keywords    TEXT,         -- SEO: メタキーワード
-	robots_meta_tag  VARCHAR(50),  -- SEO: robotsメタタグ
-	canonical_url    VARCHAR(255), -- SEO: 正規URL
-	og_title         VARCHAR(255), -- SEO: Open Graphタイトル
-	og_description   TEXT,         -- SEO: Open Graph説明
-	og_image         VARCHAR(255)  -- SEO: Open Graph画像
+	updated_at        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	meta_title        VARCHAR(255), -- SEO: ページタイトル
+	meta_description  TEXT,         -- SEO: ページ説明
+	meta_keywords     TEXT,         -- SEO: メタキーワード
+	robots_meta_tag   VARCHAR(50),  -- SEO: robotsメタタグ
+	canonical_url     VARCHAR(255), -- SEO: 正規URL
+	og_title          VARCHAR(255), -- SEO: Open Graphタイトル
+	og_description    TEXT,         -- SEO: Open Graph説明
+	og_image          VARCHAR(255)  -- SEO: Open Graph画像
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
@@ -106,7 +106,7 @@ CREATE TABLE revisions
 	content         TEXT      NOT NULL,
 	revision_number INTEGER   NOT NULL,
 	created_by      UUID REFERENCES users (id),
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT unique_revision UNIQUE (post_id, revision_number)
 );
 
@@ -127,7 +127,7 @@ CREATE TABLE taxonomies
 	slug          VARCHAR(255) NOT NULL UNIQUE,
 	description   TEXT,
 	parent_id     UUID REFERENCES taxonomies (id),
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT unique_parent_id UNIQUE (parent_id)
 );
 

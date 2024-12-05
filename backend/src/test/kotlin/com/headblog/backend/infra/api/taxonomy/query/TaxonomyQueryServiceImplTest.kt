@@ -16,6 +16,8 @@ import org.jooq.Record
 import org.jooq.RecordMapper
 import org.jooq.Result
 import org.jooq.SelectConditionStep
+import org.jooq.SelectJoinStep
+import org.jooq.SelectOnConditionStep
 import org.jooq.impl.DSL.multiset
 import org.jooq.impl.DSL.select
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -145,38 +147,57 @@ class TaxonomyQueryServiceImplTest {
         val taxonomyId = TaxonomyId(UUID.randomUUID())
         val postId1 = UUID.randomUUID()
         val postId2 = UUID.randomUUID()
-        val resultSet: Result<Record> = mockk()
+        val selectOnConditionStep: SelectOnConditionStep<Record> = mockk()
         val selectConditionStep: SelectConditionStep<Record> = mockk()
 
+        // LEFT JOINを含むSELECT文のモック
         every {
-            dsl.select(
-                TAXONOMIES.asterisk(),
-                multiset(
-                    select(POST_TAXONOMIES.POST_ID)
-                        .from(POST_TAXONOMIES)
-                        .where(POST_TAXONOMIES.TAXONOMY_ID.eq(TAXONOMIES.ID))
-                ).`as`(POST_TAXONOMIES.POST_ID.name)
-            ).from(TAXONOMIES)
-                .where(TAXONOMIES.TAXONOMY_TYPE.eq(type.name))
+            dsl.select(TAXONOMIES.asterisk(), POST_TAXONOMIES.POST_ID)
+                .from(TAXONOMIES)
+                .leftJoin(POST_TAXONOMIES)
+                .on(TAXONOMIES.ID.eq(POST_TAXONOMIES.TAXONOMY_ID))
+        } returns selectOnConditionStep
+
+        every {
+            selectOnConditionStep.where(TAXONOMIES.TAXONOMY_TYPE.eq(type.name))
         } returns selectConditionStep
 
-        every { selectConditionStep.fetch() } returns resultSet
-        every { resultSet.map(any<RecordMapper<Record, TaxonomyWithPostRefsDto>>()) } returns listOf(
-            TaxonomyWithPostRefsDto(
-                id = taxonomyId,
-                name = "Test Taxonomy",
-                taxonomyType = type,
-                slug = "test-taxonomy",
-                description = "Description",
-                parentId = null,
-                createdAt = LocalDateTime.now(),
-                postIds = listOf(PostId(postId1), PostId(postId2))
-            )
-        )
+        // クエリ実行結果のモック
+        val result: Result<Record> = mockk()
+        val record1: Record = mockk()
+        val record2: Record = mockk()
 
-        val result = service.findTypeWithPostRefs(type)
+        // レコードの設定
+        every { record1[TAXONOMIES.ID] } returns taxonomyId.value
+        every { record1[TAXONOMIES.NAME] } returns "Test Taxonomy"
+        every { record1[TAXONOMIES.TAXONOMY_TYPE] } returns type.name
+        every { record1[TAXONOMIES.SLUG] } returns "test-taxonomy"
+        every { record1[TAXONOMIES.DESCRIPTION] } returns "Description"
+        every { record1[TAXONOMIES.PARENT_ID] } returns null
+        every { record1[TAXONOMIES.CREATED_AT] } returns LocalDateTime.now()
+        every { record1[POST_TAXONOMIES.POST_ID] } returns postId1
 
-        assertTrue(result.isNotEmpty())
-        assertEquals(2, result[0].postIds.size)
+        every { record2[TAXONOMIES.ID] } returns taxonomyId.value
+        every { record2[TAXONOMIES.NAME] } returns "Test Taxonomy"
+        every { record2[TAXONOMIES.TAXONOMY_TYPE] } returns type.name
+        every { record2[TAXONOMIES.SLUG] } returns "test-taxonomy"
+        every { record2[TAXONOMIES.DESCRIPTION] } returns "Description"
+        every { record2[TAXONOMIES.PARENT_ID] } returns null
+        every { record2[TAXONOMIES.CREATED_AT] } returns LocalDateTime.now()
+        every { record2[POST_TAXONOMIES.POST_ID] } returns postId2
+
+        // Resultのモック設定
+        every { selectConditionStep.fetch() } returns result
+        every { result.toList() } returns listOf(record1, record2)
+        every { result.iterator() } returns listOf(record1, record2).iterator() as MutableIterator<Record>
+
+        val taxonomies = service.findTypeWithPostRefs(type)
+
+        assertTrue(taxonomies.isNotEmpty())
+        assertEquals(1, taxonomies.size)
+        assertEquals(taxonomyId, taxonomies[0].id)
+        assertEquals(2, taxonomies[0].postIds.size)
+        assertTrue(taxonomies[0].postIds.contains(PostId(postId1)))
+        assertTrue(taxonomies[0].postIds.contains(PostId(postId2)))
     }
 }

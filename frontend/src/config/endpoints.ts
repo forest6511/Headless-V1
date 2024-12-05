@@ -4,4 +4,7 @@ export const API_ENDPOINTS = {
     SIGNIN: '/api/auth/signin',
     REFRESH_TOKEN: '/api/auth/refresh',
   },
+  TAXONOMY: {
+    CATEGORIES: '/api/taxonomies/categories',
+  },
 } as const

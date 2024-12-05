@@ -1,7 +1,7 @@
 import { apiClient } from './client'
 import { API_ENDPOINTS } from '@/config/endpoints'
-import type { AuthTokens } from '@/types/auth'
-import { SignInPayload, SignupPayload } from '@/types/request'
+import type { AuthTokens } from '@/types/api/auth/response'
+import { SignInPayload, SignupPayload } from '@/types/api/auth/request'
 
 export const authApi = {
   signin: (payload: SignInPayload) => {

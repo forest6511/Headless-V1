@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api/client'
-import type { AuthResponse } from '@/types/auth'
+import type { AuthResponse } from '@/types/api/auth/response'
 
 // TODO　テスト用
 export function useTokenRefresh() {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { authApi } from '@/lib/api/auth'
-import type { SignupPayload } from '@/types/request'
+import type { SignupPayload } from '@/types/api/auth/request'
 
 export const useSignup = () => {
   const [loading, setLoading] = useState(false)

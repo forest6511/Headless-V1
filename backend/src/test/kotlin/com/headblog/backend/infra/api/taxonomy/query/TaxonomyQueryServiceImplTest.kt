@@ -82,7 +82,7 @@ class TaxonomyQueryServiceImplTest {
             TaxonomyDto(
                 id = UUID.randomUUID(),
                 name = "Test 2",
-                taxonomyType = TaxonomyType.KEYWORD.name,
+                taxonomyType = TaxonomyType.TAG.name,
                 slug = "test-slug",
                 description = "Test description",
                 parentId = null,

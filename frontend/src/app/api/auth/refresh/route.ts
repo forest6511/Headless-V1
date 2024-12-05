@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import type { AuthResponse } from '@/types/auth'
+import type { AuthResponse } from '@/types/api/auth/response'
 import { API_ENDPOINTS } from '@/config/endpoints'
 
 export async function POST(request: Request) {

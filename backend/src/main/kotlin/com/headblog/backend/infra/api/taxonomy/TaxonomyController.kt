@@ -4,7 +4,9 @@ import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyCommand
 import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyUseCase
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
+import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
 import java.util.*
 import org.springframework.http.ResponseEntity
@@ -23,16 +25,20 @@ class TaxonomyController(
 ) {
 
     @PostMapping
-    suspend fun create(@RequestBody request: CreateTaxonomyRequest): ResponseEntity<UUID> {
+    fun create(@RequestBody request: CreateTaxonomyRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
         val taxonomyId = createTaxonomyUseCase.execute(command)
         return ResponseEntity.ok(taxonomyId.value)
     }
 
     @GetMapping("/{id}")
-    suspend fun getById(@PathVariable id: UUID): ResponseEntity<TaxonomyDto> =
+    fun getById(@PathVariable id: UUID): ResponseEntity<TaxonomyDto> =
         getTaxonomyQueryService.findById(TaxonomyId(id))?.let { ResponseEntity.notFound().build() }
             ?: ResponseEntity.notFound().build()
+
+    @GetMapping("/categories")
+    fun getByCategories(): ResponseEntity<List<TaxonomyWithPostRefsDto>> =
+        ResponseEntity.ok(getTaxonomyQueryService.findTypeWithPostRefs(TaxonomyType.CATEGORY))
 
     // toCommand メソッド
     private fun CreateTaxonomyRequest.toCommand(): CreateTaxonomyCommand {

@@ -1,8 +1,6 @@
 package com.headblog.backend.infra.api.taxonomy.query
 
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
-import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
-import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
@@ -16,10 +14,7 @@ import org.jooq.Record
 import org.jooq.RecordMapper
 import org.jooq.Result
 import org.jooq.SelectConditionStep
-import org.jooq.SelectJoinStep
 import org.jooq.SelectOnConditionStep
-import org.jooq.impl.DSL.multiset
-import org.jooq.impl.DSL.select
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -50,7 +45,7 @@ class TaxonomyQueryServiceImplTest {
         val result = service.findById(id)
 
         assertNotNull(result)
-        assertEquals(id, result?.id)
+        assertEquals(id.value, result?.id)
         assertEquals("Test", result?.name)
     }
 
@@ -76,18 +71,18 @@ class TaxonomyQueryServiceImplTest {
             resultSet.map(match<RecordMapper<Record, TaxonomyDto>> { true })
         } returns listOf(
             TaxonomyDto(
-                id = TaxonomyId(UUID.randomUUID()),
+                id = UUID.randomUUID(),
                 name = "Test 1",
-                taxonomyType = TaxonomyType.CATEGORY,
+                taxonomyType = TaxonomyType.CATEGORY.name,
                 slug = "test-slug",
                 description = null,
                 parentId = null,
                 createdAt = LocalDateTime.now()
             ),
             TaxonomyDto(
-                id = TaxonomyId(UUID.randomUUID()),
+                id = UUID.randomUUID(),
                 name = "Test 2",
-                taxonomyType = TaxonomyType.KEYWORD,
+                taxonomyType = TaxonomyType.KEYWORD.name,
                 slug = "test-slug",
                 description = "Test description",
                 parentId = null,
@@ -123,9 +118,9 @@ class TaxonomyQueryServiceImplTest {
         every { dsl.select().from(TAXONOMIES).where(TAXONOMIES.TAXONOMY_TYPE.eq(type.name)).fetch() } returns resultSet
         every { resultSet.map<TaxonomyDto>(any()) } returns listOf(
             TaxonomyDto(
-                id = TaxonomyId(taxonomyId),
+                id = taxonomyId,
                 name = "Test",
-                taxonomyType = TaxonomyType.CATEGORY,
+                taxonomyType = TaxonomyType.CATEGORY.name,
                 slug = "test",
                 description = null,
                 parentId = null,
@@ -137,14 +132,14 @@ class TaxonomyQueryServiceImplTest {
 
         assertFalse(result.isEmpty())
         assertEquals("Test", result[0].name)
-        assertEquals(taxonomyId, result[0].id.value)
+        assertEquals(taxonomyId, result[0].id)
     }
 
     @Test
     @DisplayName("タクソノミーに関連するタクシノミーとポストIDを返す")
     fun `findTypeWithPostRefs returns taxonomies with post references`() {
         val type = TaxonomyType.CATEGORY
-        val taxonomyId = TaxonomyId(UUID.randomUUID())
+        val taxonomyId = UUID.randomUUID()
         val postId1 = UUID.randomUUID()
         val postId2 = UUID.randomUUID()
         val selectOnConditionStep: SelectOnConditionStep<Record> = mockk()
@@ -168,7 +163,7 @@ class TaxonomyQueryServiceImplTest {
         val record2: Record = mockk()
 
         // レコードの設定
-        every { record1[TAXONOMIES.ID] } returns taxonomyId.value
+        every { record1[TAXONOMIES.ID] } returns taxonomyId
         every { record1[TAXONOMIES.NAME] } returns "Test Taxonomy"
         every { record1[TAXONOMIES.TAXONOMY_TYPE] } returns type.name
         every { record1[TAXONOMIES.SLUG] } returns "test-taxonomy"
@@ -177,7 +172,7 @@ class TaxonomyQueryServiceImplTest {
         every { record1[TAXONOMIES.CREATED_AT] } returns LocalDateTime.now()
         every { record1[POST_TAXONOMIES.POST_ID] } returns postId1
 
-        every { record2[TAXONOMIES.ID] } returns taxonomyId.value
+        every { record2[TAXONOMIES.ID] } returns taxonomyId
         every { record2[TAXONOMIES.NAME] } returns "Test Taxonomy"
         every { record2[TAXONOMIES.TAXONOMY_TYPE] } returns type.name
         every { record2[TAXONOMIES.SLUG] } returns "test-taxonomy"
@@ -197,7 +192,7 @@ class TaxonomyQueryServiceImplTest {
         assertEquals(1, taxonomies.size)
         assertEquals(taxonomyId, taxonomies[0].id)
         assertEquals(2, taxonomies[0].postIds.size)
-        assertTrue(taxonomies[0].postIds.contains(PostId(postId1)))
-        assertTrue(taxonomies[0].postIds.contains(PostId(postId2)))
+        assertTrue(taxonomies[0].postIds.contains(postId1))
+        assertTrue(taxonomies[0].postIds.contains(postId2))
     }
 }

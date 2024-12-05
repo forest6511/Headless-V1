@@ -3,15 +3,12 @@ package com.headblog.backend.infra.api.taxonomy.query
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
-import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
 import com.headblog.infra.jooq.tables.references.TAXONOMIES
 import org.jooq.DSLContext
 import org.jooq.Record
-import org.jooq.impl.DSL.multiset
-import org.jooq.impl.DSL.select
 import org.springframework.stereotype.Service
 
 @Service
@@ -57,9 +54,9 @@ class TaxonomyQueryServiceImpl(
      */
     private fun Record.toTaxonomyDto(): TaxonomyDto {
         return TaxonomyDto(
-            id = TaxonomyId(get(TAXONOMIES.ID)!!),
+            id = get(TAXONOMIES.ID)!!,
             name = get(TAXONOMIES.NAME)!!,
-            taxonomyType = TaxonomyType.valueOf(get(TAXONOMIES.TAXONOMY_TYPE)!!),
+            taxonomyType = get(TAXONOMIES.TAXONOMY_TYPE)!!,
             slug = get(TAXONOMIES.SLUG)!!,
             description = get(TAXONOMIES.DESCRIPTION),
             parentId = get(TAXONOMIES.PARENT_ID),
@@ -70,14 +67,14 @@ class TaxonomyQueryServiceImpl(
     private fun List<Record>.toTaxonomyWithPostRefsDto(): TaxonomyWithPostRefsDto {
         val firstRecord = first()
         return TaxonomyWithPostRefsDto(
-            id = TaxonomyId(firstRecord[TAXONOMIES.ID]!!),
+            id = firstRecord[TAXONOMIES.ID]!!,
             name = firstRecord[TAXONOMIES.NAME]!!,
-            taxonomyType = TaxonomyType.valueOf(firstRecord[TAXONOMIES.TAXONOMY_TYPE]!!),
+            taxonomyType = firstRecord[TAXONOMIES.TAXONOMY_TYPE]!!,
             slug = firstRecord[TAXONOMIES.SLUG]!!,
             description = firstRecord[TAXONOMIES.DESCRIPTION],
             parentId = firstRecord[TAXONOMIES.PARENT_ID],
             createdAt = firstRecord[TAXONOMIES.CREATED_AT]!!,
-            postIds = mapNotNull { it[POST_TAXONOMIES.POST_ID]?.let(::PostId) }
+            postIds = mapNotNull { it[POST_TAXONOMIES.POST_ID] }
                 .distinct()
                 .ifEmpty { emptyList() }
         )

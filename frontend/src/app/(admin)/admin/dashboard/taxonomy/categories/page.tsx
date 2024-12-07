@@ -1,6 +1,5 @@
 'use client'
 
-import { TaxonomyBulkActions } from '@/components/taxonomy/categories/TaxonomyBulkActions'
 import { AddCategoryButton } from '@/components/taxonomy/categories/AddCategoryButton'
 import { TaxonomyTable } from '@/components/taxonomy/categories/TaxonomyTable'
 import { useCategories } from '@/hooks/taxonomy/useCategories'
@@ -28,7 +27,6 @@ export default function CategoryList() {
   return (
     <div className="w-full px-4 py-8">
       <div className="flex justify-between mb-4">
-        <TaxonomyBulkActions />
         <AddCategoryButton />
       </div>
       <TaxonomyTable

@@ -29,6 +29,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 is ServletException -> {
                     ex.cause ?: ex
                 }
+
                 else -> {
                     ex
                 }
@@ -38,6 +39,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
                 is AppConflictException -> {
                     HttpStatus.CONFLICT to cause.message
                 }
+
                 else -> {
                     logger.error("Original exception message: ${cause.message}")
                     logger.error("HTTP Status: ${HttpStatus.INTERNAL_SERVER_ERROR}")

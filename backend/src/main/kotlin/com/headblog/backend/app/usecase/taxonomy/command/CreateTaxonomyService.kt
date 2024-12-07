@@ -1,9 +1,9 @@
 package com.headblog.backend.app.usecase.taxonomy.command
 
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
-import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
+import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import org.slf4j.LoggerFactory
@@ -21,7 +21,7 @@ class CreateTaxonomyService(
 
     override fun execute(command: CreateTaxonomyCommand): TaxonomyId {
         taxonomyRepository.findBySlug(command.slug)?.let {
-            val message = "Conflict: The taxonomy with slug '${command.slug}' already exists."
+            val message = "The taxonomy with slug '${command.slug}' already exists."
             logger.error(message)
             throw AppConflictException(message)
         }
@@ -35,7 +35,9 @@ class CreateTaxonomyService(
             description = command.description,
             parentId = command.parentId
         )
-        return taxonomyRepository.save(taxonomy).id
+        taxonomyRepository.save(taxonomy)
+
+        return taxonomy.id
     }
 }
 

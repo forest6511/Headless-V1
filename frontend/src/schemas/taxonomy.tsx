@@ -18,7 +18,7 @@ export const taxonomySchema = z.object({
     .string()
     .max(100, '説明は100文字以内で入力してください')
     .optional(),
-  parentId: z.string().min(1, '親カテゴリーは必須です'),
+  parentId: z.string().nullish(),
   type: z.union([z.literal('CATEGORY'), z.literal('TAG')]),
 })
 

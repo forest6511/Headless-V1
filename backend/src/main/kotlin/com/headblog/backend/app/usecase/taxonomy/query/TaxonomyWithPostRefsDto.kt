@@ -1,4 +1,5 @@
 package com.headblog.backend.app.usecase.taxonomy.query
+
 import java.time.LocalDateTime
 import java.util.*
 

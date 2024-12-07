@@ -5,7 +5,6 @@ import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyUseCase
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
 import java.util.*
@@ -34,7 +33,7 @@ class TaxonomyController(
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: UUID): ResponseEntity<TaxonomyDto> =
-        getTaxonomyQueryService.findById(TaxonomyId(id))?.let { ResponseEntity.notFound().build() }
+        getTaxonomyQueryService.findById(id)?.let { ResponseEntity.notFound().build() }
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/categories")
@@ -48,7 +47,7 @@ class TaxonomyController(
             taxonomyType = this.type,
             slug = this.slug,
             description = this.description,
-            parentId = this.parentId?.let { TaxonomyId(it) }
+            parentId = this.parentId
         )
     }
 }

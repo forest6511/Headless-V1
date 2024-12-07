@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class CookieService(
-    @Value("\${cookie.secure}") private  val secure: Boolean,
+    @Value("\${cookie.secure}") private val secure: Boolean,
     @Value("\${cookie.domain}") private val domain: String,
     @Value("\${cookie.same-site}") private val sameSite: String,
-    @Value("\${cookie.http-only}") private  val httpOnly: Boolean
+    @Value("\${cookie.http-only}") private val httpOnly: Boolean
 ) {
 //    private val logger = LoggerFactory.getLogger(CookieService::class.java)
 

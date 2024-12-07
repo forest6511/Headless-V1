@@ -25,8 +25,6 @@ interface TaxonomyTableProps {
 
 export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
   taxonomies,
-  selectedKeys,
-  onSelectionChange,
   onEdit,
   onDelete,
   isLoading = false,
@@ -47,13 +45,7 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
           </Link>
         )
       case 'actions':
-        return (
-          <TaxonomyActions
-            taxonomyId={taxonomy.id}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        )
+        return <TaxonomyActions taxonomyId={taxonomy.id} onDelete={onDelete} />
       default:
         return cellValue
     }
@@ -68,12 +60,7 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
   }
 
   return (
-    <Table
-      aria-label="タクソノミー一覧"
-      selectionMode="multiple"
-      selectedKeys={selectedKeys}
-      onSelectionChange={onSelectionChange}
-    >
+    <Table aria-label="タクソノミー一覧">
       <TableHeader>
         {TAXONOMY_COLUMNS.map((column) => (
           <TableColumn

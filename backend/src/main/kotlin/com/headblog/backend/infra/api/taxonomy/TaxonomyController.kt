@@ -25,7 +25,8 @@ class TaxonomyController(
 ) {
 
     @PostMapping
-    fun create(@RequestBody request: CreateTaxonomyRequest): ResponseEntity<UUID> {
+    @RequestMapping("/category")
+    fun createCategory(@RequestBody request: CreateTaxonomyRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
         val taxonomyId = createTaxonomyUseCase.execute(command)
         return ResponseEntity.ok(taxonomyId.value)

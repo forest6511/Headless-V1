@@ -12,6 +12,7 @@ import {
 import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
 import { TaxonomyActions } from './TaxonomyActions'
 import { TAXONOMY_COLUMNS } from './constants'
+import React from 'react'
 
 interface TaxonomyTableProps {
   taxonomies: TaxonomyWithPostRefsResponse[]

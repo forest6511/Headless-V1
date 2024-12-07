@@ -37,7 +37,7 @@ class JwtAuthenticationFilter(
                 )
                 SecurityContextHolder.getContext().authentication = authentication
             } catch (e: Exception) {
-                logger.error("error during token validation: ${e.message}", e)
+                logger.error("error during token validation: ${e.message}")
             }
         } ?: run {
             logger.warn("no valid token found in the request")

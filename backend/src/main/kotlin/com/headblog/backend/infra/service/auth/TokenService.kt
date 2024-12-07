@@ -21,7 +21,7 @@ class TokenService(
     private val logger = LoggerFactory.getLogger(TokenService::class.java)
 
     fun createAuthTokens(user: User): AuthTokens {
-        logger.info("generating jwt authentication result for user: ${user.id.value}")
+//        logger.info("generating jwt authentication result for user: ${user.id.value}")
 
         val accessToken = createToken(user, expiration)
         val refreshToken = createToken(user, refreshExpiration)
@@ -31,9 +31,10 @@ class TokenService(
             refreshToken = refreshToken,
             expiresAt = expiration.toDate(),
             refreshExpiresAt = refreshExpiration.toDate()
-        ).also {
-            logger.info("jwt authentication result generated for user: ${user.id.value}")
-        }
+        )
+//        .also {
+//            logger.info("jwt authentication result generated for user: ${user.id.value}")
+//        }
     }
 
     private fun createToken(user: User, duration: Long): JwtToken =
@@ -47,7 +48,7 @@ class TokenService(
             .withExpiresAt(duration.toDate())
             .sign(Algorithm.HMAC256(secret))
             .let { JwtToken.of(it) }
-            .also { logger.info("token generated successfully for user: {}", user.id.value) }
+//            .also { logger.info("token generated successfully for user: {}", user.id.value) }
 
     fun validateAccessToken(token: JwtToken): Email =
         validateToken(token) { decodedJWT ->
@@ -59,9 +60,10 @@ class TokenService(
 
     fun validateRefreshToken(token: JwtToken): String? =
         validateToken(token) { decodedJWT ->
-            decodedJWT.subject.also {
-                logger.info("refresh token validated successfully, subject: $it")
-            }
+            decodedJWT.subject
+//            .also {
+//                logger.info("refresh token validated successfully, subject: $it")
+//            }
         }
 
     private fun <T> validateToken(token: JwtToken, claimExtractor: (DecodedJWT) -> T): T = try {
@@ -75,7 +77,7 @@ class TokenService(
                 }
             }.let(claimExtractor)
     } catch (e: Exception) {
-        logger.error("error validating token: ${e.message}", e)
+        logger.error("error validating token: ${token.value} ${e.message}")
         throw IllegalArgumentException("invalid token")
     }
 

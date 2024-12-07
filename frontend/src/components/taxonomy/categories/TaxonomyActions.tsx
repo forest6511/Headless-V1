@@ -1,5 +1,6 @@
 import { Button } from '@nextui-org/react'
 import { Edit, Trash2 } from 'lucide-react'
+import React from 'react'
 
 interface TaxonomyActionsProps {
   taxonomyId: string

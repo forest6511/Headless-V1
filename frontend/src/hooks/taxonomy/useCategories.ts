@@ -1,11 +1,10 @@
-import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
 import { useEffect, useState } from 'react'
 import { taxonomyApi } from '@/lib/api/taxonomy'
+import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
 
 export const useCategories = () => {
-  const [taxonomies, setTaxonomies] = useState<TaxonomyWithPostRefsResponse[]>(
-    []
-  )
+  const setTaxonomies = useTaxonomyStore((state) => state.setTaxonomies)
+  const taxonomies = useTaxonomyStore((state) => state.taxonomies)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
@@ -13,17 +12,19 @@ export const useCategories = () => {
     const fetchCategories = async () => {
       try {
         const data = await taxonomyApi.getCategories()
-        setTaxonomies(data)
+        setTaxonomies(data) // Zustandに保存
       } catch (error) {
         setError(error as Error)
-        console.error('カテゴリーの取得に失敗しました:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchCategories()
-  }, [])
+    // 即時実行関数でラップして非同期処理を安全に呼び出す
+    ;(async () => {
+      await fetchCategories()
+    })()
+  }, [setTaxonomies])
 
   return { taxonomies, isLoading, error }
 }

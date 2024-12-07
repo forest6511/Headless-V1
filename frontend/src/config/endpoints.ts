@@ -6,5 +6,6 @@ export const API_ENDPOINTS = {
   },
   TAXONOMY: {
     CATEGORIES: '/api/taxonomies/categories',
+    CATEGORY: '/api/taxonomies/category',
   },
 } as const

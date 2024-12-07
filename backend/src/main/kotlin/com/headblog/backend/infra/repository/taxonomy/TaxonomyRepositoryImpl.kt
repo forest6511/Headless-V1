@@ -28,6 +28,17 @@ class TaxonomyRepositoryImpl(
             .execute()
     }
 
+    override fun update(taxonomy: Taxonomy): Int {
+        return dsl.update(TAXONOMIES)
+            .set(TAXONOMIES.NAME, taxonomy.name)
+            .set(TAXONOMIES.TAXONOMY_TYPE, taxonomy.taxonomyType.name)
+            .set(TAXONOMIES.SLUG, taxonomy.slug.value)
+            .set(TAXONOMIES.DESCRIPTION, taxonomy.description)
+            .set(TAXONOMIES.PARENT_ID, taxonomy.parentId?.value)
+            .where(TAXONOMIES.ID.eq(taxonomy.id.value))
+            .execute()
+    }
+
     override fun findById(id: UUID): TaxonomyDto? = dsl.select()
         .from(TAXONOMIES)
         .where(TAXONOMIES.ID.eq(id))

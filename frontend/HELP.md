@@ -12,6 +12,7 @@ This project uses the following UI libraries:
 
 - **NextUI**: A modern React UI library for building responsive interfaces.
 - **lucide-react**: A collection of beautifully simple and consistent React icons.
+- **zustand**: A lightweight and flexible state management library for React.
 
 ## Resolving Compatibility Issue
 

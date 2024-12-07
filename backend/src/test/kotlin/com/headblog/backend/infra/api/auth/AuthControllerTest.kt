@@ -56,8 +56,7 @@ class AuthControllerTest {
             MockMvcRequestBuilders.post("/api/auth/signin")
                 .contentType("application/json")
                 .content("""{"email": "${request.email}", "password": "${request.password}"}""")
-        )
-            .andExpect(status().isForbidden)
+        ).andExpect(status().isUnauthorized)
     }
 
     @Test
@@ -72,7 +71,6 @@ class AuthControllerTest {
             MockMvcRequestBuilders.post("/api/auth/signin")
                 .contentType("application/json")
                 .content("""{"email": "${request.email}", "password": "${request.password}"}""")
-        )
-            .andExpect(status().isForbidden)
+        ).andExpect(status().isUnauthorized)
     }
 }

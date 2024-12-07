@@ -3,12 +3,9 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
-import { signInSchema } from '@/schemas/auth'
-import type { z } from 'zod'
+import { SigninFormData, signInSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api/auth'
 import { useRouter } from 'next/navigation'
-
-type SigninFormData = z.infer<typeof signInSchema>
 
 export default function SignInForm() {
   const router = useRouter()
@@ -21,7 +18,6 @@ export default function SignInForm() {
   })
 
   const onSubmit = async (data: SigninFormData) => {
-    console.log(data)
     try {
       await authApi.signin({
         email: data.email,

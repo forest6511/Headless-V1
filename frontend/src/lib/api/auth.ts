@@ -1,6 +1,6 @@
 import { apiClient } from './client'
 import { API_ENDPOINTS } from '@/config/endpoints'
-import type { AuthTokens } from '@/types/api/auth/response'
+import { AuthResponse } from '@/types/api/auth/response'
 import { SignInPayload, SignupPayload } from '@/types/api/auth/request'
 
 export const authApi = {
@@ -10,11 +10,15 @@ export const authApi = {
       body: payload,
     })
   },
-
   signup: (payload: SignupPayload) => {
-    return apiClient.request<AuthTokens>(API_ENDPOINTS.AUTH.SIGNUP, {
+    return apiClient.request<AuthResponse>(API_ENDPOINTS.AUTH.SIGNUP, {
       method: 'POST',
       body: payload,
+    })
+  },
+  refresh: () => {
+    return apiClient.request<AuthResponse>(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
+      method: 'POST',
     })
   },
   // logout: () => {

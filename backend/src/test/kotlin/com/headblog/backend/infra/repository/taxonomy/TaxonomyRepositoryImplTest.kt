@@ -1,11 +1,14 @@
 package com.headblog.backend.infra.repository.taxonomy
 
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
+import java.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -18,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 class TaxonomyRepositoryImplTest {
 
@@ -35,11 +37,11 @@ class TaxonomyRepositoryImplTest {
         val taxonomy = createTaxonomy("Programming", "programming")
 
         // When
-        val savedTaxonomy = taxonomyRepository.save(taxonomy)
+        taxonomyRepository.save(taxonomy)
 
         // Then
-        val foundTaxonomy = taxonomyRepository.findById(savedTaxonomy.id)
-        assertTaxonomyEquals(taxonomy, foundTaxonomy)
+        val taxonomyDto = taxonomyRepository.findById(taxonomy.id.value)
+        assertTaxonomyEquals(taxonomy, taxonomyDto)
     }
 
     @Test
@@ -50,12 +52,12 @@ class TaxonomyRepositoryImplTest {
         taxonomyRepository.save(taxonomy)
 
         // When
-        val foundTaxonomy = taxonomyRepository.findBySlug(taxonomy.slug)
+        val taxonomyDto = taxonomyRepository.findBySlug("development")
 
         // Then
-        assertNotNull(foundTaxonomy)
-        assertEquals(taxonomy.slug, foundTaxonomy?.slug)
-        assertEquals(taxonomy.name, foundTaxonomy?.name)
+        assertNotNull(taxonomyDto)
+        assertEquals(taxonomy.slug.value, taxonomyDto?.slug)
+        assertEquals(taxonomy.name, taxonomyDto?.name)
     }
 
     @Test
@@ -63,16 +65,16 @@ class TaxonomyRepositoryImplTest {
     fun `should save taxonomy with parent`() {
         // Given
         val parent = createTaxonomy("Parent Category", "parent-category")
-        val savedParent = taxonomyRepository.save(parent)
+        taxonomyRepository.save(parent)
 
         // When
-        val child = createTaxonomy("Child Category", "child-category", savedParent.id)
-        val savedChild = taxonomyRepository.save(child)
+        val child = createTaxonomy("Child Category", "child-category", parent.id.value)
+        taxonomyRepository.save(child)
 
         // Then
-        val foundChild = taxonomyRepository.findById(savedChild.id)
+        val foundChild = taxonomyRepository.findById(child.id.value)
         assertNotNull(foundChild)
-        assertEquals(savedParent.id.value, foundChild?.parentId?.value)
+        assertEquals(parent.id.value, child.parentId?.value)
     }
 
     @Test
@@ -80,26 +82,26 @@ class TaxonomyRepositoryImplTest {
     fun `should check if parent has children`() {
         // Given
         val parent = createTaxonomy("Parent", "parent")
-        val savedParent = taxonomyRepository.save(parent)
+        taxonomyRepository.save(parent)
 
         // When
-        assertFalse(taxonomyRepository.existsByParentId(savedParent.id))
+        assertFalse(taxonomyRepository.existsByParentId(parent.id.value))
 
         // Then
-        val child = createTaxonomy("Child", "child", savedParent.id)
+        val child = createTaxonomy("Child", "child", parent.id.value)
         taxonomyRepository.save(child)
 
-        assertTrue(taxonomyRepository.existsByParentId(savedParent.id))
+        assertTrue(taxonomyRepository.existsByParentId(parent.id.value))
     }
 
-    private fun createTaxonomy(name: String, slug: String, parentId: TaxonomyId? = null): Taxonomy =
+    private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Taxonomy =
         Taxonomy.create(idGenerator, name, TaxonomyType.CATEGORY, slug, "Test description for $name", parentId)
 
-    private fun assertTaxonomyEquals(expected: Taxonomy, actual: Taxonomy?) {
+    private fun assertTaxonomyEquals(expected: Taxonomy, actual: TaxonomyDto?) {
         assertNotNull(actual)
         assertEquals(expected.name, actual?.name)
-        assertEquals(expected.slug, actual?.slug)
-        assertEquals(expected.taxonomyType, actual?.taxonomyType)
+        assertEquals(expected.slug.value, actual?.slug)
+        assertEquals(expected.taxonomyType.name, actual?.taxonomyType)
         assertEquals(expected.description, actual?.description)
         assertEquals(expected.parentId, actual?.parentId)
     }

@@ -1,5 +1,3 @@
-import { API_ENDPOINTS } from '@/config/endpoints'
-
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
@@ -12,8 +10,10 @@ const logRequest = (url: string, method: string, body: any) => {
   console.log(`Request - ${method} ${url}`, body)
 }
 
-const logResponse = (url: string, response: any) => {
-  console.log(`Response - ${url}`, response)
+const logResponse = (url: string, response: Response) => {
+  const status = response.status
+  const statusText = response.statusText
+  console.log(`Response - ${url}, Status: ${status} (${statusText})`)
 }
 
 const logError = (url: string, error: any) => {
@@ -29,12 +29,20 @@ class ApiError extends Error {
   }
 }
 
+const isNonGetMethod = (method: HttpMethod): boolean => {
+  return method !== 'GET'
+}
+
 export const apiClient = {
+  router: null as any,
+
   async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-    const url = `${baseUrl}${endpoint}`
+    const url = isNonGetMethod(config.method)
+      ? endpoint
+      : `${baseUrl}${endpoint}`
 
-    const headers = {
+    const requestHeaders = {
       'Content-Type': 'application/json',
       ...config.headers,
     }
@@ -44,7 +52,7 @@ export const apiClient = {
     try {
       const response = await fetch(url, {
         ...config,
-        headers,
+        headers: requestHeaders,
         body: config.body ? JSON.stringify(config.body) : undefined,
         credentials: 'include',
       })
@@ -52,12 +60,9 @@ export const apiClient = {
       const responseData = await response.json()
       logResponse(url, responseData)
 
-      if (response.status === 401) {
-        const refreshed = await this.refreshToken()
-        if (refreshed) {
-          // リフレッシュ成功したら、元のリクエストを再試行
-          return this.request<T>(endpoint, config)
-        }
+      if (response.status === 401 || response.status === 403) {
+        window.location.href = '/admin'
+        throw new ApiError(response.status, 'API request unauthorized')
       }
 
       if (!response.ok) {
@@ -72,12 +77,5 @@ export const apiClient = {
       }
       throw new Error('Network error')
     }
-  },
-
-  async refreshToken() {
-    return await fetch(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
-      method: 'POST',
-      credentials: 'include',
-    })
   },
 }

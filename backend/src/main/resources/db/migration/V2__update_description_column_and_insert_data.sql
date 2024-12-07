@@ -2,6 +2,9 @@
 ALTER TABLE taxonomies
     ALTER COLUMN description TYPE VARCHAR(100);
 
+ALTER TABLE taxonomies
+    DROP CONSTRAINT unique_parent_id;
+
 -- Insert the specified data into the taxonomies table
 INSERT INTO taxonomies (
     id,

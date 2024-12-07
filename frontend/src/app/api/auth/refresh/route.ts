@@ -1,66 +1,48 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import type { AuthResponse } from '@/types/api/auth/response'
+import { handleAuthCookies } from '@/lib/api/authCookieHandler'
 import { API_ENDPOINTS } from '@/config/endpoints'
+import { AuthResponse } from '@/types/api/auth/response'
 
-export async function POST(request: Request) {
+export async function POST(_request: Request) {
   try {
     const cookieStore = cookies()
     const refreshToken = cookieStore.get('refresh_token')
 
-    if (!refreshToken?.value) {
-      console.warn('not found refresh token:', refreshToken?.value)
-      return NextResponse.json(
-        { error: 'refresh token not found' },
-        { status: 401 }
-      )
-    }
     const refreshUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`
-    const refreshResponse = await fetch(refreshUrl, {
+
+    const response = await fetch(refreshUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${refreshToken?.value}`, // 認証ヘッダーを追加
+        Authorization: `Bearer ${refreshToken?.value}`,
       },
       body: JSON.stringify({
         refreshToken: refreshToken?.value,
       }),
     })
 
-    if (!refreshResponse.ok) {
-      const errorData = await refreshResponse.text()
-      console.error('token refresh error:', errorData)
+    if (!response.ok) {
+      const status = response.status
+      const errorBody = await response.text()
+      console.error(
+        `Failed to refresh token. Status: ${status}, Body: ${errorBody}`
+      )
       return NextResponse.json(
-        { error: 'token refresh failed' },
-        { status: refreshResponse.status }
+        { error: 'token refresh failed', details: errorBody },
+        { status }
       )
     }
 
-    const authResponse: AuthResponse = await refreshResponse.json()
+    const authResponse: AuthResponse = await response.json()
+    handleAuthCookies(authResponse)
 
-    // Set the new access and refresh tokens in the response cookies
-    // TODO クッキーのセキュリティー
-    cookieStore.set(
-      'access_token',
-      authResponse.authTokens.accessToken.toString(),
-      {
-        httpOnly: true,
-        secure: true,
-        expires: new Date(authResponse.authTokens.expiresAt),
-      }
-    )
-    cookieStore.set(
-      'refresh_token',
-      authResponse.authTokens.refreshToken.toString(),
-      {
-        httpOnly: true,
-        secure: true,
-        expires: new Date(authResponse.authTokens.expiresAt),
-      }
-    )
     return NextResponse.json(authResponse)
   } catch (error) {
-    console.error('refresh token error:', error)
-    return NextResponse.json({ error: 'token refresh failed' }, { status: 401 })
+    console.error('Unexpected error during token refresh:', error)
+    return NextResponse.json(
+      { error: 'unexpected error occurred' },
+      { status: 500 }
+    )
   }
 }

@@ -1,11 +1,12 @@
 package com.headblog.backend.app.usecase.taxonomy.query
 
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
+import java.util.*
 
 interface GetTaxonomyQueryService {
-    fun findById(id: TaxonomyId): TaxonomyDto?
-    fun findBySlug(slug: String): List<TaxonomyDto>
+    fun findById(id: UUID): TaxonomyDto?
+    fun findBySlug(slug: String): TaxonomyDto?
     fun findByType(type: TaxonomyType): List<TaxonomyDto>
+    fun existsByParentId(parentId: UUID): Boolean
     fun findTypeWithPostRefs(type: TaxonomyType): List<TaxonomyWithPostRefsDto>
 }

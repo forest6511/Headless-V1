@@ -23,8 +23,8 @@ spring:
 
 jwt:
   secret: "BzFwqL2+1XKvNmL9RzGv3J0RwskKPJ4JmC3TPwmKS0v3JK9L4Km6RX3JL="
-  expiration: 300000 # 5 min for testing
-  refresh-expiration: 600000 # 10 min for testing
+  expiration: 1800000 # 30 minutes
+  refresh-expiration: 3600000 # 60 minutes
 
 
 logging:

@@ -24,6 +24,7 @@ export default function EditCategoryPage({ params }: Props) {
   }
 
   const defaultValues = {
+    id: params.id,
     name: category.name,
     slug: category.slug,
     description: category.description || '',

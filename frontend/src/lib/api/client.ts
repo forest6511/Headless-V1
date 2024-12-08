@@ -61,7 +61,7 @@ export const apiClient = {
       logResponse(url, responseData)
 
       if (response.status === 401 || response.status === 403) {
-        window.location.href = '/admin'
+        //window.location.href = '/admin'
         throw new ApiError(response.status, 'API request unauthorized')
       }
 

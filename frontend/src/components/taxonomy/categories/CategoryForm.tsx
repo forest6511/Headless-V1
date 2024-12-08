@@ -1,37 +1,53 @@
 'use client'
 
-import { CategoryFormData, taxonomySchema } from '@/schemas/taxonomy'
+import {
+  CreateTaxonomyFormData,
+  UpdateTaxonomyFormData,
+  createTaxonomySchema,
+  updateTaxonomySchema,
+} from '@/schemas/taxonomy'
 import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { taxonomyApi } from '@/lib/api/taxonomy'
-import { TaxonomyCategoryRequest } from '@/types/api/taxonomy/request'
+import {
+  CreateTaxonomyRequest,
+  UpdateTaxonomyRequest,
+} from '@/types/api/taxonomy/request'
 
-export type CategoryFormMode = 'new' | 'edit' | 'delete' | 'view'
+export type CategoryFormMode = 'new' | 'edit'
 
 interface CategoryFormProps {
   mode: CategoryFormMode
   redirectPath: string
-  initialData?: CategoryFormData
+  initialData?: CreateTaxonomyFormData | UpdateTaxonomyFormData
 }
 
 export const CategoryForm = ({
+  mode,
   redirectPath,
   initialData,
 }: CategoryFormProps) => {
   const router = useRouter()
   const taxonomies = useTaxonomyStore((state) => state.taxonomies)
+
+  // 編集モードの場合、defaultValuesに呼び出し元のIDを設定
+  const defaultValues =
+    mode === 'edit' && initialData
+      ? { ...initialData }
+      : { type: 'CATEGORY' as const }
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CategoryFormData>({
-    resolver: zodResolver(taxonomySchema),
-    defaultValues: initialData || {
-      type: 'CATEGORY' as const,
-    },
+  } = useForm<CreateTaxonomyFormData | UpdateTaxonomyFormData>({
+    resolver: zodResolver(
+      mode === 'edit' ? updateTaxonomySchema : createTaxonomySchema
+    ),
+    defaultValues,
     mode: 'onChange',
   })
 
@@ -40,13 +56,44 @@ export const CategoryForm = ({
     label: taxonomy.name,
   }))
 
-  const onSubmit = async (data: CategoryFormData) => {
+  const handleCreate = async (data: CreateTaxonomyFormData) => {
+    const createData: CreateTaxonomyRequest = {
+      name: data.name,
+      type: data.type,
+      slug: data.slug,
+      description: data.description,
+      parentId: data.parentId || undefined,
+    }
+    await taxonomyApi.createCategory(createData)
+  }
+
+  const handleUpdate = async (data: UpdateTaxonomyFormData) => {
+    const requestData: UpdateTaxonomyRequest = {
+      id: data.id,
+      name: data.name,
+      type: data.type,
+      slug: data.slug,
+      description: data.description,
+      parentId: data.parentId || undefined,
+    }
+    await taxonomyApi.updateCategory(requestData)
+  }
+
+  const onSubmit = async (
+    data: CreateTaxonomyFormData | UpdateTaxonomyFormData
+  ) => {
     try {
-      const taxonomyCategoryRequest = data as TaxonomyCategoryRequest
-      await taxonomyApi.createCategory(taxonomyCategoryRequest)
+      switch (mode) {
+        case 'new':
+          await handleCreate(data as CreateTaxonomyFormData)
+          break
+        case 'edit':
+          await handleUpdate(data as UpdateTaxonomyFormData)
+          break
+      }
       router.push(redirectPath)
     } catch (error) {
-      console.error('カテゴリーの作成に失敗しました:', error)
+      console.error('カテゴリーの操作に失敗しました:', error)
     }
   }
 
@@ -71,9 +118,11 @@ export const CategoryForm = ({
         items={taxonomyOptions}
         label="親カテゴリー"
         placeholder="カテゴリーを選択してください"
-        onSelectionChange={(keys) => {
+        onSelectionChange={async (keys) => {
           const selectedKey = Array.from(keys)[0]?.toString()
-          register('parentId').onChange({ target: { value: selectedKey } })
+          await register('parentId').onChange({
+            target: { value: selectedKey },
+          })
         }}
         isInvalid={!!errors.parentId}
         errorMessage={errors.parentId?.message}
@@ -91,7 +140,7 @@ export const CategoryForm = ({
       />
 
       <Button type="submit" color="primary">
-        {initialData ? 'カテゴリーを更新' : '新規カテゴリーを追加'}
+        {mode === 'edit' ? 'カテゴリーを更新' : '新規カテゴリーを追加'}
       </Button>
     </form>
   )

@@ -1,7 +1,10 @@
 import { apiClient } from './client'
 import { API_ENDPOINTS } from '@/config/endpoints'
 import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
-import { TaxonomyCategoryRequest } from '@/types/api/taxonomy/request'
+import {
+  CreateTaxonomyRequest,
+  UpdateTaxonomyRequest,
+} from '@/types/api/taxonomy/request'
 
 export const taxonomyApi = {
   getCategories: () => {
@@ -12,9 +15,15 @@ export const taxonomyApi = {
       }
     )
   },
-  createCategory: (payload: TaxonomyCategoryRequest) => {
+  createCategory: (payload: CreateTaxonomyRequest) => {
     return apiClient.request(API_ENDPOINTS.TAXONOMY.CATEGORY, {
       method: 'POST',
+      body: payload,
+    })
+  },
+  updateCategory: (payload: UpdateTaxonomyRequest) => {
+    return apiClient.request(API_ENDPOINTS.TAXONOMY.CATEGORY, {
+      method: 'PUT',
       body: payload,
     })
   },

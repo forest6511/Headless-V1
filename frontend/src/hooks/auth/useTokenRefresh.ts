@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/lib/api/auth'
 
-// TODO　テスト用
 export function useTokenRefresh() {
   const router = useRouter()
   const refreshInProgress = useRef(false)
@@ -29,7 +28,8 @@ export function useTokenRefresh() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(checkAndRefreshToken, 10 * 1000) // 10秒間隔でリフレッシュ
+    // 25分間隔でトークンをリフレッシュ
+    const intervalId = setInterval(checkAndRefreshToken, 25 * 60 * 1000)
     return () => {
       clearInterval(intervalId)
     }

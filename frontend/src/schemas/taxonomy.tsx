@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { TaxonomyType } from '@/types/api/taxonomy/types'
 
-export const taxonomySchema = z.object({
+// 共通のベーススキーマ
+const baseTaxonomySchema = z.object({
   name: z
     .string()
     .min(1, '名前は必須です')
@@ -22,6 +23,19 @@ export const taxonomySchema = z.object({
   type: z.union([z.literal('CATEGORY'), z.literal('TAG')]),
 })
 
-export type CategoryFormData = z.infer<typeof taxonomySchema> & {
+// 新規作成スキーマ
+export const createTaxonomySchema = baseTaxonomySchema
+
+// 更新スキーマ（IDを含む）
+export const updateTaxonomySchema = baseTaxonomySchema.extend({
+  id: z.string().uuid('有効なIDではありません'),
+})
+
+// 型の定義
+export type CreateTaxonomyFormData = z.infer<typeof createTaxonomySchema> & {
+  type: Extract<TaxonomyType, 'CATEGORY'>
+}
+
+export type UpdateTaxonomyFormData = z.infer<typeof updateTaxonomySchema> & {
   type: Extract<TaxonomyType, 'CATEGORY'>
 }

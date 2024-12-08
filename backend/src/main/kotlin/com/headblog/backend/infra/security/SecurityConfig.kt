@@ -54,11 +54,12 @@ class SecurityConfig(
             }
             // 認証系のエラーハンドリング
             .exceptionHandling { ex ->
-                ex.authenticationEntryPoint { _, response, exception ->
+                ex.authenticationEntryPoint {request, response, exception ->
 
                     val logger = LoggerFactory.getLogger("SecurityExceptionHandler")
                     logger.error("========================================================")
                     logger.error("Authentication error occurred", exception)
+                    logger.error("Exception method: ${request.method}")
                     logger.error("Exception type: ${exception.javaClass.name}")
                     logger.error("Exception message: ${exception.message}")
                     logger.error("========================================================")

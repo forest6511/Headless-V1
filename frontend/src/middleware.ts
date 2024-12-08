@@ -10,8 +10,6 @@ export async function middleware(request: NextRequest) {
   // クッキーからアクセストークンを取得（サーバーサイドの責任として、ブラウザから送信されたクッキーを解析）
   const accessToken = request.cookies.get('access_token')?.value
 
-  console.log('access_token', accessToken)
-
   // /admin/dashboard で始まるリクエストパスをチェック
   // サーバーサイドでリクエストのパスを解析し、該当するルートへのアクセスを制御
   if (request.nextUrl.pathname.startsWith('/admin/dashboard')) {

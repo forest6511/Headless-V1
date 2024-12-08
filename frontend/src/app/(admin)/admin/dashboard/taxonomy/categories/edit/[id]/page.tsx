@@ -3,7 +3,7 @@
 import { Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
-import {UpdateCategoryForm} from "@/components/taxonomy/categories/UpdateCategoryForm";
+import { UpdateCategoryForm } from '@/components/taxonomy/categories/UpdateCategoryForm'
 
 interface Props {
   params: {

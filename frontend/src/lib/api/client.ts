@@ -36,6 +36,26 @@ const isNonGetMethod = (method: HttpMethod): boolean => {
 export const apiClient = {
   router: null as any,
 
+  async handleResponse<T>(url: string, response: Response): Promise<T> {
+    const responseData = await response.json()
+    logResponse(url, response)
+
+    if (response.status === 401 || response.status === 403) {
+      window.location.href = '/admin'
+      const error = new ApiError(response.status, 'API request unauthorized')
+      logError(url, error)
+      throw error
+    }
+
+    if (!response.ok) {
+      const error = new ApiError(response.status, 'API request failed')
+      logError(url, error)
+      throw error
+    }
+
+    return responseData
+  },
+
   async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
     const url = isNonGetMethod(config.method)
@@ -57,25 +77,10 @@ export const apiClient = {
         credentials: 'include',
       })
 
-      const responseData = await response.json()
-      logResponse(url, responseData)
-
-      if (response.status === 401 || response.status === 403) {
-        //window.location.href = '/admin'
-        throw new ApiError(response.status, 'API request unauthorized')
-      }
-
-      if (!response.ok) {
-        throw new ApiError(response.status, 'API request failed')
-      }
-
-      return responseData
+      return await this.handleResponse<T>(url, response)
     } catch (error) {
       logError(url, error)
-      if (error instanceof ApiError) {
-        throw error
-      }
-      throw new Error('Network error')
+      throw error
     }
   },
 }

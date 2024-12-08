@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.taxonomy
 
-import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyCommand
-import com.headblog.backend.app.usecase.taxonomy.command.CreateTaxonomyUseCase
+import com.headblog.backend.app.usecase.taxonomy.command.create.CreateTaxonomyCommand
+import com.headblog.backend.app.usecase.taxonomy.command.create.CreateTaxonomyUseCase
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto

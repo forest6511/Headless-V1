@@ -18,4 +18,10 @@ export const taxonomyApi = {
       body: payload,
     })
   },
+  updateCategory: (payload: TaxonomyCategoryRequest) => {
+    return apiClient.request(API_ENDPOINTS.TAXONOMY.CATEGORY, {
+      method: 'PUT',
+      body: payload,
+    })
+  },
 }

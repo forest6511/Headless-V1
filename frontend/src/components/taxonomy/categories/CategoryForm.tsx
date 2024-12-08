@@ -18,6 +18,7 @@ interface CategoryFormProps {
 }
 
 export const CategoryForm = ({
+  mode,
   redirectPath,
   initialData,
 }: CategoryFormProps) => {
@@ -43,7 +44,14 @@ export const CategoryForm = ({
   const onSubmit = async (data: CategoryFormData) => {
     try {
       const taxonomyCategoryRequest = data as TaxonomyCategoryRequest
-      await taxonomyApi.createCategory(taxonomyCategoryRequest)
+      switch (mode) {
+        case 'new':
+          await taxonomyApi.createCategory(taxonomyCategoryRequest)
+          break
+        case 'edit':
+          await taxonomyApi.updateCategory(taxonomyCategoryRequest)
+          break
+      }
       router.push(redirectPath)
     } catch (error) {
       console.error('カテゴリーの作成に失敗しました:', error)

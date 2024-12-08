@@ -1,5 +1,6 @@
 package com.headblog.backend.domain.model.taxonomy
 
+import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime
@@ -53,5 +54,27 @@ class Taxonomy private constructor(
                 createdAt = createdAt
             )
         }
+    }
+
+    fun updateParent(newParent: Taxonomy): Taxonomy {
+        // 自分自身を親にはできない
+        if (this.id == newParent.id) {
+            throw AppConflictException("Cannot set self as parent")
+        }
+
+        // デフォルトカテゴリーの親は変更不可
+        if (this.slug.value == Slug.DEFAULT_SLUG) {
+            throw AppConflictException("Cannot change parent of default category")
+        }
+
+        return Taxonomy(
+            id = this.id,
+            name = this.name,
+            taxonomyType = this.taxonomyType,
+            slug = this.slug,
+            description = this.description,
+            parentId = newParent.id,
+            createdAt = this.createdAt
+        )
     }
 }

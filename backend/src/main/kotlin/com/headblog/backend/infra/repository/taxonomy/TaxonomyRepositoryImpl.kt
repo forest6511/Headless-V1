@@ -91,6 +91,24 @@ class TaxonomyRepositoryImpl(
             .map { (_, records) -> records.toTaxonomyWithPostRefsDto() }
     }
 
+    override fun findAllByParentId(parentId: UUID): List<Taxonomy> {
+        return dsl.select()
+            .from(TAXONOMIES)
+            .where(TAXONOMIES.PARENT_ID.eq(parentId))
+            .fetch()
+            .map { record ->
+                Taxonomy.fromDto(
+                    id = record[TAXONOMIES.ID]!!,
+                    name = record[TAXONOMIES.NAME]!!,
+                    taxonomyType = TaxonomyType.valueOf(record[TAXONOMIES.TAXONOMY_TYPE]!!),
+                    slug = record[TAXONOMIES.SLUG]!!,
+                    description = record[TAXONOMIES.DESCRIPTION],
+                    parentId = record[TAXONOMIES.PARENT_ID],
+                    createdAt = record[TAXONOMIES.CREATED_AT]!!
+                )
+            }
+    }
+
 
     /**
      * TODO HELP

@@ -1,6 +1,10 @@
 import { cookies } from 'next/headers'
 import type { AuthResponse } from '@/types/api/auth/response'
 
+/**
+ * 認証トークンをサーバーサイドでクッキーに設定する
+ * 本番環境ではセキュリティ属性を適切に設定
+ */
 export const handleAuthCookies = (authResponse: AuthResponse) => {
   const cookieStore = cookies()
 

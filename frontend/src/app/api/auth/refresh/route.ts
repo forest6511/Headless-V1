@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { handleAuthCookies } from '@/lib/api/authCookieHandler'
+import { handleAuthCookies } from '@/lib/api/auth/cookieHandler'
 import { API_ENDPOINTS } from '@/config/endpoints'
 import { AuthResponse } from '@/types/api/auth/response'
 

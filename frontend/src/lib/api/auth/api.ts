@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '@/lib/api'
 import { API_ENDPOINTS } from '@/config/endpoints'
 import { AuthResponse } from '@/types/api/auth/response'
 import { SignInPayload, SignupPayload } from '@/types/api/auth/request'

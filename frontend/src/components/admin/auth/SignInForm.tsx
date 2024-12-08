@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { SigninFormData, signInSchema } from '@/schemas/auth'
-import { authApi } from '@/lib/api/auth'
+import { authApi } from '@/lib/api'
 import { useRouter } from 'next/navigation'
 
 export default function SignInForm() {

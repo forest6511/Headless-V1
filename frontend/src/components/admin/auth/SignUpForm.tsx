@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { SignupFormData, signupSchema } from '@/schemas/auth'
 import { useRouter } from 'next/navigation'
-import { authApi } from '@/lib/api/auth'
+import { authApi } from '@/lib/api'
 
 export default function SignUpForm() {
   const router = useRouter()

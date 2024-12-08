@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '@/lib/api'
 import { API_ENDPOINTS } from '@/config/endpoints'
 import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
 import {

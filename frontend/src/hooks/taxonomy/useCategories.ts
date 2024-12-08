@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { taxonomyApi } from '@/lib/api/taxonomy'
+import { taxonomyApi } from '@/lib/api'
 import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
 
 export const useCategories = () => {

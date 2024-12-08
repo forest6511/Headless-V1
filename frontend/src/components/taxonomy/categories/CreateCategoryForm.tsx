@@ -9,7 +9,7 @@ import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { taxonomyApi } from '@/lib/api/taxonomy'
+import { taxonomyApi } from '@/lib/api'
 import { CreateTaxonomyRequest } from '@/types/api/taxonomy/request'
 import {
   CreateCategoryFormProps,

@@ -1,9 +1,9 @@
 'use client'
 
 import { Card, CardBody } from '@nextui-org/react'
-import { CategoryForm } from '@/components/taxonomy/categories/CategoryForm'
 import { useRouter } from 'next/navigation'
 import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
+import {UpdateCategoryForm} from "@/components/taxonomy/categories/UpdateCategoryForm";
 
 interface Props {
   params: {
@@ -36,8 +36,7 @@ export default function EditCategoryPage({ params }: Props) {
     <Card className="max-w-2xl mx-auto">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの編集</h1>
-        <CategoryForm
-          mode={'edit'}
+        <UpdateCategoryForm
           redirectPath="/admin/dashboard/taxonomy/categories"
           initialData={defaultValues}
         />

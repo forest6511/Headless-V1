@@ -37,8 +37,6 @@ class SecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .formLogin { formLogin -> formLogin.disable() }
             .httpBasic { httpBasic -> httpBasic.disable() }
-            // JWTを使用した認証を、通常のユーザー名・パスワード認証
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeHttpRequests { auth ->
                 auth
                     // GETリクエストは認証なし
@@ -52,6 +50,8 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
                     .anyRequest().denyAll()
             }
+            // JWTを使用した認証を、通常のユーザー名・パスワード認証
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             // 認証系のエラーハンドリング
             .exceptionHandling { ex ->
                 ex.authenticationEntryPoint {request, response, exception ->

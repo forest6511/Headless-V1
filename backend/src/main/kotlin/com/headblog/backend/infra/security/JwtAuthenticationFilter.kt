@@ -5,6 +5,7 @@ import com.headblog.backend.infra.service.auth.UserAuthenticationService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -15,12 +16,22 @@ class JwtAuthenticationFilter(
     private val userAuthenticationService: UserAuthenticationService
 ) : OncePerRequestFilter() {
 
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val isGetRequest = request.method == HttpMethod.GET.name()
+        if (isGetRequest) {
+            logger.info("skipping jwt authentication filter for GET request: ${request.requestURI}")
+        }
+        return isGetRequest
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        logger.info("entering jwt authentication filter")
+        logger.debug("entering jwt authentication filter")
+
+        logRequestDetails(request)
 
         extractToken(request)?.let {
             logger.info("token extracted from request: $it")
@@ -28,7 +39,7 @@ class JwtAuthenticationFilter(
 
             try {
                 val userDetails = userAuthenticationService.getUserFromToken(jwtToken)
-                logger.info("user authenticated: ${userDetails.email.value}")
+                logger.debug("user authenticated: ${userDetails.email.value}")
 
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails,
@@ -56,5 +67,22 @@ class JwtAuthenticationFilter(
                     logger.warn("authorization header missing or invalid format in request: ${request.requestURL}")
                 }
             }
+    }
+
+    private fun logRequestDetails(request: HttpServletRequest) {
+        logger.debug("===================================================")
+        logger.debug("request method: ${request.method}")
+        logger.debug("request URI: ${request.requestURI}")
+        logger.debug("request URL: ${request.requestURL}")
+        logger.debug("request headers:")
+        request.headerNames.asIterator().forEachRemaining { headerName ->
+            logger.debug("  $headerName: ${request.getHeader(headerName)}")
+        }
+        logger.debug("request parameters:")
+        request.parameterNames.asIterator().forEachRemaining { paramName ->
+            logger.debug("  $paramName: ${request.getParameter(paramName)}")
+        }
+        logger.debug("request remote address: ${request.remoteAddr}")
+        logger.debug("===================================================")
     }
 }

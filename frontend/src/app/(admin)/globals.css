@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Next UIのテキストエリアサイズの変更
+<Textarea
+    label="本文"
+    name="content"
+    value={formData.content}
+    onChange={handleInputChange}
+    placeholder="記事の本文を入力"
+    disableAutosize  // 自動リサイズを無効化
+    classNames={{
+        inputWrapper: "h-[600px]",  // 入力エリアの高さを固定
+        input: "h-full"             // 入力エリアを親要素いっぱいに
+    }}
+    isInvalid={!!errors.content}
+    errorMessage={errors.content}
+/>
+*/
+#content-textarea-wrapper > div > div {
+  height: 600px !important;
+}
+
+#content-textarea-wrapper > div > div > textarea {
+  height: 100% !important;
+}

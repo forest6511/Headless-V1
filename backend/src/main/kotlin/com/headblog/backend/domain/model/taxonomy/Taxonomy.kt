@@ -23,7 +23,6 @@ class Taxonomy private constructor(
             description: String? = null,
             parentId: UUID? = null,
         ): Taxonomy {
-
             return Taxonomy(
                 id = TaxonomyId(id.generate().value),
                 name = name,
@@ -32,6 +31,26 @@ class Taxonomy private constructor(
                 description = description,
                 parentId = parentId?.let { TaxonomyId(it) },
                 createdAt = LocalDateTime.now()
+            )
+        }
+
+        fun fromDto(
+            id: UUID,
+            name: String,
+            taxonomyType: TaxonomyType,
+            slug: String,
+            description: String? = null,
+            parentId: UUID? = null,
+            createdAt: LocalDateTime,
+        ): Taxonomy {
+            return Taxonomy(
+                id = TaxonomyId(id),
+                name = name,
+                taxonomyType = taxonomyType,
+                slug = Slug.of(slug),
+                description = description,
+                parentId = parentId?.let { TaxonomyId(it) },
+                createdAt = createdAt
             )
         }
     }

@@ -15,3 +15,8 @@ export interface CreateTaxonomyRequest extends BaseTaxonomyRequest {}
 export interface UpdateTaxonomyRequest extends BaseTaxonomyRequest {
   id: string
 }
+
+// 削除リクエスト
+export interface DeleteTaxonomyRequest {
+  id: string
+}

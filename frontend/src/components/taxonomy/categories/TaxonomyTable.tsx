@@ -15,7 +15,7 @@ import React from 'react'
 
 interface TaxonomyTableProps {
   taxonomies: TaxonomyWithPostRefsResponse[]
-  onDelete?: (id: string) => void
+  onDelete: () => void
   isLoading?: boolean
 }
 

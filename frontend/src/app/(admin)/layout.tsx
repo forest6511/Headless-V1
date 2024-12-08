@@ -3,6 +3,7 @@
 import './globals.css'
 import { NextUIProvider } from '@nextui-org/react'
 import React from 'react'
+import { Toaster } from 'react-hot-toast'
 
 export default function AdminRootLayout({
   children,
@@ -12,7 +13,10 @@ export default function AdminRootLayout({
   return (
     <html lang="en">
       <body className={'admin'}>
-        <NextUIProvider>{children}</NextUIProvider>
+        <NextUIProvider>
+          {children}
+          <Toaster />
+        </NextUIProvider>
       </body>
     </html>
   )

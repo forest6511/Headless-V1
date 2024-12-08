@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-class UpdateTaxonomyServiceTest {
+class DeleteTaxonomyServiceTest {
 
     private val taxonomyRepository: TaxonomyRepository = mockk()
     private val updateTaxonomyService = UpdateTaxonomyService(taxonomyRepository)

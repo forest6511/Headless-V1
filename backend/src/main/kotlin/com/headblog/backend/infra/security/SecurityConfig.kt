@@ -54,7 +54,7 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             // 認証系のエラーハンドリング
             .exceptionHandling { ex ->
-                ex.authenticationEntryPoint {request, response, exception ->
+                ex.authenticationEntryPoint { request, response, exception ->
 
                     val logger = LoggerFactory.getLogger("SecurityExceptionHandler")
                     logger.error("========================================================")

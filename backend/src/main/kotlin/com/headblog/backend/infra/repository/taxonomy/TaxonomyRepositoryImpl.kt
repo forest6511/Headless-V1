@@ -39,6 +39,19 @@ class TaxonomyRepositoryImpl(
             .execute()
     }
 
+    override fun delete(taxonomy: Taxonomy): Int {
+        return dsl.delete(TAXONOMIES)
+            .where(TAXONOMIES.ID.eq(taxonomy.id.value))
+            .execute()
+    }
+
+    override fun updateParentId(oldParentId: UUID, newParentId: UUID): Int {
+        return dsl.update(TAXONOMIES)
+            .set(TAXONOMIES.PARENT_ID, newParentId)
+            .where(TAXONOMIES.PARENT_ID.eq(oldParentId))
+            .execute()
+    }
+
     override fun findById(id: UUID): TaxonomyDto? = dsl.select()
         .from(TAXONOMIES)
         .where(TAXONOMIES.ID.eq(id))

@@ -7,6 +7,8 @@ import java.util.*
 interface TaxonomyRepository {
     fun save(taxonomy: Taxonomy): Int
     fun update(taxonomy: Taxonomy): Int
+    fun delete(taxonomy: Taxonomy): Int
+    fun updateParentId(oldParentId: UUID, newParentId: UUID): Int
 
     fun findById(id: UUID): TaxonomyDto?
     fun findBySlug(slug: String): TaxonomyDto?

@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from '@/config/endpoints'
 import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
 import {
   CreateTaxonomyRequest,
+  DeleteTaxonomyRequest,
   UpdateTaxonomyRequest,
 } from '@/types/api/taxonomy/request'
 
@@ -24,6 +25,12 @@ export const taxonomyApi = {
   updateCategory: (payload: UpdateTaxonomyRequest) => {
     return apiClient.request(API_ENDPOINTS.TAXONOMY.CATEGORY, {
       method: 'PUT',
+      body: payload,
+    })
+  },
+  deleteCategory: (payload: DeleteTaxonomyRequest) => {
+    return apiClient.request(API_ENDPOINTS.TAXONOMY.CATEGORY, {
+      method: 'DELETE',
       body: payload,
     })
   },

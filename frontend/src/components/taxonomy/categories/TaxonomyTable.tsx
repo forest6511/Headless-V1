@@ -1,6 +1,5 @@
 import {
   Link,
-  Selection,
   Table,
   TableBody,
   TableCell,
@@ -16,16 +15,12 @@ import React from 'react'
 
 interface TaxonomyTableProps {
   taxonomies: TaxonomyWithPostRefsResponse[]
-  selectedKeys: Selection
-  onSelectionChange: (keys: Selection) => void
-  onEdit?: (id: string) => void
-  onDelete?: (id: string) => void
+  onDelete: () => void
   isLoading?: boolean
 }
 
 export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
   taxonomies,
-  onEdit,
   onDelete,
   isLoading = false,
 }) => {

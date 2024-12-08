@@ -23,16 +23,12 @@ async function handleRequest(request: NextRequest, method: string) {
       Authorization: `Bearer ${accessToken.value}`,
     }
 
-    // DELETE以外はbodyを含める
     const options: RequestInit = {
       method,
       headers,
     }
-
-    if (method !== 'DELETE') {
-      const body = await request.json()
-      options.body = JSON.stringify(body)
-    }
+    const body = await request.json()
+    options.body = JSON.stringify(body)
 
     const response = await fetch(requestUrl, options)
 

@@ -17,8 +17,8 @@ class UpdateTaxonomyService(
     private val logger = LoggerFactory.getLogger(UpdateTaxonomyService::class.java)
 
     override fun execute(command: UpdateTaxonomyCommand): TaxonomyId {
-        val taxonomyDto = taxonomyRepository.findById(command.id)?:
-        throw AppConflictException("Taxonomy with ID ${command.id} not found")
+        val taxonomyDto = taxonomyRepository.findById(command.id)
+            ?: throw AppConflictException("Taxonomy with ID ${command.id} not found")
 
         taxonomyRepository.findBySlug(command.slug)?.let { existingDto ->
             if (existingDto.id != taxonomyDto.id) {

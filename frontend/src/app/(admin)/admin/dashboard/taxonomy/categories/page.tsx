@@ -3,21 +3,13 @@
 import { AddCategoryButton } from '@/components/taxonomy/categories/AddCategoryButton'
 import { TaxonomyTable } from '@/components/taxonomy/categories/TaxonomyTable'
 import { useCategories } from '@/hooks/taxonomy/useCategories'
-import { Selection } from '@nextui-org/react'
-import { useState } from 'react'
 
 export default function CategoryList() {
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(
-    new Set<string>() as Selection
-  )
-  const { taxonomies, isLoading, error } = useCategories()
+  const { taxonomies, isLoading, error, refetch } = useCategories() // refetchを追加
 
-  const handleEdit = (id: string) => {
-    console.log('編集:', id)
-  }
-
-  const handleDelete = (id: string) => {
-    console.log('削除:', id)
+  // 子コンポーネントへデータ再取得関数を渡す
+  const handleDelete = async () => {
+    await refetch()
   }
 
   if (error) {
@@ -31,9 +23,6 @@ export default function CategoryList() {
       </div>
       <TaxonomyTable
         taxonomies={taxonomies}
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
-        onEdit={handleEdit}
         onDelete={handleDelete}
         isLoading={isLoading}
       />

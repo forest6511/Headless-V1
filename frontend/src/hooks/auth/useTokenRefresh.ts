@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { authApi } from '@/lib/api/auth'
+import { authApi } from '@/lib/api'
 
 export function useTokenRefresh() {
   const router = useRouter()

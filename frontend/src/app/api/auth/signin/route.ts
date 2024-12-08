@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { handleAuthCookies } from '@/lib/api/authCookieHandler'
+import { handleAuthCookies } from '@/lib/api/auth/cookieHandler'
 import { SignupPayload } from '@/types/api/auth/request'
 import { AuthResponse } from '@/types/api/auth/response'
 import { API_ENDPOINTS } from '@/config/endpoints'

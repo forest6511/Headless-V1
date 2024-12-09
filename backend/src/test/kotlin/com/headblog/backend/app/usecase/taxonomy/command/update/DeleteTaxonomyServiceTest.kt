@@ -35,7 +35,7 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG,
+            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null
@@ -62,7 +62,7 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG,
+            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null
@@ -109,7 +109,7 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG,
+            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null

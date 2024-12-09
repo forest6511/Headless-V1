@@ -57,66 +57,38 @@ COMMENT ON COLUMN refresh_tokens.created_at IS 'Timestamp when the refresh token
 CREATE TABLE posts
 (
     id                uuid PRIMARY KEY,
-    author_id         uuid REFERENCES users (id),
     title             varchar(255) NOT NULL,
     slug              varchar(255) NOT NULL UNIQUE,
-    content           text,
-    excerpt           text,
-    status            varchar(50)  NOT NULL,
-    post_type         varchar(50)  NOT NULL,
+    content           text NOT NULL,
+    excerpt           varchar(150) NOT NULL ,
+    status            varchar(10)  NOT NULL,
     featured_image_id uuid,
     created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     meta_title        varchar(255), -- SEO: ページタイトル
-    meta_description  text,         -- SEO: ページ説明
+    meta_description  varchar(150), -- SEO: ページ説明
     meta_keywords     text,         -- SEO: メタキーワード
     robots_meta_tag   varchar(50),  -- SEO: robotsメタタグ
-    canonical_url     varchar(255), -- SEO: 正規URL
     og_title          varchar(255), -- SEO: Open Graphタイトル
-    og_description    text,         -- SEO: Open Graph説明
-    og_image          varchar(255)  -- SEO: Open Graph画像
+    og_description    varchar(150)  -- SEO: Open Graph説明
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
 COMMENT ON COLUMN posts.id IS 'Unique identifier for each post';
-COMMENT ON COLUMN posts.author_id IS 'Reference to the author of the post';
 COMMENT ON COLUMN posts.title IS 'Title of the post';
 COMMENT ON COLUMN posts.slug IS 'Unique slug for the post, used in URLs';
 COMMENT ON COLUMN posts.content IS 'Content of the post';
 COMMENT ON COLUMN posts.excerpt IS 'Short excerpt of the post';
 COMMENT ON COLUMN posts.status IS 'Status of the post (e.g., draft, published)';
-COMMENT ON COLUMN posts.post_type IS 'Type of the post (e.g., blog, news)';
 COMMENT ON COLUMN posts.featured_image_id IS 'Reference to the featured image in the media table';
 COMMENT ON COLUMN posts.meta_title IS 'SEO title for the post';
 COMMENT ON COLUMN posts.meta_description IS 'SEO description for the post';
 COMMENT ON COLUMN posts.meta_keywords IS 'SEO keywords for the post';
 COMMENT ON COLUMN posts.robots_meta_tag IS 'SEO robots meta tag for search engines';
-COMMENT ON COLUMN posts.canonical_url IS 'SEO canonical URL to avoid duplicate content';
 COMMENT ON COLUMN posts.og_title IS 'Open Graph title for social sharing';
 COMMENT ON COLUMN posts.og_description IS 'Open Graph description for social sharing';
-COMMENT ON COLUMN posts.og_image IS 'Open Graph image for social sharing';
 COMMENT ON COLUMN posts.created_at IS 'Timestamp when the post was created';
 COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated';
-
--- Revisions table
-CREATE TABLE revisions
-(
-    id              uuid PRIMARY KEY,
-    post_id         uuid REFERENCES posts (id),
-    content         text      NOT NULL,
-    revision_number integer   NOT NULL,
-    created_by      uuid REFERENCES users (id),
-    created_at      timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_revision UNIQUE (post_id, revision_number)
-);
-
-COMMENT ON TABLE revisions IS 'Table for storing revisions of blog posts';
-COMMENT ON COLUMN revisions.id IS 'Unique identifier for each revision';
-COMMENT ON COLUMN revisions.post_id IS 'Reference to the post being revised';
-COMMENT ON COLUMN revisions.content IS 'Content of the revision';
-COMMENT ON COLUMN revisions.revision_number IS 'Revision number for tracking changes';
-COMMENT ON COLUMN revisions.created_by IS 'Reference to the user who created the revision';
-COMMENT ON COLUMN revisions.created_at IS 'Timestamp when the revision was created';
 
 -- Taxonomies table
 CREATE TABLE taxonomies
@@ -125,13 +97,15 @@ CREATE TABLE taxonomies
     name          varchar(255) NOT NULL,
     taxonomy_type varchar(50)  NOT NULL,
     slug          varchar(255) NOT NULL UNIQUE,
-    description   text,
+    description   varchar(100),
     parent_id     uuid REFERENCES taxonomies (id),
-    created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_parent_id UNIQUE (parent_id)
+    created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table comment
 COMMENT ON TABLE taxonomies IS 'Table for storing taxonomies like categories and tags';
+
+-- Column comments
 COMMENT ON COLUMN taxonomies.id IS 'Unique identifier for each taxonomy';
 COMMENT ON COLUMN taxonomies.name IS 'Name of the taxonomy (e.g., category, tag)';
 COMMENT ON COLUMN taxonomies.taxonomy_type IS 'Type of the taxonomy (e.g., category, tag)';
@@ -139,6 +113,7 @@ COMMENT ON COLUMN taxonomies.slug IS 'Unique slug for the taxonomy, used in URLs
 COMMENT ON COLUMN taxonomies.description IS 'Description of the taxonomy';
 COMMENT ON COLUMN taxonomies.parent_id IS 'Reference to the parent taxonomy, if applicable';
 COMMENT ON COLUMN taxonomies.created_at IS 'Timestamp when the taxonomy was created';
+
 
 -- Post-Taxonomies Relationship table
 CREATE TABLE post_taxonomies
@@ -177,7 +152,27 @@ COMMENT ON COLUMN media.created_at IS 'Timestamp when the media was uploaded';
 
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
-CREATE INDEX idx_posts_status_type ON posts (status, post_type);
-CREATE INDEX idx_revisions_post ON revisions (post_id, revision_number);
+CREATE INDEX idx_posts_status ON posts (status);
 CREATE INDEX idx_taxonomies_slug ON taxonomies (slug);
 CREATE INDEX idx_post_taxonomies_taxonomy ON post_taxonomies (taxonomy_id);
+
+-- Insert the specified data into the taxonomies table
+INSERT INTO taxonomies (
+    id,
+    taxonomy_type,
+    name,
+    slug,
+    description,
+    parent_id,
+    created_at
+)
+VALUES (
+    '01939280-7ccb-72a8-9257-7ba44de715b6',
+    'CATEGORY',
+    '未設定',
+    'nosetting',
+    '未設定カテゴリ',
+    NULL,
+    CURRENT_TIMESTAMP
+);
+

@@ -41,7 +41,11 @@ export const apiClient = {
     logResponse(url, response)
 
     if (response.status === 401 || response.status === 403) {
-      window.location.href = '/admin'
+      if (process.env.NODE_ENV === 'production') {
+        window.location.href = '/admin'
+      } else {
+        console.error('認証エラーが発生しました')
+      }
       const error = new ApiError(response.status, 'API request unauthorized')
       logError(url, error)
       throw error

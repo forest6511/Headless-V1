@@ -1,6 +1,5 @@
 package com.headblog.backend.infra.api.taxonomy.request
 
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
@@ -16,7 +15,7 @@ data class UpdateTaxonomyRequest(
     val name: String,
 
     @field:NotNull(message = "Type is required")
-    val type: TaxonomyType,
+    val type: String,
 
     @field:NotBlank(message = "Slug is required")
     @field:Size(max = 255, message = "Slug must be less than 255 characters")

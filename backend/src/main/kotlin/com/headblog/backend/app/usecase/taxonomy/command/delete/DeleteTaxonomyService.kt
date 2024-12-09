@@ -5,7 +5,6 @@ import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -33,7 +32,7 @@ class DeleteTaxonomyService(
         val deleteTaxonomy: Taxonomy = Taxonomy.fromDto(
             id = taxonomyDto.id,
             name = taxonomyDto.name,
-            taxonomyType = TaxonomyType.of(taxonomyDto.taxonomyType),
+            taxonomyType = taxonomyDto.taxonomyType,
             slug = taxonomyDto.slug,
             description = taxonomyDto.description,
             parentId = taxonomyDto.parentId,
@@ -57,7 +56,7 @@ class DeleteTaxonomyService(
         val defaultTaxonomy = Taxonomy.fromDto(
             id = defaultCategory.id,
             name = defaultCategory.name,
-            taxonomyType = TaxonomyType.of(defaultCategory.taxonomyType),
+            taxonomyType = defaultCategory.taxonomyType,
             slug = defaultCategory.slug,
             description = defaultCategory.description,
             parentId = defaultCategory.parentId,

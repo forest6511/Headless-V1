@@ -59,10 +59,9 @@ CREATE TABLE posts
     id                uuid PRIMARY KEY,
     title             varchar(255) NOT NULL,
     slug              varchar(255) NOT NULL UNIQUE,
-    content           text,
-    excerpt           text,
-    status            varchar(50)  NOT NULL,
-    post_type         varchar(50)  NOT NULL,
+    content           text NOT NULL,
+    excerpt           varchar(100) NOT NULL ,
+    status            varchar(10)  NOT NULL,
     featured_image_id uuid,
     created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -70,10 +69,8 @@ CREATE TABLE posts
     meta_description  text,         -- SEO: ページ説明
     meta_keywords     text,         -- SEO: メタキーワード
     robots_meta_tag   varchar(50),  -- SEO: robotsメタタグ
-    canonical_url     varchar(255), -- SEO: 正規URL
     og_title          varchar(255), -- SEO: Open Graphタイトル
-    og_description    text,         -- SEO: Open Graph説明
-    og_image          varchar(255)  -- SEO: Open Graph画像
+    og_description    text          -- SEO: Open Graph説明
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
@@ -83,16 +80,13 @@ COMMENT ON COLUMN posts.slug IS 'Unique slug for the post, used in URLs';
 COMMENT ON COLUMN posts.content IS 'Content of the post';
 COMMENT ON COLUMN posts.excerpt IS 'Short excerpt of the post';
 COMMENT ON COLUMN posts.status IS 'Status of the post (e.g., draft, published)';
-COMMENT ON COLUMN posts.post_type IS 'Type of the post (e.g., blog, news)';
 COMMENT ON COLUMN posts.featured_image_id IS 'Reference to the featured image in the media table';
 COMMENT ON COLUMN posts.meta_title IS 'SEO title for the post';
 COMMENT ON COLUMN posts.meta_description IS 'SEO description for the post';
 COMMENT ON COLUMN posts.meta_keywords IS 'SEO keywords for the post';
 COMMENT ON COLUMN posts.robots_meta_tag IS 'SEO robots meta tag for search engines';
-COMMENT ON COLUMN posts.canonical_url IS 'SEO canonical URL to avoid duplicate content';
 COMMENT ON COLUMN posts.og_title IS 'Open Graph title for social sharing';
 COMMENT ON COLUMN posts.og_description IS 'Open Graph description for social sharing';
-COMMENT ON COLUMN posts.og_image IS 'Open Graph image for social sharing';
 COMMENT ON COLUMN posts.created_at IS 'Timestamp when the post was created';
 COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated';
 
@@ -178,7 +172,7 @@ COMMENT ON COLUMN media.created_at IS 'Timestamp when the media was uploaded';
 
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
-CREATE INDEX idx_posts_status_type ON posts (status, post_type);
+CREATE INDEX idx_posts_status ON posts (status);
 CREATE INDEX idx_revisions_post ON revisions (post_id, revision_number);
 CREATE INDEX idx_taxonomies_slug ON taxonomies (slug);
 CREATE INDEX idx_post_taxonomies_taxonomy ON post_taxonomies (taxonomy_id);

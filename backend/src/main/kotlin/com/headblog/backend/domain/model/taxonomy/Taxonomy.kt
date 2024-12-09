@@ -19,7 +19,7 @@ class Taxonomy private constructor(
         fun create(
             id: IdGenerator<EntityId>,
             name: String,
-            taxonomyType: TaxonomyType,
+            taxonomyType: String,
             slug: String,
             description: String? = null,
             parentId: UUID? = null,
@@ -27,7 +27,7 @@ class Taxonomy private constructor(
             return Taxonomy(
                 id = TaxonomyId(id.generate().value),
                 name = name,
-                taxonomyType = taxonomyType,
+                taxonomyType = TaxonomyType.of(taxonomyType),
                 slug = Slug.of(slug),
                 description = description,
                 parentId = parentId?.let { TaxonomyId(it) },
@@ -38,7 +38,7 @@ class Taxonomy private constructor(
         fun fromDto(
             id: UUID,
             name: String,
-            taxonomyType: TaxonomyType,
+            taxonomyType: String,
             slug: String,
             description: String? = null,
             parentId: UUID? = null,
@@ -47,7 +47,7 @@ class Taxonomy private constructor(
             return Taxonomy(
                 id = TaxonomyId(id),
                 name = name,
-                taxonomyType = taxonomyType,
+                taxonomyType = TaxonomyType.of(taxonomyType),
                 slug = Slug.of(slug),
                 description = description,
                 parentId = parentId?.let { TaxonomyId(it) },

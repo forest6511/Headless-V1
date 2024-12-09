@@ -8,4 +8,7 @@ export const API_ENDPOINTS = {
     CATEGORIES: '/api/taxonomies/categories',
     CATEGORY: '/api/taxonomies/category',
   },
+  POST: {
+    POST: '/api/posts/post',
+  },
 } as const

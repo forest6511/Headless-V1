@@ -1,9 +1,7 @@
 package com.headblog.backend.infra.repository.taxonomy
 
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
-import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.shared.id.domain.EntityId
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
@@ -95,7 +92,7 @@ class TaxonomyRepositoryImplTest {
     }
 
     private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Taxonomy =
-        Taxonomy.create(idGenerator, name, TaxonomyType.CATEGORY, slug, "Test description for $name", parentId)
+        Taxonomy.create(idGenerator, name, TaxonomyType.CATEGORY.name, slug, "Test description for $name", parentId)
 
     private fun assertTaxonomyEquals(expected: Taxonomy, actual: TaxonomyDto?) {
         assertNotNull(actual)

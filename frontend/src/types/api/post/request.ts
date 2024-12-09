@@ -1,29 +1,26 @@
-// Post インターフェース
 interface Post {
-  id: string // UUID
+  id: string
   title: string
   slug: string
-  content: string // NOT NULL as specified
-  excerpt: string // NOT NULL as specified
-  status: string
-  postType: string
-  featuredImageId?: string // UUID, optional
+  content: string
+  excerpt: string
+  postStatus: string
+  featuredImageId?: string
   createdAt: Date
   updatedAt: Date
-  // SEO関連フィールド（すべてオプショナル）
   metaTitle?: string
   metaDescription?: string
   metaKeywords?: string
   robotsMetaTag?: string
-  canonicalUrl?: string
   ogTitle?: string
   ogDescription?: string
-  ogImage?: string
+  categoryId: string
 }
 
 // 投稿作成時用のインターフェース
-interface CreatePost extends Omit<Post, 'id' | 'createdAt' | 'updatedAt'> {}
+interface CreatePostRequest
+  extends Omit<Post, 'id' | 'createdAt' | 'updatedAt'> {}
 
 // 投稿更新時用のインターフェース
-interface UpdatePost
+interface UpdatePostRequest
   extends Partial<Omit<Post, 'id' | 'createdAt' | 'updatedAt'>> {}

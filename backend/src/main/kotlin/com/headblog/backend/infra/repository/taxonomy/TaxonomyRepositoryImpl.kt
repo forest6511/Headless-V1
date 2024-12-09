@@ -100,7 +100,7 @@ class TaxonomyRepositoryImpl(
                 Taxonomy.fromDto(
                     id = record[TAXONOMIES.ID]!!,
                     name = record[TAXONOMIES.NAME]!!,
-                    taxonomyType = TaxonomyType.valueOf(record[TAXONOMIES.TAXONOMY_TYPE]!!),
+                    taxonomyType = record[TAXONOMIES.TAXONOMY_TYPE]!!,
                     slug = record[TAXONOMIES.SLUG]!!,
                     description = record[TAXONOMIES.DESCRIPTION],
                     parentId = record[TAXONOMIES.PARENT_ID],

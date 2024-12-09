@@ -91,6 +91,7 @@ class TaxonomyRepositoryImpl(
             .map { (_, records) -> records.toTaxonomyWithPostRefsDto() }
     }
 
+    // TODO DTOを返却する
     override fun findAllByParentId(parentId: UUID): List<Taxonomy> {
         return dsl.select()
             .from(TAXONOMIES)

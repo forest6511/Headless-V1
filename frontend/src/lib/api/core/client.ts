@@ -20,12 +20,19 @@ const logError = (url: string, error: any) => {
   console.error(`Error - ${url}`, error.message || error)
 }
 
-class ApiError extends Error {
+interface ErrorResponse {
+  error: string
+  details: string
+}
+
+export class ApiError extends Error {
   constructor(
     public status: number,
-    message: string
+    message: string,
+    public details?: string
   ) {
     super(message)
+    this.name = 'ApiError'
   }
 }
 
@@ -52,9 +59,19 @@ export const apiClient = {
     }
 
     if (!response.ok) {
-      const error = new ApiError(response.status, 'API request failed')
-      logError(url, error)
-      throw error
+      const errorResponse =
+        response.status === 409
+          ? (responseData as ErrorResponse)
+          : { error: 'An unknown error occurred', details: '' }
+
+      const apiError = new ApiError(
+        response.status,
+        errorResponse.error,
+        errorResponse.details
+      )
+
+      logError(url, apiError)
+      throw apiError
     }
 
     return responseData

@@ -20,8 +20,11 @@ import { postApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ApiError } from '@/lib/api/core/client'
+import { useRouter } from 'next/navigation'
 
 export default function NewPostPage() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -84,9 +87,13 @@ export default function NewPostPage() {
   const onSubmit = async (data: CreatePostFormData) => {
     try {
       await postApi.createPost(data as Post)
+      toast.success(`投稿の登録に成功しました`)
+      router.push('/admin/dashboard/posts')
     } catch (error) {
       console.error('投稿の登録に失敗しました', error)
-      toast.error('投稿の登録に失敗しました')
+      if (error instanceof ApiError) {
+        toast.error(`投稿の登録に失敗しました。 ${error?.details}`)
+      }
     }
   }
 

@@ -60,17 +60,17 @@ CREATE TABLE posts
     title             varchar(255) NOT NULL,
     slug              varchar(255) NOT NULL UNIQUE,
     content           text NOT NULL,
-    excerpt           varchar(100) NOT NULL ,
+    excerpt           varchar(150) NOT NULL ,
     status            varchar(10)  NOT NULL,
     featured_image_id uuid,
     created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     meta_title        varchar(255), -- SEO: ページタイトル
-    meta_description  text,         -- SEO: ページ説明
+    meta_description  varchar(150), -- SEO: ページ説明
     meta_keywords     text,         -- SEO: メタキーワード
     robots_meta_tag   varchar(50),  -- SEO: robotsメタタグ
     og_title          varchar(255), -- SEO: Open Graphタイトル
-    og_description    text          -- SEO: Open Graph説明
+    og_description    varchar(150)  -- SEO: Open Graph説明
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
@@ -89,26 +89,6 @@ COMMENT ON COLUMN posts.og_title IS 'Open Graph title for social sharing';
 COMMENT ON COLUMN posts.og_description IS 'Open Graph description for social sharing';
 COMMENT ON COLUMN posts.created_at IS 'Timestamp when the post was created';
 COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated';
-
--- Revisions table
-CREATE TABLE revisions
-(
-    id              uuid PRIMARY KEY,
-    post_id         uuid REFERENCES posts (id),
-    content         text      NOT NULL,
-    revision_number integer   NOT NULL,
-    created_by      uuid REFERENCES users (id),
-    created_at      timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_revision UNIQUE (post_id, revision_number)
-);
-
-COMMENT ON TABLE revisions IS 'Table for storing revisions of blog posts';
-COMMENT ON COLUMN revisions.id IS 'Unique identifier for each revision';
-COMMENT ON COLUMN revisions.post_id IS 'Reference to the post being revised';
-COMMENT ON COLUMN revisions.content IS 'Content of the revision';
-COMMENT ON COLUMN revisions.revision_number IS 'Revision number for tracking changes';
-COMMENT ON COLUMN revisions.created_by IS 'Reference to the user who created the revision';
-COMMENT ON COLUMN revisions.created_at IS 'Timestamp when the revision was created';
 
 -- Taxonomies table
 CREATE TABLE taxonomies
@@ -173,7 +153,6 @@ COMMENT ON COLUMN media.created_at IS 'Timestamp when the media was uploaded';
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
 CREATE INDEX idx_posts_status ON posts (status);
-CREATE INDEX idx_revisions_post ON revisions (post_id, revision_number);
 CREATE INDEX idx_taxonomies_slug ON taxonomies (slug);
 CREATE INDEX idx_post_taxonomies_taxonomy ON post_taxonomies (taxonomy_id);
 

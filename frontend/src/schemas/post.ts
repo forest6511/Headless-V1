@@ -9,12 +9,16 @@ export const PostSchema = z.object({
   slug: z
     .string()
     .min(1, 'スラッグは必須です')
-    .max(255, 'スラッグは255文字以内で入力してください'),
+    .max(255, 'スラッグは255文字以内で入力してください')
+    .regex(
+      /^[a-zA-Z0-9-_]+$/,
+      'スラッグには英数字、ハイフン（-）、またはアンダースコア（_）のみ使用できます'
+    ),
   content: z.string().min(1, '本文は必須です'),
   excerpt: z
     .string()
     .min(1, '抜粋は必須です')
-    .max(100, '抜粋は100文字以内で入力してください'),
+    .max(150, '抜粋は150文字以内で入力してください'),
   postStatus: z
     .string()
     .min(1, 'ステータスは必須です')
@@ -24,7 +28,7 @@ export const PostSchema = z.object({
     .string()
     .max(255, 'メタタイトルは255文字以内で入力してください')
     .optional(),
-  metaDescription: z.string().nullable().optional(),
+  metaDescription: z.string().max(150, 'メタディスクリプションは150文字以内で入力してください').nullable().optional(),
   metaKeywords: z.string().nullable().optional(),
   robotsMetaTag: z
     .string()
@@ -36,7 +40,7 @@ export const PostSchema = z.object({
     .max(255, 'OGタイトルは255文字以内で入力してください')
     .nullable()
     .optional(),
-  ogDescription: z.string().nullable().optional(),
+  ogDescription: z.string().max(150, 'OGディスクリプションは150文字以内で入力してください').nullable().optional(),
   categoryId: z
     .string()
     .min(1, 'カテゴリは必須です')

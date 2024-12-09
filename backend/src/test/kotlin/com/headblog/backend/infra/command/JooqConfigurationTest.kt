@@ -28,7 +28,6 @@ class JooqConfigurationTest {
             "social_connections",
             "refresh_tokens",
             "posts",
-            "revisions",
             "taxonomies",
             "post_taxonomies",
             "media"

@@ -1,4 +1,4 @@
-import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
+import { TaxonomyListResponse } from '@/types/api/taxonomy/response'
 import {
   CreateTaxonomyFormData,
   UpdateTaxonomyFormData,
@@ -19,16 +19,14 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
   initialData: UpdateTaxonomyFormData
 }
 
-export const formatTaxonomyOptions = (
-  taxonomies: TaxonomyWithPostRefsResponse[]
-) =>
+export const formatTaxonomyOptions = (taxonomies: TaxonomyListResponse[]) =>
   taxonomies.map((taxonomy) => ({
     key: taxonomy.id,
     label: taxonomy.name,
   }))
 
 export const formatTaxonomyOptionsWithoutNoSetting = (
-  taxonomies: TaxonomyWithPostRefsResponse[]
+  taxonomies: TaxonomyListResponse[]
 ) =>
   taxonomies
     .filter((taxonomy) => taxonomy.slug !== NOSETTING_SLUG)

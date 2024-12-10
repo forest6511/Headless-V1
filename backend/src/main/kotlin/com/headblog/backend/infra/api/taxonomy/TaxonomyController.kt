@@ -8,7 +8,7 @@ import com.headblog.backend.app.usecase.taxonomy.command.update.UpdateTaxonomyCo
 import com.headblog.backend.app.usecase.taxonomy.command.update.UpdateTaxonomyUseCase
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
-import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyListDto
 import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
 import com.headblog.backend.infra.api.taxonomy.request.DeleteTaxonomyRequest
@@ -60,8 +60,8 @@ class TaxonomyController(
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/categories")
-    fun getByCategories(): ResponseEntity<List<TaxonomyWithPostRefsDto>> =
-        ResponseEntity.ok(getTaxonomyQueryService.findTypeWithPostRefs(TaxonomyType.CATEGORY))
+    fun getByCategories(): ResponseEntity<List<TaxonomyListDto>> =
+        ResponseEntity.ok(getTaxonomyQueryService.findTaxonomyList(TaxonomyType.CATEGORY))
 
     // toCommand メソッド
     private fun CreateTaxonomyRequest.toCommand(): CreateTaxonomyCommand {

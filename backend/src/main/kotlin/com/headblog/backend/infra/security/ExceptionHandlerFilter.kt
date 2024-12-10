@@ -41,6 +41,7 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
             is AppConflictException, is DomainConflictException -> {
                 HttpStatus.CONFLICT to (cause.message ?: "Conflict error")
             }
+
             else -> {
                 logError(cause)
                 HttpStatus.INTERNAL_SERVER_ERROR to "Internal Server Error"

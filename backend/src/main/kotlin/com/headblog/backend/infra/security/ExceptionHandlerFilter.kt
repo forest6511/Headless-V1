@@ -2,6 +2,7 @@ package com.headblog.backend.infra.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exception.DomainConflictException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
@@ -24,34 +25,42 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
         try {
             filterChain.doFilter(request, response)
         } catch (ex: Exception) {
-            val cause = when (ex) {
-                // ServletException の場合、元の原因を取得（オリジナルの例外を取得)
-                is ServletException -> {
-                    ex.cause ?: ex
-                }
-
-                else -> {
-                    ex
-                }
-            }
-
-            val (status, message) = when (cause) {
-                is AppConflictException -> {
-                    HttpStatus.CONFLICT to cause.message
-                }
-
-                else -> {
-                    logger.error("Original exception message: ${cause.message}")
-                    logger.error("HTTP Status: ${HttpStatus.INTERNAL_SERVER_ERROR}")
-                    HttpStatus.INTERNAL_SERVER_ERROR to "Internal Server Error"
-                }
-            }
-
-            response.status = status.value()
-            response.contentType = "application/json"
-            response.writer.write(
-                ObjectMapper().writeValueAsString(mapOf("error" to (message ?: "Unknown error")))
-            )
+            handleException(ex, response)
         }
+    }
+
+    private fun handleException(ex: Exception, response: HttpServletResponse) {
+        // ServletException の場合、元の原因を取得（オリジナルの例外を取得)
+        val cause = if (ex is ServletException && ex.cause != null) {
+            ex.cause
+        } else {
+            ex
+        }
+
+        val (status, message) = when (cause) {
+            is AppConflictException, is DomainConflictException -> {
+                HttpStatus.CONFLICT to (cause.message ?: "Conflict error")
+            }
+            else -> {
+                logError(cause)
+                HttpStatus.INTERNAL_SERVER_ERROR to "Internal Server Error"
+            }
+        }
+
+        writeErrorResponse(response, status, message)
+    }
+
+    private fun logError(cause: Throwable?) {
+        logger.error("Exception occurred: ${cause?.message}", cause)
+    }
+
+    private fun writeErrorResponse(response: HttpServletResponse, status: HttpStatus, message: String?) {
+        response.status = status.value()
+        response.contentType = "application/json"
+        response.writer.write(
+            ObjectMapper().writeValueAsString(
+                mapOf("error" to (message ?: "Unknown error"))
+            )
+        )
     }
 }

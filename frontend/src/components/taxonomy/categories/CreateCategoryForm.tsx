@@ -13,8 +13,10 @@ import { taxonomyApi } from '@/lib/api'
 import { CreateTaxonomyRequest } from '@/types/api/taxonomy/request'
 import {
   CreateCategoryFormProps,
-  formatTaxonomyOptions,
+  formatTaxonomyOptionsWithoutNoSetting,
 } from '@/types/api/taxonomy/types'
+import { ApiError } from '@/lib/api/core/client'
+import toast from 'react-hot-toast'
 
 export const CreateCategoryForm = ({
   redirectPath,
@@ -36,7 +38,7 @@ export const CreateCategoryForm = ({
     mode: 'onChange',
   })
 
-  const taxonomyOptions = formatTaxonomyOptions(taxonomies)
+  const taxonomyOptions = formatTaxonomyOptionsWithoutNoSetting(taxonomies)
 
   const onSubmit = async (data: CreateTaxonomyFormData) => {
     try {
@@ -50,6 +52,9 @@ export const CreateCategoryForm = ({
       await taxonomyApi.createCategory(createData)
       router.push(redirectPath)
     } catch (error) {
+      if (error instanceof ApiError) {
+        toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
+      }
       console.error('カテゴリーの作成に失敗しました:', error)
     }
   }

@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 
 // 共通処理を抽出した関数
+// GET 以外のリクエストは以下のフローで処理:
+// -> Next.js (Client) -> Next.js (Server) トークン設定 -> Spring Boot
+// ※クッキーをクライアント側で直接扱えないよう設定しているため、このフローを採用
 async function handleRequest(request: NextRequest, method: string) {
   try {
     const cookieStore = cookies()

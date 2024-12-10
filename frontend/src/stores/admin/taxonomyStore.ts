@@ -1,9 +1,9 @@
 import { create } from 'zustand'
-import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
+import { TaxonomyListResponse } from '@/types/api/taxonomy/response'
 
 type TaxonomyStore = {
-  taxonomies: TaxonomyWithPostRefsResponse[]
-  setTaxonomies: (taxonomies: TaxonomyWithPostRefsResponse[]) => void
+  taxonomies: TaxonomyListResponse[]
+  setTaxonomies: (taxonomies: TaxonomyListResponse[]) => void
 }
 
 export const useTaxonomyStore = create<TaxonomyStore>((set) => ({

@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.taxonomy
 
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exception.DomainConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime
@@ -16,15 +16,34 @@ class Taxonomy private constructor(
     val createdAt: LocalDateTime
 ) {
     companion object {
+        private fun validateParentId(id: TaxonomyId, parentId: TaxonomyId?) {
+            if (id.value == parentId?.value) {
+                throw DomainConflictException("The parent category and the child category are the same")
+            }
+        }
+
+        private fun createInstance(
+            id: TaxonomyId,
+            name: String,
+            taxonomyType: TaxonomyType,
+            slug: Slug,
+            description: String?,
+            parentId: TaxonomyId?,
+            createdAt: LocalDateTime
+        ): Taxonomy {
+            validateParentId(id, parentId)
+            return Taxonomy(id, name, taxonomyType, slug, description, parentId, createdAt)
+        }
+
         fun create(
             id: IdGenerator<EntityId>,
             name: String,
             taxonomyType: String,
             slug: String,
             description: String? = null,
-            parentId: UUID? = null,
+            parentId: UUID? = null
         ): Taxonomy {
-            return Taxonomy(
+            return createInstance(
                 id = TaxonomyId(id.generate().value),
                 name = name,
                 taxonomyType = TaxonomyType.of(taxonomyType),
@@ -42,9 +61,9 @@ class Taxonomy private constructor(
             slug: String,
             description: String? = null,
             parentId: UUID? = null,
-            createdAt: LocalDateTime,
+            createdAt: LocalDateTime
         ): Taxonomy {
-            return Taxonomy(
+            return createInstance(
                 id = TaxonomyId(id),
                 name = name,
                 taxonomyType = TaxonomyType.of(taxonomyType),
@@ -57,17 +76,14 @@ class Taxonomy private constructor(
     }
 
     fun updateParent(newParent: Taxonomy): Taxonomy {
-        // 自分自身を親にはできない
         if (this.id == newParent.id) {
-            throw AppConflictException("Cannot set self as parent")
+            throw DomainConflictException("Cannot set self as parent")
         }
-
-        // デフォルトカテゴリーの親は変更不可
         if (this.slug.value == Slug.DEFAULT_SLUG) {
-            throw AppConflictException("Cannot change parent of default category")
+            throw DomainConflictException("Cannot change parent of default category")
         }
 
-        return Taxonomy(
+        return createInstance(
             id = this.id,
             name = this.name,
             taxonomyType = this.taxonomyType,

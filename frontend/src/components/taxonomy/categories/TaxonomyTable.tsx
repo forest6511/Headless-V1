@@ -8,13 +8,13 @@ import {
   TableRow,
   Spinner,
 } from '@nextui-org/react'
-import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
+import { TaxonomyListResponse } from '@/types/api/taxonomy/response'
 import { TaxonomyActions } from './TaxonomyActions'
 import { TAXONOMY_COLUMNS } from './constants'
 import React from 'react'
 
 interface TaxonomyTableProps {
-  taxonomies: TaxonomyWithPostRefsResponse[]
+  taxonomies: TaxonomyListResponse[]
   onDelete: () => void
   isLoading?: boolean
 }
@@ -25,14 +25,21 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
   isLoading = false,
 }) => {
   const renderCell = (
-    taxonomy: TaxonomyWithPostRefsResponse,
+    taxonomy: TaxonomyListResponse,
     columnKey: React.Key
-  ) => {
-    const cellValue = taxonomy[columnKey as keyof TaxonomyWithPostRefsResponse]
-
+  ): React.ReactNode => {
     switch (columnKey) {
       case 'name':
-        return <Link href={`/taxonomy/${taxonomy.slug}`}>{cellValue}</Link>
+        return taxonomy.name ? (
+          <Link href={`/taxonomy/${taxonomy.slug}`}>{taxonomy.name}</Link>
+        ) : null
+      case 'breadcrumb':
+        if (Array.isArray(taxonomy.breadcrumbs)) {
+          return taxonomy.breadcrumbs
+            .map((breadcrumb) => breadcrumb.name)
+            .join(' / ')
+        }
+        return null
       case 'count':
         return (
           <Link href={`/taxonomy/${taxonomy.slug}/items`}>
@@ -42,7 +49,10 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
       case 'actions':
         return <TaxonomyActions taxonomyId={taxonomy.id} onDelete={onDelete} />
       default:
-        return cellValue
+        const cellValue = taxonomy[columnKey as keyof TaxonomyListResponse]
+        return cellValue !== null && typeof cellValue !== 'object'
+          ? cellValue.toString()
+          : null
     }
   }
 

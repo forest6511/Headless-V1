@@ -1,6 +1,8 @@
 package com.headblog.backend.app.usecase.taxonomy.command.delete
 
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
+import com.headblog.backend.domain.model.post.PostId
+import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyId
@@ -14,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class DeleteTaxonomyService(
-    private val taxonomyRepository: TaxonomyRepository
+    private val taxonomyRepository: TaxonomyRepository,
+    private val postTaxonomyRepository: PostTaxonomyRepository,
 ) : DeleteTaxonomyUseCase {
 
     private val logger = LoggerFactory.getLogger(DeleteTaxonomyService::class.java)
@@ -23,7 +26,10 @@ class DeleteTaxonomyService(
         val taxonomyDto = taxonomyRepository.findById(command.id)
             ?: throw AppConflictException("Taxonomy with ID ${command.id} not found")
 
-        // DEFAULT_SLUGのカテゴリーは削除できない
+        // デフォルトカテゴリーの取得（削除禁止の確認）
+        val defaultCategory = taxonomyRepository.findBySlug(Slug.DEFAULT_SLUG)
+            ?: throw AppConflictException("Default category not found")
+
         if (taxonomyDto.slug == Slug.DEFAULT_SLUG) {
             throw AppConflictException("Cannot delete the default category")
         }
@@ -39,13 +45,17 @@ class DeleteTaxonomyService(
             createdAt = taxonomyDto.createdAt
         )
 
-        // デフォルトカテゴリーを取得（再帰処理で使用するため、先に取得）
-        val defaultCategory = taxonomyRepository.findBySlug(Slug.DEFAULT_SLUG)
-            ?: throw AppConflictException("Default category not found")
-
         // 再帰的に子カテゴリーを処理
         updateChildrenParentRecursively(deleteTaxonomy.id.value, defaultCategory)
 
+        // 投稿との紐付けを解除しデフォルトカテゴリに再割り当て
+        val associatedPostIds: List<PostId> = postTaxonomyRepository.findPostsByTaxonomyId(deleteTaxonomy.id)
+        associatedPostIds.forEach { postId ->
+            postTaxonomyRepository.deleteRelation(postId, deleteTaxonomy.id)
+            postTaxonomyRepository.addRelation(postId, TaxonomyId(defaultCategory.id))
+        }
+
+        // タクソノミーの削除
         taxonomyRepository.delete(deleteTaxonomy)
 
         return deleteTaxonomy.id

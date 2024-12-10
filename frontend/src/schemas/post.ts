@@ -28,7 +28,11 @@ export const PostSchema = z.object({
     .string()
     .max(255, 'メタタイトルは255文字以内で入力してください')
     .optional(),
-  metaDescription: z.string().max(150, 'メタディスクリプションは150文字以内で入力してください').nullable().optional(),
+  metaDescription: z
+    .string()
+    .max(150, 'メタディスクリプションは150文字以内で入力してください')
+    .nullable()
+    .optional(),
   metaKeywords: z.string().nullable().optional(),
   robotsMetaTag: z
     .string()
@@ -40,7 +44,11 @@ export const PostSchema = z.object({
     .max(255, 'OGタイトルは255文字以内で入力してください')
     .nullable()
     .optional(),
-  ogDescription: z.string().max(150, 'OGディスクリプションは150文字以内で入力してください').nullable().optional(),
+  ogDescription: z
+    .string()
+    .max(150, 'OGディスクリプションは150文字以内で入力してください')
+    .nullable()
+    .optional(),
   categoryId: z
     .string()
     .min(1, 'カテゴリは必須です')

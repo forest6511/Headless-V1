@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api'
 import { API_ENDPOINTS } from '@/config/endpoints'
-import { TaxonomyWithPostRefsResponse } from '@/types/api/taxonomy/response'
+import { TaxonomyListResponse } from '@/types/api/taxonomy/response'
 import {
   CreateTaxonomyRequest,
   DeleteTaxonomyRequest,
@@ -9,7 +9,7 @@ import {
 
 export const taxonomyApi = {
   getCategories: () => {
-    return apiClient.request<TaxonomyWithPostRefsResponse[]>(
+    return apiClient.request<TaxonomyListResponse[]>(
       API_ENDPOINTS.TAXONOMY.CATEGORIES,
       {
         method: 'GET',

@@ -15,6 +15,8 @@ import {
   formatTaxonomyOptions,
   UpdateCategoryFormProps,
 } from '@/types/api/taxonomy/types'
+import { ApiError } from '@/lib/api/core/client'
+import toast from 'react-hot-toast'
 
 export const UpdateCategoryForm = ({
   redirectPath,
@@ -48,6 +50,9 @@ export const UpdateCategoryForm = ({
       await taxonomyApi.updateCategory(requestData)
       router.push(redirectPath)
     } catch (error) {
+      if (error instanceof ApiError) {
+        toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
+      }
       console.error('カテゴリーの更新に失敗しました:', error)
     }
   }

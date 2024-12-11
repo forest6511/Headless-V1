@@ -1,12 +1,15 @@
 package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.app.usecase.post.query.PostDto
+import com.headblog.backend.app.usecase.post.query.PostWithTaxonomyDto
+import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
 import com.headblog.infra.jooq.tables.references.TAXONOMIES
 import java.time.LocalDateTime
+import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
@@ -68,6 +71,46 @@ class PostRepositoryImpl(
             .fetchOne()
             ?.toPostDto()
 
+    override fun findAll(
+        cursorPostId: UUID?,
+        pageSize: Int,
+    ): List<PostWithTaxonomyDto> {
+        val query = createBaseQuery()
+
+        // カーソル条件がある場合
+        cursorPostId?.let { id ->
+            // Postgres UUID V7
+            query.where(POSTS.ID.lessThan(id))
+        }
+
+        return query
+            // Postgres UUID V7
+            .orderBy(POSTS.ID.desc())
+            .limit(pageSize + 1)
+            .fetch()
+            .map { it.toPostWithTaxonomyDto() }
+    }
+
+    override fun count(): Int =
+        dsl.fetchCount(POSTS)
+
+    private fun createBaseQuery() =
+        dsl.select(
+            POSTS.asterisk(),
+            TAXONOMIES.ID,
+            TAXONOMIES.NAME,
+            TAXONOMIES.TAXONOMY_TYPE,
+            TAXONOMIES.SLUG,
+            TAXONOMIES.DESCRIPTION,
+            TAXONOMIES.PARENT_ID,
+            TAXONOMIES.CREATED_AT
+        )
+            .from(POSTS)
+            .innerJoin(POST_TAXONOMIES)
+            .on(POSTS.ID.eq(POST_TAXONOMIES.POST_ID))
+            .innerJoin(TAXONOMIES)
+            .on(POST_TAXONOMIES.TAXONOMY_ID.eq(TAXONOMIES.ID))
+
     // toDto
     private fun Record.toPostDto(): PostDto {
         return PostDto(
@@ -85,6 +128,36 @@ class PostRepositoryImpl(
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
             categoryId = get(TAXONOMIES.ID)!!
+        )
+    }
+
+    private fun Record.toPostWithTaxonomyDto(): PostWithTaxonomyDto {
+        val taxonomyDto = TaxonomyDto(
+            id = get(TAXONOMIES.ID)!!,
+            name = get(TAXONOMIES.NAME)!!,
+            taxonomyType = get(TAXONOMIES.TAXONOMY_TYPE)!!,
+            slug = get(TAXONOMIES.SLUG)!!,
+            description = get(TAXONOMIES.DESCRIPTION),
+            parentId = get(TAXONOMIES.PARENT_ID),
+            createdAt = get(TAXONOMIES.CREATED_AT)!!
+        )
+
+        return PostWithTaxonomyDto(
+            id = get(POSTS.ID)!!,
+            title = get(POSTS.TITLE)!!,
+            slug = get(POSTS.SLUG)!!,
+            content = get(POSTS.CONTENT)!!,
+            excerpt = get(POSTS.EXCERPT)!!,
+            postStatus = get(POSTS.STATUS)!!,
+            featuredImageId = get(POSTS.FEATURED_IMAGE_ID),
+            metaTitle = get(POSTS.META_TITLE),
+            metaDescription = get(POSTS.META_DESCRIPTION),
+            metaKeywords = get(POSTS.META_KEYWORDS),
+            robotsMetaTag = get(POSTS.ROBOTS_META_TAG),
+            ogTitle = get(POSTS.OG_TITLE),
+            ogDescription = get(POSTS.OG_DESCRIPTION),
+            updateAt = get(POSTS.UPDATED_AT)!!,
+            taxonomies = listOf(taxonomyDto)
         )
     }
 }

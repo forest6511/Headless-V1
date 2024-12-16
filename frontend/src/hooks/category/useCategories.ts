@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
-import { taxonomyApi } from '@/lib/api'
-import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
+import { categoryApi } from '@/lib/api'
+import { useCategoryStore } from '@/stores/admin/categoryStore'
 
 export const useCategories = () => {
-  const setTaxonomies = useTaxonomyStore((state) => state.setTaxonomies)
-  const taxonomies = useTaxonomyStore((state) => state.taxonomies)
+  const setCategories = useCategoryStore((state) => state.setCategories)
+  const categories = useCategoryStore((state) => state.categories)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
   const fetchCategories = async () => {
     try {
       setIsLoading(true)
-      const data = await taxonomyApi.getCategories()
-      setTaxonomies(data) // Zustandに保存
+      const data = await categoryApi.getCategories()
+      setCategories(data) // Zustandに保存
     } catch (error) {
       setError(error as Error)
       throw error
@@ -25,7 +25,7 @@ export const useCategories = () => {
     fetchCategories().catch((error) => {
       console.error('Error fetching categories:', error)
     })
-  }, [setTaxonomies])
+  }, [setCategories])
 
-  return { taxonomies, isLoading, error, refetch: fetchCategories }
+  return { categories, isLoading, error, refetch: fetchCategories }
 }

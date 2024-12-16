@@ -7,7 +7,6 @@ import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyListDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
 import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import java.util.*
 import org.springframework.stereotype.Service
 
@@ -20,19 +19,16 @@ class TaxonomyQueryServiceImpl(
 
     override fun findBySlug(slug: String): TaxonomyDto? = taxonomyRepository.findBySlug(slug)
 
-    override fun findByType(type: TaxonomyType): List<TaxonomyDto> = taxonomyRepository.findByType(type)
-
     override fun existsByParentId(parentId: UUID) = taxonomyRepository.existsByParentId(parentId)
 
-    override fun findTaxonomyList(type: TaxonomyType): List<TaxonomyListDto> {
-        val taxonomyWithPostRefsDto: List<TaxonomyWithPostRefsDto> = taxonomyRepository.findTypeWithPostRefs(type)
+    override fun findTaxonomyList(): List<TaxonomyListDto> {
+        val taxonomyWithPostRefsDto: List<TaxonomyWithPostRefsDto> = taxonomyRepository.findTypeWithPostRefs()
         val taxonomyMap = taxonomyWithPostRefsDto.associateBy { it.id }
 
         val categoryList = taxonomyWithPostRefsDto.map { taxonomy ->
             TaxonomyListDto(
                 id = taxonomy.id,
                 name = taxonomy.name,
-                taxonomyType = taxonomy.taxonomyType,
                 slug = taxonomy.slug,
                 description = taxonomy.description,
                 parentId = taxonomy.parentId,

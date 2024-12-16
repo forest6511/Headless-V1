@@ -12,8 +12,7 @@ interface TaxonomyRepository {
 
     fun findById(id: UUID): TaxonomyDto?
     fun findBySlug(slug: String): TaxonomyDto?
-    fun findByType(type: TaxonomyType): List<TaxonomyDto>
     fun existsByParentId(parentId: UUID): Boolean
-    fun findTypeWithPostRefs(type: TaxonomyType): List<TaxonomyWithPostRefsDto>
+    fun findTypeWithPostRefs(): List<TaxonomyWithPostRefsDto>
     fun findAllByParentId(parentId: UUID): List<Taxonomy>
 }

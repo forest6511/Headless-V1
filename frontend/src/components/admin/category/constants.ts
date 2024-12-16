@@ -1,4 +1,4 @@
-export const TAXONOMY_COLUMNS = [
+export const CATEGORY_COLUMNS = [
   { name: 'カテゴリ名', uid: 'name' },
   { name: 'パンくず', uid: 'breadcrumb' },
   { name: '説明', uid: 'description' },

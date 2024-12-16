@@ -6,7 +6,6 @@ import java.util.*
 data class TaxonomyListDto(
     val id: UUID,
     val name: String,
-    val taxonomyType: String,
     val slug: String,
     val description: String?,
     val parentId: UUID?,

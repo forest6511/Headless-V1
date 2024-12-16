@@ -93,7 +93,6 @@ CREATE TABLE taxonomies
 (
     id            uuid PRIMARY KEY,
     name          varchar(255) NOT NULL,
-    taxonomy_type varchar(50)  NOT NULL,
     slug          varchar(255) NOT NULL UNIQUE,
     description   varchar(100),
     parent_id     uuid REFERENCES taxonomies (id),
@@ -106,7 +105,6 @@ COMMENT ON TABLE taxonomies IS 'Table for storing taxonomies like categories and
 -- Column comments
 COMMENT ON COLUMN taxonomies.id IS 'Unique identifier for each taxonomy';
 COMMENT ON COLUMN taxonomies.name IS 'Name of the taxonomy (e.g., category, tag)';
-COMMENT ON COLUMN taxonomies.taxonomy_type IS 'Type of the taxonomy (e.g., category, tag)';
 COMMENT ON COLUMN taxonomies.slug IS 'Unique slug for the taxonomy, used in URLs';
 COMMENT ON COLUMN taxonomies.description IS 'Description of the taxonomy';
 COMMENT ON COLUMN taxonomies.parent_id IS 'Reference to the parent taxonomy, if applicable';
@@ -157,7 +155,6 @@ CREATE INDEX idx_post_taxonomies_taxonomy ON post_taxonomies (taxonomy_id);
 -- Insert the specified data into the taxonomies table
 INSERT INTO taxonomies (
     id,
-    taxonomy_type,
     name,
     slug,
     description,
@@ -166,7 +163,6 @@ INSERT INTO taxonomies (
 )
 VALUES (
     '01939280-7ccb-72a8-9257-7ba44de715b6',
-    'CATEGORY',
     '未設定',
     'nosetting',
     '未設定カテゴリ',

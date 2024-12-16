@@ -18,11 +18,11 @@ import { useRouter } from 'next/navigation'
 import { postApi } from '@/lib/api'
 import { PostListResponse, PostWithCategoryId } from '@/types/api/post/response'
 import { PostStatuses } from '@/types/api/post/types'
-import { useCategories } from '@/hooks/taxonomy/useCategories'
-import { getBreadcrumbForCategory } from '@/lib/utils/taxonomy'
+import { useCategories } from '@/hooks/category/useCategories'
+import { getBreadcrumbForCategory } from '@/lib/utils/category'
 
 export default function PostsPage() {
-  const { taxonomies, isLoading, error } = useCategories()
+  const { categories, isLoading, error } = useCategories()
   const [posts, setPosts] = useState<PostWithCategoryId[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -122,7 +122,7 @@ export default function PostsPage() {
               </TableCell>
               <TableCell>{post.slug}</TableCell>
               <TableCell>
-                {getBreadcrumbForCategory(post.categoryId, taxonomies)}
+                {getBreadcrumbForCategory(post.categoryId, categories)}
               </TableCell>
               <TableCell>
                 {/* TODO 共通化 */}

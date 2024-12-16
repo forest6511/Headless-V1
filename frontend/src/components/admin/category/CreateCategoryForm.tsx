@@ -1,59 +1,59 @@
 'use client'
 
 import {
-  UpdateTaxonomyFormData,
-  updateTaxonomySchema,
-} from '@/schemas/taxonomy'
+  CreateCategoryData,
+  createCategorySchema,
+} from '@/schemas/category'
 import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
-import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
+import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { taxonomyApi } from '@/lib/api'
-import { UpdateTaxonomyRequest } from '@/types/api/taxonomy/request'
+import { categoryApi } from '@/lib/api'
+import { CreateCategoryRequest } from '@/types/api/category/request'
 import {
-  formatTaxonomyOptions,
-  UpdateCategoryFormProps,
-} from '@/types/api/taxonomy/types'
+  CreateCategoryFormProps,
+  formatCategoryOptionsWithoutNoSetting,
+} from '@/types/api/category/types'
 import { ApiError } from '@/lib/api/core/client'
 import toast from 'react-hot-toast'
 
-export const UpdateCategoryForm = ({
+export const CreateCategoryForm = ({
   redirectPath,
   initialData,
-}: UpdateCategoryFormProps) => {
+}: CreateCategoryFormProps) => {
   const router = useRouter()
-  const taxonomies = useTaxonomyStore((state) => state.taxonomies)
+  const categories = useCategoryStore((state) => state.categories)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UpdateTaxonomyFormData>({
-    resolver: zodResolver(updateTaxonomySchema),
-    defaultValues: initialData,
+  } = useForm<CreateCategoryData>({
+    resolver: zodResolver(createCategorySchema),
+    defaultValues: {
+      ...initialData,
+    },
     mode: 'onChange',
   })
 
-  const taxonomyOptions = formatTaxonomyOptions(taxonomies)
+  const categoryOptions = formatCategoryOptionsWithoutNoSetting(categories)
 
-  const onSubmit = async (data: UpdateTaxonomyFormData) => {
+  const onSubmit = async (data: CreateCategoryData) => {
     try {
-      const requestData: UpdateTaxonomyRequest = {
-        id: data.id,
+      const createData: CreateCategoryRequest = {
         name: data.name,
-        type: data.type,
         slug: data.slug,
         description: data.description,
         parentId: data.parentId || undefined,
       }
-      await taxonomyApi.updateCategory(requestData)
+      await categoryApi.createCategory(createData)
       router.push(redirectPath)
     } catch (error) {
       if (error instanceof ApiError) {
         toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
       }
-      console.error('カテゴリーの更新に失敗しました:', error)
+      console.error('カテゴリーの作成に失敗しました:', error)
     }
   }
 
@@ -75,7 +75,7 @@ export const UpdateCategoryForm = ({
 
       <Select
         {...register('parentId')}
-        items={taxonomyOptions}
+        items={categoryOptions}
         label="親カテゴリー"
         placeholder="カテゴリーを選択してください"
         onSelectionChange={async (keys) => {
@@ -87,8 +87,8 @@ export const UpdateCategoryForm = ({
         isInvalid={!!errors.parentId}
         errorMessage={errors.parentId?.message}
       >
-        {(taxonomy) => (
-          <SelectItem key={taxonomy.key}>{taxonomy.label}</SelectItem>
+        {(category) => (
+          <SelectItem key={category.key}>{category.label}</SelectItem>
         )}
       </Select>
 
@@ -100,7 +100,7 @@ export const UpdateCategoryForm = ({
       />
 
       <Button type="submit" color="primary">
-        カテゴリーを更新
+        新規カテゴリーを追加
       </Button>
     </form>
   )

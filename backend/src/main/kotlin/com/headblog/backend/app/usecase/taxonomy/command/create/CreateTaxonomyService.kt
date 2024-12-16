@@ -1,7 +1,7 @@
 package com.headblog.backend.app.usecase.taxonomy.command.create
 
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
+import com.headblog.backend.domain.model.taxonomy.CategoryId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
@@ -19,7 +19,7 @@ class CreateTaxonomyService(
 
     private val logger = LoggerFactory.getLogger(CreateTaxonomyService::class.java)
 
-    override fun execute(command: CreateTaxonomyCommand): TaxonomyId {
+    override fun execute(command: CreateTaxonomyCommand): CategoryId {
         taxonomyRepository.findBySlug(command.slug)?.let {
             val message = "The taxonomy with slug '${command.slug}' already exists."
             logger.error(message)
@@ -30,7 +30,6 @@ class CreateTaxonomyService(
         val taxonomy = Taxonomy.create(
             id = idGenerator,
             name = command.name,
-            taxonomyType = command.taxonomyType,
             slug = command.slug,
             description = command.description,
             parentId = command.parentId

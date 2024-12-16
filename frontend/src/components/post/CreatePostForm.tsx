@@ -14,14 +14,14 @@ import {
 import { Save } from 'lucide-react'
 import { CreatePostFormData, createPostSchema } from '@/schemas/post'
 import { PostStatuses } from '@/types/api/post/types'
-import { useCategories } from '@/hooks/taxonomy/useCategories'
+import { useCategories } from '@/hooks/category/useCategories'
 import { postApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ApiError } from '@/lib/api/core/client'
 import { useRouter } from 'next/navigation'
-import { createCategoryOptions } from '@/lib/utils/taxonomy'
+import { createCategoryOptions } from '@/lib/utils/category'
 import { CreatePostRequest } from '@/types/api/post/request'
 
 interface CreatePostFormProps {
@@ -40,8 +40,8 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
     mode: 'onChange',
   })
 
-  const { taxonomies } = useCategories()
-  const categories = createCategoryOptions(taxonomies)
+  const { categories } = useCategories()
+  const categoryOptions = createCategoryOptions(categories)
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
@@ -83,7 +83,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
             isInvalid={!!errors.categoryId}
             errorMessage={errors?.categoryId?.message}
           >
-            {categories.map((category) => (
+            {categoryOptions.map((category) => (
               <SelectItem key={category.value} value={category.value}>
                 {category.label}
               </SelectItem>

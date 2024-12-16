@@ -4,9 +4,9 @@ export const API_ENDPOINTS = {
     SIGNIN: '/api/auth/signin',
     REFRESH_TOKEN: '/api/auth/refresh',
   },
-  TAXONOMY: {
-    CATEGORIES: '/api/taxonomies/categories',
-    CATEGORY: '/api/taxonomies/category',
+  CATEGORY: {
+    CATEGORIES: '/api/categories/categories',
+    CATEGORY: '/api/categories/category',
   },
   POST: {
     POST: '/api/posts/post',

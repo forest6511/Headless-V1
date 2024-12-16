@@ -6,7 +6,6 @@ import com.headblog.backend.domain.model.post.PostStatus
 import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -164,7 +163,6 @@ class PostRepositoryImplTest {
                 metaTitle = null,
                 metaDescription = null,
                 metaKeywords = null,
-                robotsMetaTag = null,
                 ogTitle = null,
                 ogDescription = null,
                 categoryId = defaultTaxonomy.id.value
@@ -179,7 +177,6 @@ class PostRepositoryImplTest {
         Taxonomy.create(
             id = idGenerator,
             name = name,
-            taxonomyType = TaxonomyType.CATEGORY.name,
             slug = slug,
             description = "Test description for $name",
             parentId = parentId

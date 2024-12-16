@@ -4,7 +4,6 @@ import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyWithPostRefsDto
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
 import com.headblog.infra.jooq.tables.references.TAXONOMIES
 import java.util.*
@@ -21,7 +20,6 @@ class TaxonomyRepositoryImpl(
         return dsl.insertInto(TAXONOMIES)
             .set(TAXONOMIES.ID, taxonomy.id.value)
             .set(TAXONOMIES.NAME, taxonomy.name)
-            .set(TAXONOMIES.TAXONOMY_TYPE, taxonomy.taxonomyType.name)
             .set(TAXONOMIES.SLUG, taxonomy.slug.value)
             .set(TAXONOMIES.DESCRIPTION, taxonomy.description)
             .set(TAXONOMIES.PARENT_ID, taxonomy.parentId?.value)
@@ -31,7 +29,6 @@ class TaxonomyRepositoryImpl(
     override fun update(taxonomy: Taxonomy): Int {
         return dsl.update(TAXONOMIES)
             .set(TAXONOMIES.NAME, taxonomy.name)
-            .set(TAXONOMIES.TAXONOMY_TYPE, taxonomy.taxonomyType.name)
             .set(TAXONOMIES.SLUG, taxonomy.slug.value)
             .set(TAXONOMIES.DESCRIPTION, taxonomy.description)
             .set(TAXONOMIES.PARENT_ID, taxonomy.parentId?.value)
@@ -65,12 +62,6 @@ class TaxonomyRepositoryImpl(
         .fetchOne()
         ?.toTaxonomyDto()
 
-    override fun findByType(type: TaxonomyType): List<TaxonomyDto> = dsl.select()
-        .from(TAXONOMIES)
-        .where(TAXONOMIES.TAXONOMY_TYPE.eq(type.name))
-        .fetch()
-        .map { it.toTaxonomyDto() }
-
 
     override fun existsByParentId(parentId: UUID): Boolean {
         val count = dsl.selectCount()
@@ -80,12 +71,11 @@ class TaxonomyRepositoryImpl(
         return (count ?: 0) > 0
     }
 
-    override fun findTypeWithPostRefs(type: TaxonomyType): List<TaxonomyWithPostRefsDto> {
+    override fun findTypeWithPostRefs(): List<TaxonomyWithPostRefsDto> {
         return dsl.select(TAXONOMIES.asterisk(), POST_TAXONOMIES.POST_ID)
             .from(TAXONOMIES)
             .leftJoin(POST_TAXONOMIES)
             .on(TAXONOMIES.ID.eq(POST_TAXONOMIES.TAXONOMY_ID))
-            .where(TAXONOMIES.TAXONOMY_TYPE.eq(type.name))
             .fetch()
             .groupBy { it[TAXONOMIES.ID] }
             .map { (_, records) -> records.toTaxonomyWithPostRefsDto() }
@@ -101,7 +91,6 @@ class TaxonomyRepositoryImpl(
                 Taxonomy.fromDto(
                     id = record[TAXONOMIES.ID]!!,
                     name = record[TAXONOMIES.NAME]!!,
-                    taxonomyType = record[TAXONOMIES.TAXONOMY_TYPE]!!,
                     slug = record[TAXONOMIES.SLUG]!!,
                     description = record[TAXONOMIES.DESCRIPTION],
                     parentId = record[TAXONOMIES.PARENT_ID],
@@ -120,7 +109,6 @@ class TaxonomyRepositoryImpl(
         return TaxonomyDto(
             id = get(TAXONOMIES.ID)!!,
             name = get(TAXONOMIES.NAME)!!,
-            taxonomyType = get(TAXONOMIES.TAXONOMY_TYPE)!!,
             slug = get(TAXONOMIES.SLUG)!!,
             description = get(TAXONOMIES.DESCRIPTION),
             parentId = get(TAXONOMIES.PARENT_ID),
@@ -133,7 +121,6 @@ class TaxonomyRepositoryImpl(
         return TaxonomyWithPostRefsDto(
             id = firstRecord[TAXONOMIES.ID]!!,
             name = firstRecord[TAXONOMIES.NAME]!!,
-            taxonomyType = firstRecord[TAXONOMIES.TAXONOMY_TYPE]!!,
             slug = firstRecord[TAXONOMIES.SLUG]!!,
             description = firstRecord[TAXONOMIES.DESCRIPTION],
             parentId = firstRecord[TAXONOMIES.PARENT_ID],

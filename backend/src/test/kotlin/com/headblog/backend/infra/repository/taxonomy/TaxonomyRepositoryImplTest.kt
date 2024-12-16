@@ -3,7 +3,6 @@ package com.headblog.backend.infra.repository.taxonomy
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -92,13 +91,12 @@ class TaxonomyRepositoryImplTest {
     }
 
     private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Taxonomy =
-        Taxonomy.create(idGenerator, name, TaxonomyType.CATEGORY.name, slug, "Test description for $name", parentId)
+        Taxonomy.create(idGenerator, name, slug, "Test description for $name", parentId)
 
     private fun assertTaxonomyEquals(expected: Taxonomy, actual: TaxonomyDto?) {
         assertNotNull(actual)
         assertEquals(expected.name, actual?.name)
         assertEquals(expected.slug.value, actual?.slug)
-        assertEquals(expected.taxonomyType.name, actual?.taxonomyType)
         assertEquals(expected.description, actual?.description)
         assertEquals(expected.parentId, actual?.parentId)
     }

@@ -2,8 +2,8 @@
 
 import { Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
-import { useTaxonomyStore } from '@/stores/admin/taxonomyStore'
-import { UpdateCategoryForm } from '@/components/taxonomy/categories/UpdateCategoryForm'
+import { useCategoryStore } from '@/stores/admin/categoryStore'
+import { UpdateCategoryForm } from '@/components/admin/category/UpdateCategoryForm'
 
 interface Props {
   params: {
@@ -13,13 +13,13 @@ interface Props {
 
 export default function EditCategoryPage({ params }: Props) {
   const router = useRouter()
-  const taxonomies = useTaxonomyStore((state) => state.taxonomies)
+  const categories = useCategoryStore((state) => state.categories)
 
   // IDからカテゴリーを取得
-  const category = taxonomies.find((t) => t.id === params.id)
+  const category = categories.find((t) => t.id === params.id)
 
   if (!category) {
-    router.push('/admin/dashboard/taxonomy/categories')
+    router.push('/admin/dashboard/categories')
     return null
   }
 
@@ -29,7 +29,6 @@ export default function EditCategoryPage({ params }: Props) {
     slug: category.slug,
     description: category.description || '',
     parentId: category.parentId || '',
-    type: 'CATEGORY' as const,
   }
 
   return (
@@ -37,7 +36,7 @@ export default function EditCategoryPage({ params }: Props) {
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの編集</h1>
         <UpdateCategoryForm
-          redirectPath="/admin/dashboard/taxonomy/categories"
+          redirectPath="/admin/dashboard/categories"
           initialData={defaultValues}
         />
       </CardBody>

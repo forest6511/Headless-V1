@@ -9,7 +9,7 @@ export const AddCategoryButton = () => {
     <Button
       color="primary"
       startContent={<Plus size={20} />}
-      onClick={() => router.push('/admin/dashboard/taxonomy/categories/new')}
+      onClick={() => router.push('/admin/dashboard/categories/new')}
     >
       新規追加
     </Button>

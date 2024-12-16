@@ -10,16 +10,16 @@ import {
 import { Edit, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import { taxonomyApi } from '@/lib/api'
+import { categoryApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 
-interface TaxonomyActionsProps {
-  taxonomyId: string
+interface CategoryActionsProps {
+  categoryId: string
   onDelete: () => void
 }
 
-export const TaxonomyActions: React.FC<TaxonomyActionsProps> = ({
-  taxonomyId,
+export const CategoryActions: React.FC<CategoryActionsProps> = ({
+                                                                  categoryId,
   onDelete,
 }) => {
   const router = useRouter()
@@ -27,14 +27,14 @@ export const TaxonomyActions: React.FC<TaxonomyActionsProps> = ({
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleEdit = () => {
-    router.push(`/admin/dashboard/taxonomy/categories/edit/${taxonomyId}`)
+    router.push(`/admin/dashboard/categories/edit/${categoryId}`)
   }
 
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      const payload = { id: taxonomyId }
-      await taxonomyApi.deleteCategory(payload)
+      const payload = { id: categoryId }
+      await categoryApi.deleteCategory(payload)
       toast.success('カテゴリーを削除しました')
       onDelete()
     } catch (error) {

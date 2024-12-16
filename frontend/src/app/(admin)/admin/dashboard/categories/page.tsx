@@ -1,11 +1,11 @@
 'use client'
 
-import { AddCategoryButton } from '@/components/taxonomy/categories/AddCategoryButton'
-import { TaxonomyTable } from '@/components/taxonomy/categories/TaxonomyTable'
-import { useCategories } from '@/hooks/taxonomy/useCategories'
+import { AddCategoryButton } from '@/components/admin/category/AddCategoryButton'
+import { CategoryTable } from '@/components/admin/category/CategoryTable'
+import { useCategories } from '@/hooks/category/useCategories'
 
 export default function CategoryList() {
-  const { taxonomies, isLoading, error, refetch } = useCategories()
+  const { categories, isLoading, error, refetch } = useCategories()
 
   // 子コンポーネントへデータ再取得関数を渡す
   const handleDelete = async () => {
@@ -21,8 +21,8 @@ export default function CategoryList() {
       <div className="flex justify-between mb-4">
         <AddCategoryButton />
       </div>
-      <TaxonomyTable
-        taxonomies={taxonomies}
+      <CategoryTable
+        categories={categories}
         onDelete={handleDelete}
         isLoading={isLoading}
       />

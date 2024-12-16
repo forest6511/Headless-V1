@@ -8,48 +8,48 @@ import {
   TableRow,
   Spinner,
 } from '@nextui-org/react'
-import { TaxonomyListResponse } from '@/types/api/taxonomy/response'
-import { TaxonomyActions } from './TaxonomyActions'
-import { TAXONOMY_COLUMNS } from './constants'
+import { CategoryListResponse } from '@/types/api/category/response'
+import { CategoryActions } from './CategoryActions'
+import { CATEGORY_COLUMNS } from './constants'
 import React from 'react'
 
-interface TaxonomyTableProps {
-  taxonomies: TaxonomyListResponse[]
+interface CategoryTableProps {
+  categories: CategoryListResponse[]
   onDelete: () => void
   isLoading?: boolean
 }
 
-export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
-  taxonomies,
+export const CategoryTable: React.FC<CategoryTableProps> = ({
+                                                              categories,
   onDelete,
   isLoading = false,
 }) => {
   const renderCell = (
-    taxonomy: TaxonomyListResponse,
+      category: CategoryListResponse,
     columnKey: React.Key
   ): React.ReactNode => {
     switch (columnKey) {
       case 'name':
-        return taxonomy.name ? (
-          <Link href={`/taxonomy/${taxonomy.slug}`}>{taxonomy.name}</Link>
+        return category.name ? (
+          <Link href={`/categories/${category.slug}`}>{category.name}</Link>
         ) : null
       case 'breadcrumb':
-        if (Array.isArray(taxonomy.breadcrumbs)) {
-          return taxonomy.breadcrumbs
+        if (Array.isArray(category.breadcrumbs)) {
+          return category.breadcrumbs
             .map((breadcrumb) => breadcrumb.name)
             .join(' / ')
         }
         return null
       case 'count':
         return (
-          <Link href={`/taxonomy/${taxonomy.slug}/items`}>
-            {taxonomy.postIds.length}
+          <Link href={`/categories/${category.slug}/items`}>
+            {category.postIds.length}
           </Link>
         )
       case 'actions':
-        return <TaxonomyActions taxonomyId={taxonomy.id} onDelete={onDelete} />
+        return <CategoryActions categoryId={category.id} onDelete={onDelete} />
       default:
-        const cellValue = taxonomy[columnKey as keyof TaxonomyListResponse]
+        const cellValue = category[columnKey as keyof CategoryListResponse]
         return cellValue !== null && typeof cellValue !== 'object'
           ? cellValue.toString()
           : null
@@ -67,7 +67,7 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
   return (
     <Table aria-label="タクソノミー一覧">
       <TableHeader>
-        {TAXONOMY_COLUMNS.map((column) => (
+        {CATEGORY_COLUMNS.map((column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === 'actions' ? 'end' : 'start'}
@@ -76,7 +76,7 @@ export const TaxonomyTable: React.FC<TaxonomyTableProps> = ({
           </TableColumn>
         ))}
       </TableHeader>
-      <TableBody items={taxonomies}>
+      <TableBody items={categories}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

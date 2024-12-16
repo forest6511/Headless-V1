@@ -5,7 +5,7 @@ import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.domain.model.taxonomy.Slug
 import com.headblog.backend.domain.model.taxonomy.Taxonomy
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
+import com.headblog.backend.domain.model.taxonomy.CategoryId
 import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
@@ -22,7 +22,7 @@ class DeleteTaxonomyService(
 
     private val logger = LoggerFactory.getLogger(DeleteTaxonomyService::class.java)
 
-    override fun execute(command: DeleteTaxonomyCommand): TaxonomyId {
+    override fun execute(command: DeleteTaxonomyCommand): CategoryId {
         val taxonomyDto = taxonomyRepository.findById(command.id)
             ?: throw AppConflictException("Taxonomy with ID ${command.id} not found")
 
@@ -38,7 +38,6 @@ class DeleteTaxonomyService(
         val deleteTaxonomy: Taxonomy = Taxonomy.fromDto(
             id = taxonomyDto.id,
             name = taxonomyDto.name,
-            taxonomyType = taxonomyDto.taxonomyType,
             slug = taxonomyDto.slug,
             description = taxonomyDto.description,
             parentId = taxonomyDto.parentId,
@@ -52,7 +51,7 @@ class DeleteTaxonomyService(
         val associatedPostIds: List<PostId> = postTaxonomyRepository.findPostsByTaxonomyId(deleteTaxonomy.id)
         associatedPostIds.forEach { postId ->
             postTaxonomyRepository.deleteRelation(postId, deleteTaxonomy.id)
-            postTaxonomyRepository.addRelation(postId, TaxonomyId(defaultCategory.id))
+            postTaxonomyRepository.addRelation(postId, CategoryId(defaultCategory.id))
         }
 
         // タクソノミーの削除
@@ -66,7 +65,6 @@ class DeleteTaxonomyService(
         val defaultTaxonomy = Taxonomy.fromDto(
             id = defaultCategory.id,
             name = defaultCategory.name,
-            taxonomyType = defaultCategory.taxonomyType,
             slug = defaultCategory.slug,
             description = defaultCategory.description,
             parentId = defaultCategory.parentId,

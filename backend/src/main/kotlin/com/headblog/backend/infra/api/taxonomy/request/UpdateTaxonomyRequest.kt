@@ -14,9 +14,6 @@ data class UpdateTaxonomyRequest(
     @field:Size(max = 255, message = "Name must be less than 255 characters")
     val name: String,
 
-    @field:NotNull(message = "Type is required")
-    val type: String,
-
     @field:NotBlank(message = "Slug is required")
     @field:Size(max = 255, message = "Slug must be less than 255 characters")
     @field:Pattern(

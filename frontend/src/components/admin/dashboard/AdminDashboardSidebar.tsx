@@ -11,7 +11,7 @@ const menuItems = [
       { title: '記事投稿', href: '/admin/dashboard/posts', icon: FileText },
       {
         title: 'カテゴリ',
-        href: '/admin/dashboard/taxonomy/categories',
+        href: '/admin/dashboard/categories',
         icon: FolderTree,
       },
     ],

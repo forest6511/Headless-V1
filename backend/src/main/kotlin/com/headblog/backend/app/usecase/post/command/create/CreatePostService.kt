@@ -40,7 +40,6 @@ class CreatePostService(
             metaTitle = command.metaTitle,
             metaDescription = command.metaDescription,
             metaKeywords = command.metaKeywords,
-            robotsMetaTag = command.robotsMetaTag,
             ogTitle = command.ogTitle,
             ogDescription = command.ogDescription,
             categoryId = command.categoryId,

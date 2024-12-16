@@ -25,7 +25,6 @@ class DeleteTaxonomyServiceTest {
         val existingDto = TaxonomyDto(
             id = taxonomyId,
             name = "Existing Taxonomy",
-            taxonomyType = TaxonomyType.CATEGORY.name,
             slug = "existing-slug",
             description = "Existing description",
             parentId = UUID.randomUUID(),
@@ -35,7 +34,6 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null
@@ -49,7 +47,7 @@ class DeleteTaxonomyServiceTest {
         val result = updateTaxonomyService.execute(command)
 
         // THEN: 更新処理が成功し、リポジトリが更新メソッドを呼び出す
-        assertEquals(TaxonomyId(taxonomyId), result)
+        assertEquals(CategoryId(taxonomyId), result)
         verify { taxonomyRepository.update(any()) }
     }
 
@@ -62,7 +60,6 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null
@@ -89,7 +86,6 @@ class DeleteTaxonomyServiceTest {
         val existingDto = TaxonomyDto(
             id = taxonomyId,
             name = "Existing Taxonomy",
-            taxonomyType = TaxonomyType.CATEGORY.name,
             slug = "existing-slug",
             description = "Existing description",
             parentId = UUID.randomUUID(),
@@ -99,7 +95,6 @@ class DeleteTaxonomyServiceTest {
         val conflictingDto = TaxonomyDto(
             id = conflictingTaxonomyId,
             name = "Conflicting Taxonomy",
-            taxonomyType = TaxonomyType.CATEGORY.name,
             slug = "updated-slug",
             description = "Conflicting description",
             parentId = null,
@@ -109,7 +104,6 @@ class DeleteTaxonomyServiceTest {
         val command = UpdateTaxonomyCommand(
             id = taxonomyId,
             name = "Updated Taxonomy",
-            taxonomyType = TaxonomyType.TAG.name,
             slug = "updated-slug",
             description = "Updated description",
             parentId = null

@@ -7,49 +7,45 @@ import java.time.LocalDateTime
 import java.util.*
 
 class Taxonomy private constructor(
-    val id: TaxonomyId,
+    val id: CategoryId,
     val name: String,
-    val taxonomyType: TaxonomyType,
     val slug: Slug,
     val description: String?,
-    val parentId: TaxonomyId?,
+    val parentId: CategoryId?,
     val createdAt: LocalDateTime
 ) {
     companion object {
-        private fun validateParentId(id: TaxonomyId, parentId: TaxonomyId?) {
+        private fun validateParentId(id: CategoryId, parentId: CategoryId?) {
             if (id.value == parentId?.value) {
                 throw DomainConflictException("The parent category and the child category are the same")
             }
         }
 
         private fun createInstance(
-            id: TaxonomyId,
+            id: CategoryId,
             name: String,
-            taxonomyType: TaxonomyType,
             slug: Slug,
             description: String?,
-            parentId: TaxonomyId?,
+            parentId: CategoryId?,
             createdAt: LocalDateTime
         ): Taxonomy {
             validateParentId(id, parentId)
-            return Taxonomy(id, name, taxonomyType, slug, description, parentId, createdAt)
+            return Taxonomy(id, name, slug, description, parentId, createdAt)
         }
 
         fun create(
             id: IdGenerator<EntityId>,
             name: String,
-            taxonomyType: String,
             slug: String,
             description: String? = null,
             parentId: UUID? = null
         ): Taxonomy {
             return createInstance(
-                id = TaxonomyId(id.generate().value),
+                id = CategoryId(id.generate().value),
                 name = name,
-                taxonomyType = TaxonomyType.of(taxonomyType),
                 slug = Slug.of(slug),
                 description = description,
-                parentId = parentId?.let { TaxonomyId(it) },
+                parentId = parentId?.let { CategoryId(it) },
                 createdAt = LocalDateTime.now()
             )
         }
@@ -57,19 +53,17 @@ class Taxonomy private constructor(
         fun fromDto(
             id: UUID,
             name: String,
-            taxonomyType: String,
             slug: String,
             description: String? = null,
             parentId: UUID? = null,
             createdAt: LocalDateTime
         ): Taxonomy {
             return createInstance(
-                id = TaxonomyId(id),
+                id = CategoryId(id),
                 name = name,
-                taxonomyType = TaxonomyType.of(taxonomyType),
                 slug = Slug.of(slug),
                 description = description,
-                parentId = parentId?.let { TaxonomyId(it) },
+                parentId = parentId?.let { CategoryId(it) },
                 createdAt = createdAt
             )
         }
@@ -86,7 +80,6 @@ class Taxonomy private constructor(
         return createInstance(
             id = this.id,
             name = this.name,
-            taxonomyType = this.taxonomyType,
             slug = this.slug,
             description = this.description,
             parentId = newParent.id,

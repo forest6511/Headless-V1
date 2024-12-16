@@ -9,7 +9,6 @@ import com.headblog.backend.app.usecase.taxonomy.command.update.UpdateTaxonomyUs
 import com.headblog.backend.app.usecase.taxonomy.query.GetTaxonomyQueryService
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyListDto
-import com.headblog.backend.domain.model.taxonomy.TaxonomyType
 import com.headblog.backend.infra.api.taxonomy.request.CreateTaxonomyRequest
 import com.headblog.backend.infra.api.taxonomy.request.DeleteTaxonomyRequest
 import com.headblog.backend.infra.api.taxonomy.request.UpdateTaxonomyRequest
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/taxonomies")
+@RequestMapping("/api/categories")
 class TaxonomyController(
     private val createTaxonomyUseCase: CreateTaxonomyUseCase,
     private val updateTaxonomyUseCase: UpdateTaxonomyUseCase,
@@ -61,13 +60,12 @@ class TaxonomyController(
 
     @GetMapping("/categories")
     fun getByCategories(): ResponseEntity<List<TaxonomyListDto>> =
-        ResponseEntity.ok(getTaxonomyQueryService.findTaxonomyList(TaxonomyType.CATEGORY))
+        ResponseEntity.ok(getTaxonomyQueryService.findTaxonomyList())
 
     // toCommand メソッド
     private fun CreateTaxonomyRequest.toCommand(): CreateTaxonomyCommand {
         return CreateTaxonomyCommand(
             name = this.name,
-            taxonomyType = this.type,
             slug = this.slug,
             description = this.description,
             parentId = this.parentId
@@ -78,7 +76,6 @@ class TaxonomyController(
         return UpdateTaxonomyCommand(
             id = this.id,
             name = this.name,
-            taxonomyType = this.type,
             slug = this.slug,
             description = this.description,
             parentId = this.parentId

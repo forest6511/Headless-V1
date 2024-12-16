@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-const preprocessEmptyString = (schema: z.ZodTypeAny) => {
-  return z.preprocess((val) => (val === '' ? null : val), schema)
-}
-
 export const PostSchema = z.object({
   id: z.string().uuid(),
   title: z
@@ -27,45 +23,38 @@ export const PostSchema = z.object({
     .string()
     .min(1, 'ステータスは必須です')
     .max(50, 'ステータスは50文字以内で入力してください'),
-  featuredImageId: preprocessEmptyString(z.string().nullable().optional()),
-  metaTitle: preprocessEmptyString(
-    z
-      .string()
-      .max(255, 'メタタイトルは255文字以内で入力してください')
-      .optional()
-  ),
-  metaDescription: preprocessEmptyString(
-    z
-      .string()
-      .max(150, 'メタディスクリプションは150文字以内で入力してください')
-      .nullable()
-      .optional()
-  ),
-  metaKeywords: preprocessEmptyString(z.string().nullable().optional()),
-  robotsMetaTag: preprocessEmptyString(
-    z
-      .string()
-      .max(50, 'robotsメタタグは50文字以内で入力してください')
-      .nullable()
-      .optional()
-  ),
-  ogTitle: preprocessEmptyString(
-    z
-      .string()
-      .max(255, 'OGタイトルは255文字以内で入力してください')
-      .nullable()
-      .optional()
-  ),
-  ogDescription: preprocessEmptyString(
-    z
-      .string()
-      .max(150, 'OGディスクリプションは150文字以内で入力してください')
-      .nullable()
-      .optional()
-  ),
-  categoryId: preprocessEmptyString(
-    z.string().min(1, 'カテゴリは必須です').uuid('カテゴリIDが正しくありません')
-  ),
+  featuredImageId: z
+    .string()
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
+  metaTitle: z
+    .string()
+    .max(255, 'メタタイトルは255文字以内で入力してください')
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
+  metaDescription: z
+    .string()
+    .max(150, 'メタディスクリプションは150文字以内で入力してください')
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullable(),
+  metaKeywords: z
+    .string()
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
+  ogTitle: z
+    .string()
+    .max(255, 'OGタイトルは255文字以内で入力してください')
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
+  ogDescription: z
+    .string()
+    .max(150, 'OGディスクリプションは150文字以内で入力してください')
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
+  categoryId: z
+    .string()
+    .min(1, 'カテゴリは必須です')
+    .uuid('カテゴリIDが正しくありません'),
 })
 
 export const createPostSchema = PostSchema.omit({

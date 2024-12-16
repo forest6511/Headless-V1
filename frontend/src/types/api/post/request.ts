@@ -5,15 +5,15 @@ interface Post {
   content: string
   excerpt: string
   postStatus: string
-  featuredImageId?: string
+  featuredImageId: string | null
   createdAt: Date
   updatedAt: Date
-  metaTitle?: string
-  metaDescription?: string
-  metaKeywords?: string
-  robotsMetaTag?: string
-  ogTitle?: string
-  ogDescription?: string
+  metaTitle: string | null
+  metaDescription: string | null
+  metaKeywords: string | null
+  robotsMetaTag: string | null
+  ogTitle: string | null
+  ogDescription: string | null
   categoryId: string
 }
 

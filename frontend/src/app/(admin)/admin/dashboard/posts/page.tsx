@@ -17,19 +17,18 @@ import {
 import { useRouter } from 'next/navigation'
 import { postApi } from '@/lib/api'
 import { PostListResponse, PostWithCategoryId } from '@/types/api/post/response'
-
-const statuses = [
-  { value: 'draft', label: '下書き' },
-  { value: 'published', label: '公開済み' },
-]
+import { PostStatuses } from '@/types/api/post/types'
+import { useCategories } from '@/hooks/taxonomy/useCategories'
+import { getBreadcrumbForCategory } from '@/lib/utils/taxonomy'
 
 export default function PostsPage() {
+  const { taxonomies, isLoading, error } = useCategories()
   const [posts, setPosts] = useState<PostWithCategoryId[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [pageCursors, setPageCursors] = useState<{ [key: number]: string }>({})
   const [hasNextPage, setHasNextPage] = useState(false)
-  const rowsPerPage = 2
+  const rowsPerPage = 10 // 1ページに表示する記事数
   const router = useRouter()
 
   useEffect(() => {
@@ -58,9 +57,9 @@ export default function PostsPage() {
 
         // 次のページのカーソルを保存（最後の要素のIDをカーソルとして使用）
         if (result.posts.length > rowsPerPage) {
-          setPageCursors(prev => ({
+          setPageCursors((prev) => ({
             ...prev,
-            [page]: result.posts[rowsPerPage - 1].id
+            [page]: result.posts[rowsPerPage - 1].id,
           }))
         }
       } catch (error) {
@@ -82,85 +81,87 @@ export default function PostsPage() {
   }
 
   const getStatusColor = (status: string) => {
-    return status === 'published' ? 'success' : 'warning'
+    return status === 'PUBLISHED' ? 'success' : 'warning'
   }
 
   const getStatusLabel = (status: string) => {
-    return statuses.find((s) => s.value === status)?.label || status
+    return PostStatuses.find((s) => s.value === status)?.label || status
   }
 
   return (
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <Button
-              color="primary"
-              startContent={<Plus size={20} />}
-              onClick={() => router.push('/admin/dashboard/posts/new')}
-          >
-            新規追加
-          </Button>
-        </div>
-
-        <Table aria-label="記事一覧表">
-          <TableHeader>
-            <TableColumn>タイトル</TableColumn>
-            <TableColumn>スラッグ</TableColumn>
-            <TableColumn>カテゴリ</TableColumn>
-            <TableColumn>ステータス</TableColumn>
-            <TableColumn align="center">アクション</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {posts.map((post) => (
-                <TableRow key={post.id as Key}>
-                  <TableCell>
-                    <Link
-                        href={`/posts/${post.slug}`}
-                        className="text-primary hover:underline"
-                    >
-                      {post.title}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{post.slug}</TableCell>
-                  <TableCell>{post.categoryId}</TableCell>
-                  <TableCell>
-                    <Chip color={getStatusColor(post.postStatus)} variant="flat">
-                      {getStatusLabel(post.postStatus)}
-                    </Chip>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 justify-end">
-                      <Button
-                          isIconOnly
-                          color="warning"
-                          aria-label="編集"
-                          onPress={() => handleEdit(post.id)}
-                      >
-                        <Edit size={20} />
-                      </Button>
-                      <Button
-                          isIconOnly
-                          color="danger"
-                          aria-label="削除"
-                          onPress={() => handleDelete(post.id)}
-                      >
-                        <Trash2 size={20} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <div className="flex justify-center">
-          <Pagination
-              total={totalPages}
-              page={page}
-              onChange={setPage}
-              showControls
-              variant="bordered"
-          />
-        </div>
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <Button
+          color="primary"
+          startContent={<Plus size={20} />}
+          onClick={() => router.push('/admin/dashboard/posts/new')}
+        >
+          新規追加
+        </Button>
       </div>
+
+      <Table aria-label="記事一覧表">
+        <TableHeader>
+          <TableColumn>タイトル</TableColumn>
+          <TableColumn>スラッグ</TableColumn>
+          <TableColumn>カテゴリ</TableColumn>
+          <TableColumn>ステータス</TableColumn>
+          <TableColumn align="center">アクション</TableColumn>
+        </TableHeader>
+        <TableBody>
+          {posts.map((post) => (
+            <TableRow key={post.id as Key}>
+              <TableCell>
+                <Link
+                  href={`/posts/${post.slug}`}
+                  className="text-primary hover:underline"
+                >
+                  {post.title}
+                </Link>
+              </TableCell>
+              <TableCell>{post.slug}</TableCell>
+              <TableCell>
+                {getBreadcrumbForCategory(post.categoryId, taxonomies)}
+              </TableCell>
+              <TableCell>
+                <Chip color={getStatusColor(post.postStatus)} variant="flat">
+                  {getStatusLabel(post.postStatus)}
+                </Chip>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2 justify-end">
+                  <Button
+                    isIconOnly
+                    color="warning"
+                    aria-label="編集"
+                    onPress={() => handleEdit(post.id)}
+                  >
+                    <Edit size={20} />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    color="danger"
+                    aria-label="削除"
+                    onPress={() => handleDelete(post.id)}
+                  >
+                    <Trash2 size={20} />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <div className="flex justify-center">
+        <Pagination
+          total={totalPages}
+          page={page}
+          onChange={setPage}
+          showControls
+          variant="bordered"
+        />
+      </div>
+    </div>
   )
 }

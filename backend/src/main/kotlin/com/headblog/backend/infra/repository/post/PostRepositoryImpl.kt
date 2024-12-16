@@ -30,7 +30,6 @@ class PostRepositoryImpl(
             .set(POSTS.META_TITLE, post.metaTitle)
             .set(POSTS.META_DESCRIPTION, post.metaDescription)
             .set(POSTS.META_KEYWORDS, post.metaKeywords)
-            .set(POSTS.ROBOTS_META_TAG, post.robotsMetaTag)
             .set(POSTS.OG_TITLE, post.ogTitle)
             .set(POSTS.OG_DESCRIPTION, post.ogDescription)
             .execute()
@@ -47,7 +46,6 @@ class PostRepositoryImpl(
             .set(POSTS.META_TITLE, post.metaTitle)
             .set(POSTS.META_DESCRIPTION, post.metaDescription)
             .set(POSTS.META_KEYWORDS, post.metaKeywords)
-            .set(POSTS.ROBOTS_META_TAG, post.robotsMetaTag)
             .set(POSTS.OG_TITLE, post.ogTitle)
             .set(POSTS.OG_DESCRIPTION, post.ogDescription)
             .set(POSTS.UPDATED_AT, LocalDateTime.now())
@@ -114,7 +112,6 @@ class PostRepositoryImpl(
             metaTitle = get(POSTS.META_TITLE),
             metaDescription = get(POSTS.META_DESCRIPTION),
             metaKeywords = get(POSTS.META_KEYWORDS),
-            robotsMetaTag = get(POSTS.ROBOTS_META_TAG),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
             categoryId = get(TAXONOMIES.ID)!!
@@ -133,7 +130,6 @@ class PostRepositoryImpl(
             metaTitle = get(POSTS.META_TITLE),
             metaDescription = get(POSTS.META_DESCRIPTION),
             metaKeywords = get(POSTS.META_KEYWORDS),
-            robotsMetaTag = get(POSTS.ROBOTS_META_TAG),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
             updateAt = get(POSTS.UPDATED_AT)!!,

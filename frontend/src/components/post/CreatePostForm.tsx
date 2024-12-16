@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ApiError } from '@/lib/api/core/client'
 import { useRouter } from 'next/navigation'
-import { buildCategoryOptions } from '@/lib/utils/taxonomy'
+import { createCategoryOptions } from '@/lib/utils/taxonomy'
 import { CreatePostRequest } from '@/types/api/post/request'
 
 interface CreatePostFormProps {
@@ -33,7 +33,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreatePostFormData>({
     resolver: zodResolver(createPostSchema),
     defaultValues: {},
@@ -41,7 +41,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
   })
 
   const { taxonomies } = useCategories()
-  const categories = buildCategoryOptions(taxonomies)
+  const categories = createCategoryOptions(taxonomies)
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {

@@ -5,7 +5,7 @@ import { TaxonomyTable } from '@/components/taxonomy/categories/TaxonomyTable'
 import { useCategories } from '@/hooks/taxonomy/useCategories'
 
 export default function CategoryList() {
-  const { taxonomies, isLoading, error, refetch } = useCategories() // refetchを追加
+  const { taxonomies, isLoading, error, refetch } = useCategories()
 
   // 子コンポーネントへデータ再取得関数を渡す
   const handleDelete = async () => {

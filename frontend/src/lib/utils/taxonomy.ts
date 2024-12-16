@@ -5,20 +5,21 @@ export interface CategoryOption {
   label: string
 }
 
-export interface CategoryOption {
-  value: string
-  label: string
+export function createCategoryOptions(
+  taxonomies: TaxonomyListResponse[] = []
+): CategoryOption[] {
+  return taxonomies.map(({ id, breadcrumbs }) => ({
+    value: id,
+    label: breadcrumbs.map((breadcrumb) => breadcrumb.name).join(' / '),
+  }))
 }
 
-export function buildCategoryOptions(
-  taxonomies: TaxonomyListResponse[]
-): CategoryOption[] {
-  if (!taxonomies || taxonomies.length === 0) return []
-
-  return taxonomies.map((taxonomy) => ({
-    value: taxonomy.id,
-    label: taxonomy.breadcrumbs
-      .map((breadcrumb) => breadcrumb.name)
-      .join(' / '),
-  }))
+export function getBreadcrumbForCategory(
+  categoryId: string,
+  taxonomies: TaxonomyListResponse[] = []
+): string | null {
+  const taxonomy = taxonomies.find(({ id }) => id === categoryId)
+  return taxonomy
+    ? taxonomy.breadcrumbs.map((breadcrumb) => breadcrumb.name).join(' / ')
+    : null
 }

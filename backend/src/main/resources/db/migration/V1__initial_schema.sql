@@ -63,14 +63,13 @@ CREATE TABLE posts
     excerpt           varchar(150) NOT NULL ,
     status            varchar(10)  NOT NULL,
     featured_image_id uuid,
-    created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     meta_title        varchar(255), -- SEO: ページタイトル
     meta_description  varchar(150), -- SEO: ページ説明
     meta_keywords     text,         -- SEO: メタキーワード
-    robots_meta_tag   varchar(50),  -- SEO: robotsメタタグ
     og_title          varchar(255), -- SEO: Open Graphタイトル
-    og_description    varchar(150)  -- SEO: Open Graph説明
+    og_description    varchar(150), -- SEO: Open Graph説明
+    created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE posts IS 'Table for storing blog posts and related content';
@@ -84,7 +83,6 @@ COMMENT ON COLUMN posts.featured_image_id IS 'Reference to the featured image in
 COMMENT ON COLUMN posts.meta_title IS 'SEO title for the post';
 COMMENT ON COLUMN posts.meta_description IS 'SEO description for the post';
 COMMENT ON COLUMN posts.meta_keywords IS 'SEO keywords for the post';
-COMMENT ON COLUMN posts.robots_meta_tag IS 'SEO robots meta tag for search engines';
 COMMENT ON COLUMN posts.og_title IS 'Open Graph title for social sharing';
 COMMENT ON COLUMN posts.og_description IS 'Open Graph description for social sharing';
 COMMENT ON COLUMN posts.created_at IS 'Timestamp when the post was created';

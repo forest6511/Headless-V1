@@ -14,7 +14,6 @@ data class PostWithTaxonomyIdDto(
     val metaTitle: String?,
     val metaDescription: String?,
     val metaKeywords: String?,
-    val robotsMetaTag: String?,
     val ogTitle: String?,
     val ogDescription: String?,
     val updateAt: LocalDateTime,

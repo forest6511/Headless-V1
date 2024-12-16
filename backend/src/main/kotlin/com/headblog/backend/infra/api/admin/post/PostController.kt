@@ -25,15 +25,15 @@ class PostController(
 
     private val logger = LoggerFactory.getLogger(PostController::class.java)
 
-    @PostMapping("/post")
+    @PostMapping
     fun createPost(@RequestBody request: CreatePostRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
         val id = createPostUseCase.execute(command)
         return ResponseEntity.ok(id.value)
     }
 
-    @GetMapping("/list")
-    fun getPosts(
+    @GetMapping
+    fun listPosts(
         @RequestParam(required = false) cursorPostId: UUID?,
         @RequestParam(defaultValue = "10") pageSize: Int
     ): ResponseEntity<PostListDto> {

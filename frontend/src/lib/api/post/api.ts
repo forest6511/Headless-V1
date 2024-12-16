@@ -15,7 +15,7 @@ export const postApi = {
       ...(params.cursorPostId && { cursorPostId: params.cursorPostId }),
       ...(params.pageSize && { pageSize: params.pageSize.toString() }),
     })
-    const url = `${ADMIN_API_ENDPOINTS.POST.LIST}?${queryParams.toString()}`
+    const url = `${ADMIN_API_ENDPOINTS.POST.POST}?${queryParams.toString()}`
     return apiClient.request(url, {
       method: 'GET',
     })

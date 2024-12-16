@@ -29,14 +29,14 @@ class CategoryController(
     private val getCategoryQueryService: GetCategoryQueryService
 ) {
 
-    @PostMapping("/category")
+    @PostMapping
     fun createCategory(@RequestBody request: CreateCategoryRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
         val categoryId = createCategoryUseCase.execute(command)
         return ResponseEntity.ok(categoryId.value)
     }
 
-    @PutMapping("/category")
+    @PutMapping
     fun updateCategory(@RequestBody request: UpdateCategoryRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
         val categoryId = updateCategoryUseCase.execute(command)
@@ -49,8 +49,8 @@ class CategoryController(
         return ResponseEntity.ok(categoryId.value)
     }
 
-    @GetMapping("/categories")
-    fun getCategories(): ResponseEntity<List<CategoryListDto>> =
+    @GetMapping
+    fun listCategories(): ResponseEntity<List<CategoryListDto>> =
         ResponseEntity.ok(getCategoryQueryService.findCategoryList())
 
     // toCommand メソッド

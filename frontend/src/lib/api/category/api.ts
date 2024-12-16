@@ -9,7 +9,7 @@ import {
 export const categoryApi = {
   getCategories: () => {
     return apiClient.request<CategoryListResponse[]>(
-      ADMIN_API_ENDPOINTS.CATEGORY.CATEGORIES,
+      ADMIN_API_ENDPOINTS.CATEGORY.CATEGORY,
       {
         method: 'GET',
       }
@@ -28,7 +28,7 @@ export const categoryApi = {
     })
   },
   deleteCategory: (id: string) => {
-    return apiClient.request(`${ADMIN_API_ENDPOINTS.CATEGORY.DELETE}/${id}`, {
+    return apiClient.request(`${ADMIN_API_ENDPOINTS.CATEGORY.CATEGORY}/${id}`, {
       method: 'DELETE',
     })
   },

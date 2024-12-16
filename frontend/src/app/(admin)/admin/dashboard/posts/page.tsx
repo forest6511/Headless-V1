@@ -105,6 +105,7 @@ export default function PostsPage() {
           <TableColumn>タイトル</TableColumn>
           <TableColumn>スラッグ</TableColumn>
           <TableColumn>カテゴリ</TableColumn>
+          <TableColumn>日付</TableColumn>
           <TableColumn>ステータス</TableColumn>
           <TableColumn align="center">アクション</TableColumn>
         </TableHeader>
@@ -122,6 +123,17 @@ export default function PostsPage() {
               <TableCell>{post.slug}</TableCell>
               <TableCell>
                 {getBreadcrumbForCategory(post.categoryId, taxonomies)}
+              </TableCell>
+              <TableCell>
+                {/* TODO 共通化 */}
+                {new Date(post.updateAt).toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                })}
               </TableCell>
               <TableCell>
                 <Chip color={getStatusColor(post.postStatus)} variant="flat">

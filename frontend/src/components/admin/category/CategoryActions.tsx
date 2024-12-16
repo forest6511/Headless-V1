@@ -33,8 +33,7 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      const payload = { id: categoryId }
-      await categoryApi.deleteCategory(payload)
+      await categoryApi.deleteCategory(categoryId)
       toast.success('カテゴリーを削除しました')
       onDelete()
     } catch (error) {

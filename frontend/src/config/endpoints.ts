@@ -7,6 +7,7 @@ export const ADMIN_API_ENDPOINTS = {
   CATEGORY: {
     CATEGORIES: '/api/admin/categories/categories',
     CATEGORY: '/api/admin/categories/category',
+    DELETE: '/api/admin/categories',
   },
   POST: {
     POST: '/api/admin/posts/post',

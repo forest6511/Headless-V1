@@ -2,15 +2,12 @@ package com.headblog.backend.infra.api.admin.category
 
 import com.headblog.backend.app.usecase.category.command.create.CreateCategoryCommand
 import com.headblog.backend.app.usecase.category.command.create.CreateCategoryUseCase
-import com.headblog.backend.app.usecase.category.command.delete.DeleteCategoryCommand
 import com.headblog.backend.app.usecase.category.command.delete.DeleteCategoryUseCase
 import com.headblog.backend.app.usecase.category.command.update.UpdateCategoryCommand
 import com.headblog.backend.app.usecase.category.command.update.UpdateCategoryUseCase
-import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryListDto
 import com.headblog.backend.app.usecase.category.query.GetCategoryQueryService
 import com.headblog.backend.infra.api.admin.category.request.CreateCategoryRequest
-import com.headblog.backend.infra.api.admin.category.request.DeleteCategoryRequest
 import com.headblog.backend.infra.api.admin.category.request.UpdateCategoryRequest
 import java.util.*
 import org.springframework.http.ResponseEntity
@@ -46,20 +43,14 @@ class CategoryController(
         return ResponseEntity.ok(categoryId.value)
     }
 
-    @DeleteMapping("/category")
-    fun deleteCategory(@RequestBody request: DeleteCategoryRequest): ResponseEntity<UUID> {
-        val command = request.toCommand()
-        val categoryId = deleteCategoryUseCase.execute(command)
+    @DeleteMapping("/{id}")
+    fun deleteCategory(@PathVariable id: UUID): ResponseEntity<UUID> {
+        val categoryId = deleteCategoryUseCase.execute(id)
         return ResponseEntity.ok(categoryId.value)
     }
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id: UUID): ResponseEntity<CategoryDto> =
-        getCategoryQueryService.findById(id)?.let { ResponseEntity.notFound().build() }
-            ?: ResponseEntity.notFound().build()
-
     @GetMapping("/categories")
-    fun getByCategories(): ResponseEntity<List<CategoryListDto>> =
+    fun getCategories(): ResponseEntity<List<CategoryListDto>> =
         ResponseEntity.ok(getCategoryQueryService.findCategoryList())
 
     // toCommand メソッド
@@ -79,12 +70,6 @@ class CategoryController(
             slug = this.slug,
             description = this.description,
             parentId = this.parentId
-        )
-    }
-
-    private fun DeleteCategoryRequest.toCommand(): DeleteCategoryCommand {
-        return DeleteCategoryCommand(
-            id = this.id
         )
     }
 }

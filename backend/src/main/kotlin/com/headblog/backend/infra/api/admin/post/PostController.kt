@@ -37,7 +37,7 @@ class PostController(
         @RequestParam(required = false) cursorPostId: UUID?,
         @RequestParam(defaultValue = "10") pageSize: Int
     ): ResponseEntity<PostListDto> {
-        logger.info("cursorPostId $cursorPostId")
+        logger.debug("cursorPostId {}", cursorPostId)
         val posts: PostListDto = getPostQueryService.findPostList(cursorPostId, pageSize)
         return ResponseEntity.ok(posts)
     }

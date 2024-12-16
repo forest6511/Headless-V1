@@ -3,7 +3,6 @@ import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 import { CategoryListResponse } from '@/types/api/category/response'
 import {
   CreateCategoryRequest,
-  DeleteCategoryRequest,
   UpdateCategoryRequest,
 } from '@/types/api/category/request'
 
@@ -28,10 +27,9 @@ export const categoryApi = {
       body: payload,
     })
   },
-  deleteCategory: (payload: DeleteCategoryRequest) => {
-    return apiClient.request(ADMIN_API_ENDPOINTS.CATEGORY.CATEGORY, {
+  deleteCategory: (id: string) => {
+    return apiClient.request(`${ADMIN_API_ENDPOINTS.CATEGORY.DELETE}/${id}`, {
       method: 'DELETE',
-      body: payload,
     })
   },
 }

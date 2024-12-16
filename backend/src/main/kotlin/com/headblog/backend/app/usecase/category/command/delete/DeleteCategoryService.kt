@@ -22,9 +22,9 @@ class DeleteCategoryService(
 
     private val logger = LoggerFactory.getLogger(DeleteCategoryService::class.java)
 
-    override fun execute(command: DeleteCategoryCommand): CategoryId {
-        val categoryDto = categoryRepository.findById(command.id)
-            ?: throw AppConflictException("Category with ID ${command.id} not found")
+    override fun execute(deleteId: UUID): CategoryId {
+        val categoryDto = categoryRepository.findById(deleteId)
+            ?: throw AppConflictException("Category with ID $deleteId not found")
 
         // デフォルトカテゴリーの取得（削除禁止の確認）
         val defaultCategory = categoryRepository.findBySlug(Slug.DEFAULT_SLUG)

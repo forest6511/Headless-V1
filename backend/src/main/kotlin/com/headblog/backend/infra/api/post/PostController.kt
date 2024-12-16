@@ -3,10 +3,10 @@ package com.headblog.backend.infra.api.post
 import com.headblog.backend.app.usecase.post.command.create.CreatePostCommand
 import com.headblog.backend.app.usecase.post.command.create.CreatePostUseCase
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
-import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostListDto
 import com.headblog.backend.infra.api.post.request.CreatePostRequest
 import java.util.*
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,6 +23,8 @@ class PostController(
     private val getPostQueryService: GetPostQueryService
 ) {
 
+    private val logger = LoggerFactory.getLogger(PostController::class.java)
+
     @PostMapping("/post")
     fun createPost(@RequestBody request: CreatePostRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
@@ -35,6 +37,7 @@ class PostController(
         @RequestParam(required = false) cursorPostId: UUID?,
         @RequestParam(defaultValue = "10") pageSize: Int
     ): ResponseEntity<PostListDto> {
+        logger.info("cursorPostId $cursorPostId")
         val posts: PostListDto = getPostQueryService.findPostList(cursorPostId, pageSize)
         return ResponseEntity.ok(posts)
     }

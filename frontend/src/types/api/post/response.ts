@@ -3,7 +3,7 @@ import { TaxonomyType } from '@/types/api/taxonomy/types'
 // /api/posts/list
 export interface PostListResponse {
   totalCount: number
-  posts: PostWithTaxonomies[]
+  posts: PostWithCategoryId[]
   totalPages: number
   pageSize: number
 }
@@ -18,7 +18,7 @@ export interface Taxonomies {
   createdAt: string
 }
 
-export interface PostWithTaxonomies {
+export interface PostWithCategoryId {
   id: string
   title: string
   slug: string
@@ -33,5 +33,5 @@ export interface PostWithTaxonomies {
   ogTitle?: string
   ogDescription?: string
   updateAt: string
-  taxonomies: Taxonomies[]
+  categoryId: string
 }

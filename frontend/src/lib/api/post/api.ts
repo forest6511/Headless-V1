@@ -1,6 +1,7 @@
 import { apiClient } from '@/lib/api'
 import { API_ENDPOINTS } from '@/config/endpoints'
 import { CreatePostRequest, ListPostRequest } from '@/types/api/post/request'
+import {PostListResponse} from "@/types/api/post/response";
 
 export const postApi = {
   createPost: (payload: CreatePostRequest) => {
@@ -9,7 +10,7 @@ export const postApi = {
       body: payload,
     })
   },
-  getPostList: (params: ListPostRequest) => {
+  getPostList: (params: ListPostRequest): Promise<PostListResponse>  => {
     const queryParams = new URLSearchParams({
       ...(params.cursorPostId && { cursorPostId: params.cursorPostId }),
       ...(params.pageSize && { pageSize: params.pageSize.toString() }),

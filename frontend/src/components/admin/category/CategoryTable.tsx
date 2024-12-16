@@ -65,7 +65,7 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
   }
 
   return (
-    <Table aria-label="タクソノミー一覧">
+    <Table aria-label="カテゴリー一覧">
       <TableHeader>
         {CATEGORY_COLUMNS.map((column) => (
           <TableColumn

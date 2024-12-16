@@ -1,11 +1,11 @@
 package com.headblog.backend.infra.repository.post
 
-import com.headblog.backend.domain.model.post.Post
-import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostStatus
-import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.post.Post
+import com.headblog.backend.domain.model.post.PostCategoryRepository
+import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.domain.model.post.PostStatus
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -30,7 +30,7 @@ class PostRepositoryImplTest {
     lateinit var categoryRepository: CategoryRepository
 
     @Autowired
-    lateinit var postTaxonomyRepository: PostTaxonomyRepository
+    lateinit var postCategoryRepository: PostCategoryRepository
 
     @Autowired
     lateinit var idGenerator: IdGenerator<EntityId>
@@ -39,8 +39,8 @@ class PostRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
-        // デフォルトのタクソノミーを作成
-        defaultCategory = createTaxonomy("Default Category", "default-category")
+        // デフォルトのカテゴリーを作成
+        defaultCategory = createCategory("Default Category", "default-category")
         categoryRepository.save(defaultCategory)
     }
 
@@ -168,12 +168,12 @@ class PostRepositoryImplTest {
                 categoryId = defaultCategory.id.value
             )
             postRepository.save(post)
-            postTaxonomyRepository.addRelation(post.id, defaultCategory.id)
+            postCategoryRepository.addRelation(post.id, defaultCategory.id)
             post
         }
     }
 
-    private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Category =
+    private fun createCategory(name: String, slug: String, parentId: UUID? = null): Category =
         Category.create(
             id = idGenerator,
             name = name,

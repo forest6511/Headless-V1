@@ -1,6 +1,6 @@
 # シーケンス図
 
-## タクソノミー作成（POST）
+## カテゴリー作成（POST）
 ```mermaid
 sequenceDiagram
     actor Client
@@ -22,7 +22,7 @@ sequenceDiagram
     Controller-->>Client: 201 Created
 ```
 
-## タクソノミー取得（GET）
+## カテゴリー取得（GET）
 ```mermaid
 sequenceDiagram
     actor Client

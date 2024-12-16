@@ -5,8 +5,8 @@ import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Slug
+import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
-import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class DeleteCategoryService(
     private val categoryRepository: CategoryRepository,
-    private val postTaxonomyRepository: PostTaxonomyRepository,
+    private val postCategoryRepository: PostCategoryRepository,
 ) : DeleteCategoryUseCase {
 
     private val logger = LoggerFactory.getLogger(DeleteCategoryService::class.java)
@@ -34,7 +34,7 @@ class DeleteCategoryService(
             throw AppConflictException("Cannot delete the default category")
         }
 
-        // 削除対象のタクソノミーを作成
+        // 削除対象のカテゴリーを作成
         val deleteCategory: Category = Category.fromDto(
             id = categoryDto.id,
             name = categoryDto.name,
@@ -48,21 +48,21 @@ class DeleteCategoryService(
         updateChildrenParentRecursively(deleteCategory.id.value, defaultCategory)
 
         // 投稿との紐付けを解除しデフォルトカテゴリに再割り当て
-        val associatedPostIds: List<PostId> = postTaxonomyRepository.findPostsByTaxonomyId(deleteCategory.id)
+        val associatedPostIds: List<PostId> = postCategoryRepository.findPostsByCategoryId(deleteCategory.id)
         associatedPostIds.forEach { postId ->
-            postTaxonomyRepository.deleteRelation(postId, deleteCategory.id)
-            postTaxonomyRepository.addRelation(postId, CategoryId(defaultCategory.id))
+            postCategoryRepository.deleteRelation(postId, deleteCategory.id)
+            postCategoryRepository.addRelation(postId, CategoryId(defaultCategory.id))
         }
 
-        // タクソノミーの削除
+        // カテゴリーの削除
         categoryRepository.delete(deleteCategory)
 
         return deleteCategory.id
     }
 
     private fun updateChildrenParentRecursively(currentParentId: UUID, defaultCategory: CategoryDto) {
-        // デフォルトカテゴリーをTaxonomyオブジェクトに変換
-        val defaultTaxonomy = Category.fromDto(
+        // デフォルトカテゴリーをCategoryオブジェクトに変換
+        val category = Category.fromDto(
             id = defaultCategory.id,
             name = defaultCategory.name,
             slug = defaultCategory.slug,
@@ -76,7 +76,7 @@ class DeleteCategoryService(
 
         children.forEach { child ->
             // 子カテゴリーの親をデフォルトカテゴリーに変更
-            val updatedChild = child.updateParent(defaultTaxonomy)
+            val updatedChild = child.updateParent(category)
             categoryRepository.update(updatedChild)  // 更新後のオブジェクトを保存
 
             // この子カテゴリーが持つ子カテゴリーを再帰的に処理

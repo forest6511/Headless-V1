@@ -3,7 +3,7 @@ package com.headblog.backend.app.usecase.post.query
 import java.time.LocalDateTime
 import java.util.*
 
-data class PostWithTaxonomyIdDto(
+data class PostWithCategoryIdDto(
     val id: UUID,
     val title: String,
     val slug: String,

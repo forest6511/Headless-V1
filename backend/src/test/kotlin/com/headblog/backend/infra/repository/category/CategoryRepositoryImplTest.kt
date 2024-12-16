@@ -27,44 +27,44 @@ class CategoryRepositoryImplTest {
     lateinit var idGenerator: IdGenerator<EntityId>
 
     @Test
-    @DisplayName("単一のタクソノミーを保存して取得できる")
-    fun `should save and find single taxonomy`() {
+    @DisplayName("単一のカテゴリーを保存して取得できる")
+    fun `should save and find single category`() {
         // Given
-        val taxonomy = createTaxonomy("Programming", "programming")
+        val category = createCategory("Programming", "programming")
 
         // When
-        categoryRepository.save(taxonomy)
+        categoryRepository.save(category)
 
         // Then
-        val taxonomyDto = categoryRepository.findById(taxonomy.id.value)
-        assertTaxonomyEquals(taxonomy, taxonomyDto)
+        val categoryDto = categoryRepository.findById(category.id.value)
+        assertCategoryEquals(category, categoryDto)
     }
 
     @Test
-    @DisplayName("スラグでタクソノミーを検索できる")
-    fun `should find taxonomy by slug`() {
+    @DisplayName("スラグでカテゴリーを検索できる")
+    fun `should find category by slug`() {
         // Given
-        val taxonomy = createTaxonomy("Development", "development")
-        categoryRepository.save(taxonomy)
+        val category = createCategory("Development", "development")
+        categoryRepository.save(category)
 
         // When
-        val taxonomyDto = categoryRepository.findBySlug("development")
+        val categoryDto = categoryRepository.findBySlug("development")
 
         // Then
-        assertNotNull(taxonomyDto)
-        assertEquals(taxonomy.slug.value, taxonomyDto?.slug)
-        assertEquals(taxonomy.name, taxonomyDto?.name)
+        assertNotNull(categoryDto)
+        assertEquals(category.slug.value, categoryDto?.slug)
+        assertEquals(category.name, categoryDto?.name)
     }
 
     @Test
-    @DisplayName("親子関係のあるタクソノミーを保存できる")
-    fun `should save taxonomy with parent`() {
+    @DisplayName("親子関係のあるカテゴリーを保存できる")
+    fun `should save category with parent`() {
         // Given
-        val parent = createTaxonomy("Parent Category", "parent-category")
+        val parent = createCategory("Parent Category", "parent-category")
         categoryRepository.save(parent)
 
         // When
-        val child = createTaxonomy("Child Category", "child-category", parent.id.value)
+        val child = createCategory("Child Category", "child-category", parent.id.value)
         categoryRepository.save(child)
 
         // Then
@@ -74,26 +74,26 @@ class CategoryRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("親タクソノミーに子が存在するか確認できる")
+    @DisplayName("親カテゴリーに子が存在するか確認できる")
     fun `should check if parent has children`() {
         // Given
-        val parent = createTaxonomy("Parent", "parent")
+        val parent = createCategory("Parent", "parent")
         categoryRepository.save(parent)
 
         // When
         assertFalse(categoryRepository.existsByParentId(parent.id.value))
 
         // Then
-        val child = createTaxonomy("Child", "child", parent.id.value)
+        val child = createCategory("Child", "child", parent.id.value)
         categoryRepository.save(child)
 
         assertTrue(categoryRepository.existsByParentId(parent.id.value))
     }
 
-    private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Category =
+    private fun createCategory(name: String, slug: String, parentId: UUID? = null): Category =
         Category.create(idGenerator, name, slug, "Test description for $name", parentId)
 
-    private fun assertTaxonomyEquals(expected: Category, actual: CategoryDto?) {
+    private fun assertCategoryEquals(expected: Category, actual: CategoryDto?) {
         assertNotNull(actual)
         assertEquals(expected.name, actual?.name)
         assertEquals(expected.slug.value, actual?.slug)

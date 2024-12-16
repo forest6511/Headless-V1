@@ -1,11 +1,11 @@
 package com.headblog.backend.infra.repository.category
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.CategoryWithPostRefsDto
+import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryRepository
-import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
-import com.headblog.infra.jooq.tables.references.TAXONOMIES
+import com.headblog.infra.jooq.tables.references.CATEGORIES
+import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
@@ -17,84 +17,84 @@ class CategoryRepositoryImpl(
 ) : CategoryRepository {
 
     override fun save(category: Category): Int {
-        return dsl.insertInto(TAXONOMIES)
-            .set(TAXONOMIES.ID, category.id.value)
-            .set(TAXONOMIES.NAME, category.name)
-            .set(TAXONOMIES.SLUG, category.slug.value)
-            .set(TAXONOMIES.DESCRIPTION, category.description)
-            .set(TAXONOMIES.PARENT_ID, category.parentId?.value)
+        return dsl.insertInto(CATEGORIES)
+            .set(CATEGORIES.ID, category.id.value)
+            .set(CATEGORIES.NAME, category.name)
+            .set(CATEGORIES.SLUG, category.slug.value)
+            .set(CATEGORIES.DESCRIPTION, category.description)
+            .set(CATEGORIES.PARENT_ID, category.parentId?.value)
             .execute()
     }
 
     override fun update(category: Category): Int {
-        return dsl.update(TAXONOMIES)
-            .set(TAXONOMIES.NAME, category.name)
-            .set(TAXONOMIES.SLUG, category.slug.value)
-            .set(TAXONOMIES.DESCRIPTION, category.description)
-            .set(TAXONOMIES.PARENT_ID, category.parentId?.value)
-            .where(TAXONOMIES.ID.eq(category.id.value))
+        return dsl.update(CATEGORIES)
+            .set(CATEGORIES.NAME, category.name)
+            .set(CATEGORIES.SLUG, category.slug.value)
+            .set(CATEGORIES.DESCRIPTION, category.description)
+            .set(CATEGORIES.PARENT_ID, category.parentId?.value)
+            .where(CATEGORIES.ID.eq(category.id.value))
             .execute()
     }
 
     override fun delete(category: Category): Int {
-        return dsl.delete(TAXONOMIES)
-            .where(TAXONOMIES.ID.eq(category.id.value))
+        return dsl.delete(CATEGORIES)
+            .where(CATEGORIES.ID.eq(category.id.value))
             .execute()
     }
 
     override fun updateParentId(oldParentId: UUID, newParentId: UUID): Int {
-        return dsl.update(TAXONOMIES)
-            .set(TAXONOMIES.PARENT_ID, newParentId)
-            .where(TAXONOMIES.PARENT_ID.eq(oldParentId))
+        return dsl.update(CATEGORIES)
+            .set(CATEGORIES.PARENT_ID, newParentId)
+            .where(CATEGORIES.PARENT_ID.eq(oldParentId))
             .execute()
     }
 
     override fun findById(id: UUID): CategoryDto? = dsl.select()
-        .from(TAXONOMIES)
-        .where(TAXONOMIES.ID.eq(id))
+        .from(CATEGORIES)
+        .where(CATEGORIES.ID.eq(id))
         .fetchOne()
-        ?.toTaxonomyDto()
+        ?.toCategoryDto()
 
 
     override fun findBySlug(slug: String): CategoryDto? = dsl.select()
-        .from(TAXONOMIES)
-        .where(TAXONOMIES.SLUG.eq(slug))
+        .from(CATEGORIES)
+        .where(CATEGORIES.SLUG.eq(slug))
         .fetchOne()
-        ?.toTaxonomyDto()
+        ?.toCategoryDto()
 
 
     override fun existsByParentId(parentId: UUID): Boolean {
         val count = dsl.selectCount()
-            .from(TAXONOMIES)
-            .where(TAXONOMIES.PARENT_ID.eq(parentId))
+            .from(CATEGORIES)
+            .where(CATEGORIES.PARENT_ID.eq(parentId))
             .fetchOne(0, Int::class.java)
         return (count ?: 0) > 0
     }
 
-    override fun findTypeWithPostRefs(): List<CategoryWithPostRefsDto> {
-        return dsl.select(TAXONOMIES.asterisk(), POST_TAXONOMIES.POST_ID)
-            .from(TAXONOMIES)
-            .leftJoin(POST_TAXONOMIES)
-            .on(TAXONOMIES.ID.eq(POST_TAXONOMIES.TAXONOMY_ID))
+    override fun findTypeWithPostIds(): List<CategoryWithPostIdsDto> {
+        return dsl.select(CATEGORIES.asterisk(), POST_CATEGORIES.POST_ID)
+            .from(CATEGORIES)
+            .leftJoin(POST_CATEGORIES)
+            .on(CATEGORIES.ID.eq(POST_CATEGORIES.CATEGORY_ID))
             .fetch()
-            .groupBy { it[TAXONOMIES.ID] }
-            .map { (_, records) -> records.toTaxonomyWithPostRefsDto() }
+            .groupBy { it[CATEGORIES.ID] }
+            .map { (_, records) -> records.toCategoryWithPostIdsDto() }
     }
 
     // TODO DTOを返却する
     override fun findAllByParentId(parentId: UUID): List<Category> {
         return dsl.select()
-            .from(TAXONOMIES)
-            .where(TAXONOMIES.PARENT_ID.eq(parentId))
+            .from(CATEGORIES)
+            .where(CATEGORIES.PARENT_ID.eq(parentId))
             .fetch()
             .map { record ->
                 Category.fromDto(
-                    id = record[TAXONOMIES.ID]!!,
-                    name = record[TAXONOMIES.NAME]!!,
-                    slug = record[TAXONOMIES.SLUG]!!,
-                    description = record[TAXONOMIES.DESCRIPTION],
-                    parentId = record[TAXONOMIES.PARENT_ID],
-                    createdAt = record[TAXONOMIES.CREATED_AT]!!
+                    id = record[CATEGORIES.ID]!!,
+                    name = record[CATEGORIES.NAME]!!,
+                    slug = record[CATEGORIES.SLUG]!!,
+                    description = record[CATEGORIES.DESCRIPTION],
+                    parentId = record[CATEGORIES.PARENT_ID],
+                    createdAt = record[CATEGORIES.CREATED_AT]!!
                 )
             }
     }
@@ -105,27 +105,27 @@ class CategoryRepositoryImpl(
      * Add jOOQ-kotlin extension methods to help ignore nullability when mapping
      * https://github.com/jOOQ/jOOQ/issues/12934
      */
-    private fun Record.toTaxonomyDto(): CategoryDto {
+    private fun Record.toCategoryDto(): CategoryDto {
         return CategoryDto(
-            id = get(TAXONOMIES.ID)!!,
-            name = get(TAXONOMIES.NAME)!!,
-            slug = get(TAXONOMIES.SLUG)!!,
-            description = get(TAXONOMIES.DESCRIPTION),
-            parentId = get(TAXONOMIES.PARENT_ID),
-            createdAt = get(TAXONOMIES.CREATED_AT)!!
+            id = get(CATEGORIES.ID)!!,
+            name = get(CATEGORIES.NAME)!!,
+            slug = get(CATEGORIES.SLUG)!!,
+            description = get(CATEGORIES.DESCRIPTION),
+            parentId = get(CATEGORIES.PARENT_ID),
+            createdAt = get(CATEGORIES.CREATED_AT)!!
         )
     }
 
-    private fun List<Record>.toTaxonomyWithPostRefsDto(): CategoryWithPostRefsDto {
+    private fun List<Record>.toCategoryWithPostIdsDto(): CategoryWithPostIdsDto {
         val firstRecord = first()
-        return CategoryWithPostRefsDto(
-            id = firstRecord[TAXONOMIES.ID]!!,
-            name = firstRecord[TAXONOMIES.NAME]!!,
-            slug = firstRecord[TAXONOMIES.SLUG]!!,
-            description = firstRecord[TAXONOMIES.DESCRIPTION],
-            parentId = firstRecord[TAXONOMIES.PARENT_ID],
-            createdAt = firstRecord[TAXONOMIES.CREATED_AT]!!,
-            postIds = mapNotNull { it[POST_TAXONOMIES.POST_ID] }
+        return CategoryWithPostIdsDto(
+            id = firstRecord[CATEGORIES.ID]!!,
+            name = firstRecord[CATEGORIES.NAME]!!,
+            slug = firstRecord[CATEGORIES.SLUG]!!,
+            description = firstRecord[CATEGORIES.DESCRIPTION],
+            parentId = firstRecord[CATEGORIES.PARENT_ID],
+            createdAt = firstRecord[CATEGORIES.CREATED_AT]!!,
+            postIds = mapNotNull { it[POST_CATEGORIES.POST_ID] }
                 .distinct()
                 .ifEmpty { emptyList() }
         )

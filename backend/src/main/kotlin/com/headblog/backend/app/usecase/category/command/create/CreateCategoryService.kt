@@ -21,12 +21,12 @@ class CreateCategoryService(
 
     override fun execute(command: CreateCategoryCommand): CategoryId {
         categoryRepository.findBySlug(command.slug)?.let {
-            val message = "The taxonomy with slug '${command.slug}' already exists."
+            val message = "The category with slug '${command.slug}' already exists."
             logger.error(message)
             throw AppConflictException(message)
         }
 
-        // ドメインの集約メソッドを呼び出してタクソノミーを作成
+        // ドメインの集約メソッドを呼び出してカテゴリーを作成
         val category = Category.create(
             id = idGenerator,
             name = command.name,

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/categories")
 class CategoryController(
     private val createCategoryUseCase: CreateCategoryUseCase,
-    private val updateTaxonomyUseCase: UpdateCategoryUseCase,
+    private val updateCategoryUseCase: UpdateCategoryUseCase,
     private val deleteCategoryUseCase: DeleteCategoryUseCase,
     private val getCategoryQueryService: GetCategoryQueryService
 ) {
@@ -35,22 +35,22 @@ class CategoryController(
     @PostMapping("/category")
     fun createCategory(@RequestBody request: CreateCategoryRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
-        val taxonomyId = createCategoryUseCase.execute(command)
-        return ResponseEntity.ok(taxonomyId.value)
+        val categoryId = createCategoryUseCase.execute(command)
+        return ResponseEntity.ok(categoryId.value)
     }
 
     @PutMapping("/category")
     fun updateCategory(@RequestBody request: UpdateCategoryRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
-        val taxonomyId = updateTaxonomyUseCase.execute(command)
-        return ResponseEntity.ok(taxonomyId.value)
+        val categoryId = updateCategoryUseCase.execute(command)
+        return ResponseEntity.ok(categoryId.value)
     }
 
     @DeleteMapping("/category")
     fun deleteCategory(@RequestBody request: DeleteCategoryRequest): ResponseEntity<UUID> {
         val command = request.toCommand()
-        val taxonomyId = deleteCategoryUseCase.execute(command)
-        return ResponseEntity.ok(taxonomyId.value)
+        val categoryId = deleteCategoryUseCase.execute(command)
+        return ResponseEntity.ok(categoryId.value)
     }
 
     @GetMapping("/{id}")
@@ -60,7 +60,7 @@ class CategoryController(
 
     @GetMapping("/categories")
     fun getByCategories(): ResponseEntity<List<CategoryListDto>> =
-        ResponseEntity.ok(getCategoryQueryService.findTaxonomyList())
+        ResponseEntity.ok(getCategoryQueryService.findCategoryList())
 
     // toCommand メソッド
     private fun CreateCategoryRequest.toCommand(): CreateCategoryCommand {

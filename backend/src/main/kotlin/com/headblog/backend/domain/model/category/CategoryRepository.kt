@@ -1,7 +1,7 @@
 package com.headblog.backend.domain.model.category
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.CategoryWithPostRefsDto
+import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import java.util.*
 
 interface CategoryRepository {
@@ -13,6 +13,6 @@ interface CategoryRepository {
     fun findById(id: UUID): CategoryDto?
     fun findBySlug(slug: String): CategoryDto?
     fun existsByParentId(parentId: UUID): Boolean
-    fun findTypeWithPostRefs(): List<CategoryWithPostRefsDto>
+    fun findTypeWithPostIds(): List<CategoryWithPostIdsDto>
     fun findAllByParentId(parentId: UUID): List<Category>
 }

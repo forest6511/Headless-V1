@@ -2,9 +2,9 @@ package com.headblog.backend.domain.model.post
 
 import com.headblog.backend.domain.model.category.CategoryId
 
-interface PostTaxonomyRepository {
+interface PostCategoryRepository {
     fun addRelation(postId: PostId, categoryId: CategoryId): Int
     fun deleteRelation(postId: PostId, categoryId: CategoryId): Int
-    fun findTaxonomiesByPostId(postId: PostId): List<CategoryId>
-    fun findPostsByTaxonomyId(categoryId: CategoryId): List<PostId>
+    fun findCategoriesByPostId(postId: PostId): List<CategoryId>
+    fun findPostsByCategoryId(categoryId: CategoryId): List<PostId>
 }

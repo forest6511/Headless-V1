@@ -6,5 +6,5 @@ interface GetCategoryQueryService {
     fun findById(id: UUID): CategoryDto?
     fun findBySlug(slug: String): CategoryDto?
     fun existsByParentId(parentId: UUID): Boolean
-    fun findTaxonomyList(): List<CategoryListDto>
+    fun findCategoryList(): List<CategoryListDto>
 }

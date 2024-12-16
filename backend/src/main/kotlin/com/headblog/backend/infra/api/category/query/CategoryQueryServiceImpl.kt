@@ -3,7 +3,7 @@ package com.headblog.backend.infra.api.category.query
 import com.headblog.backend.app.usecase.category.query.BreadcrumbDto
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryListDto
-import com.headblog.backend.app.usecase.category.query.CategoryWithPostRefsDto
+import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import com.headblog.backend.app.usecase.category.query.GetCategoryQueryService
 import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Slug
@@ -21,20 +21,20 @@ class CategoryQueryServiceImpl(
 
     override fun existsByParentId(parentId: UUID) = categoryRepository.existsByParentId(parentId)
 
-    override fun findTaxonomyList(): List<CategoryListDto> {
-        val taxonomyWithPostRefsDto: List<CategoryWithPostRefsDto> = categoryRepository.findTypeWithPostRefs()
-        val taxonomyMap = taxonomyWithPostRefsDto.associateBy { it.id }
+    override fun findCategoryList(): List<CategoryListDto> {
+        val categoryWithPostIdsDto: List<CategoryWithPostIdsDto> = categoryRepository.findTypeWithPostIds()
+        val categoryMap = categoryWithPostIdsDto.associateBy { it.id }
 
-        val categoryList = taxonomyWithPostRefsDto.map { taxonomy ->
+        val categoryList = categoryWithPostIdsDto.map { category ->
             CategoryListDto(
-                id = taxonomy.id,
-                name = taxonomy.name,
-                slug = taxonomy.slug,
-                description = taxonomy.description,
-                parentId = taxonomy.parentId,
-                createdAt = taxonomy.createdAt,
-                postIds = taxonomy.postIds,
-                breadcrumbs = generateBreadcrumbs(taxonomy, taxonomyMap)
+                id = category.id,
+                name = category.name,
+                slug = category.slug,
+                description = category.description,
+                parentId = category.parentId,
+                createdAt = category.createdAt,
+                postIds = category.postIds,
+                breadcrumbs = generateBreadcrumbs(category, categoryMap)
             )
         }
         return categoryList.sortedWith(compareBy(
@@ -45,11 +45,11 @@ class CategoryQueryServiceImpl(
     }
 
     private fun generateBreadcrumbs(
-        taxonomy: CategoryWithPostRefsDto,
-        taxonomyMap: Map<UUID, CategoryWithPostRefsDto>
+        category: CategoryWithPostIdsDto,
+        categoryMap: Map<UUID, CategoryWithPostIdsDto>
     ): List<BreadcrumbDto> {
-        return generateSequence(taxonomy) { current ->
-            current.parentId?.let { taxonomyMap[it] } // 親カテゴリを取得
+        return generateSequence(category) { current ->
+            current.parentId?.let { categoryMap[it] } // 親カテゴリを取得
         }.map { current ->
             BreadcrumbDto(
                 id = current.id,

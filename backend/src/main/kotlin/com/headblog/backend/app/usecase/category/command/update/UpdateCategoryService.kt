@@ -23,12 +23,12 @@ class UpdateCategoryService(
         categoryRepository.findBySlug(command.slug)?.let { existingDto ->
             if (existingDto.id != categoryDto.id) {
                 throw AppConflictException(
-                    "The taxonomy with slug '${command.slug}' already exists and belongs to a different taxonomy."
+                    "The category with slug '${command.slug}' already exists and belongs to a different category."
                 )
             }
         }
 
-        // ドメインの集約メソッドを呼び出してタクソノミーを作成
+        // ドメインの集約メソッドを呼び出してカテゴリーを作成
         val updatedCategory = Category.fromDto(
             id = categoryDto.id,
             name = command.name,

@@ -1,12 +1,12 @@
 package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.app.usecase.post.query.PostDto
-import com.headblog.backend.app.usecase.post.query.PostWithTaxonomyIdDto
+import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.infra.jooq.tables.references.CATEGORIES
 import com.headblog.infra.jooq.tables.references.POSTS
-import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
-import com.headblog.infra.jooq.tables.references.TAXONOMIES
+import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import java.time.LocalDateTime
 import java.util.*
 import org.jooq.DSLContext
@@ -62,8 +62,8 @@ class PostRepositoryImpl(
     override fun findBySlug(slug: String): PostDto? =
         dsl.select()
             .from(POSTS)
-            .leftJoin(POST_TAXONOMIES)
-            .on(POSTS.ID.eq(POST_TAXONOMIES.POST_ID))
+            .innerJoin(POST_CATEGORIES)
+            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
             .where(POSTS.SLUG.eq(slug))
             .fetchOne()
             ?.toPostDto()
@@ -71,7 +71,7 @@ class PostRepositoryImpl(
     override fun findAll(
         cursorPostId: UUID?,
         pageSize: Int,
-    ): List<PostWithTaxonomyIdDto> {
+    ): List<PostWithCategoryIdDto> {
         val query = createBaseQuery()
 
         // カーソル条件がある場合 (2ページ目以降)
@@ -85,7 +85,7 @@ class PostRepositoryImpl(
             .orderBy(POSTS.ID.desc())
             .limit(pageSize + 1)
             .fetch()
-            .map { it.toPostWithTaxonomyIdDto() }
+            .map { it.toPostWithCategoryIdDto() }
     }
 
     override fun count(): Int = dsl.fetchCount(POSTS)
@@ -93,11 +93,11 @@ class PostRepositoryImpl(
     private fun createBaseQuery() =
         dsl.select(
             POSTS.asterisk(),
-            POST_TAXONOMIES.TAXONOMY_ID
+            POST_CATEGORIES.CATEGORY_ID
         )
             .from(POSTS)
-            .innerJoin(POST_TAXONOMIES)
-            .on(POSTS.ID.eq(POST_TAXONOMIES.POST_ID))
+            .innerJoin(POST_CATEGORIES)
+            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
 
     // toDto
     private fun Record.toPostDto(): PostDto {
@@ -114,12 +114,12 @@ class PostRepositoryImpl(
             metaKeywords = get(POSTS.META_KEYWORDS),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
-            categoryId = get(TAXONOMIES.ID)!!
+            categoryId = get(CATEGORIES.ID)!!
         )
     }
 
-    private fun Record.toPostWithTaxonomyIdDto(): PostWithTaxonomyIdDto {
-        return PostWithTaxonomyIdDto(
+    private fun Record.toPostWithCategoryIdDto(): PostWithCategoryIdDto {
+        return PostWithCategoryIdDto(
             id = get(POSTS.ID)!!,
             title = get(POSTS.TITLE)!!,
             slug = get(POSTS.SLUG)!!,
@@ -133,7 +133,7 @@ class PostRepositoryImpl(
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
             updateAt = get(POSTS.UPDATED_AT)!!,
-            categoryId = get(POST_TAXONOMIES.TAXONOMY_ID)!!,
+            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
         )
     }
 }

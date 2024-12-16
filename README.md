@@ -1,6 +1,8 @@
 # HeadBlog
 
-![Build Status](https://github.com/forest6511/HeadBlog/actions/workflows/ci.yml/badge.svg) 
+![Build Status](https://github.com/forest6511/HeadBlog/actions/workflows/ci.yml/badge.svg)
+![Next.js Version](https://img.shields.io/badge/next.js-14.2.18-brightgreen)
+![Spring Boot Version](https://img.shields.io/badge/spring--boot-3.4.0-brightgreen)
 
 ## Setup Instructions
 

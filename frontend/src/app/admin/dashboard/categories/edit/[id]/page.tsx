@@ -4,6 +4,7 @@ import { Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { UpdateCategoryForm } from '@/components/admin/category/UpdateCategoryForm'
+import { ROUTES } from '@/config/routes'
 
 interface Props {
   params: {
@@ -19,7 +20,7 @@ export default function EditCategoryPage({ params }: Props) {
   const category = categories.find((t) => t.id === params.id)
 
   if (!category) {
-    router.push('/admin/dashboard/categories')
+    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE)
     return null
   }
 
@@ -36,7 +37,7 @@ export default function EditCategoryPage({ params }: Props) {
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの編集</h1>
         <UpdateCategoryForm
-          redirectPath="/admin/dashboard/categories"
+          redirectPath={ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE}
           initialData={defaultValues}
         />
       </CardBody>

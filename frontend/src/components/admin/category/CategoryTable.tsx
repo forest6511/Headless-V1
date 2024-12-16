@@ -10,7 +10,7 @@ import {
 } from '@nextui-org/react'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { CategoryActions } from './CategoryActions'
-import { CATEGORY_COLUMNS } from './constants'
+import { CATEGORY_COLUMNS } from '@/config/constants'
 import React from 'react'
 
 interface CategoryTableProps {

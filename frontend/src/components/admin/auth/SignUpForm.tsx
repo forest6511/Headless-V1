@@ -6,6 +6,7 @@ import { Button, Input } from '@nextui-org/react'
 import { SignupFormData, signupSchema } from '@/schemas/auth'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/lib/api'
+import { ROUTES } from '@/config/routes'
 
 export default function SignUpForm() {
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function SignUpForm() {
       })
 
       // TODO メール確認などは省略。将来的にサインアップ機能は削除予定(バックエンドのデプロイ前)
-      router.push('/admin/dashboard')
+      router.push(ROUTES.ADMIN.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }

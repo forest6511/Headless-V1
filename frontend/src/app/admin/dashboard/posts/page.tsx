@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Key, useEffect } from 'react'
+import React, { useState, Key, useEffect } from 'react'
 import Link from 'next/link'
 import { Edit, Trash2, Plus } from 'lucide-react'
 import {
@@ -20,6 +20,8 @@ import { PostListResponse, PostWithCategoryId } from '@/types/api/post/response'
 import { PostStatuses } from '@/types/api/post/types'
 import { useCategories } from '@/hooks/category/useCategories'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
+import { ROUTES } from '@/config/routes'
+import { POST_COLUMNS } from '@/config/constants'
 
 export default function PostsPage() {
   const { categories, isLoading, error } = useCategories()
@@ -68,10 +70,10 @@ export default function PostsPage() {
     }
 
     fetchPosts()
-  }, [page])
+  }, [page])　// pageの変更を変更をトリガーとする
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/dashboard/posts/edit/${id}`)
+    router.push(ROUTES.ADMIN.DASHBOARD.POSTS.EDIT(id))
   }
 
   const handleDelete = (id: string) => {
@@ -94,7 +96,7 @@ export default function PostsPage() {
         <Button
           color="primary"
           startContent={<Plus size={20} />}
-          onClick={() => router.push('/admin/dashboard/posts/new')}
+          onClick={() => router.push(ROUTES.ADMIN.DASHBOARD.POSTS.NEW)}
         >
           新規追加
         </Button>
@@ -102,12 +104,14 @@ export default function PostsPage() {
 
       <Table aria-label="記事一覧表">
         <TableHeader>
-          <TableColumn>タイトル</TableColumn>
-          <TableColumn>スラッグ</TableColumn>
-          <TableColumn>カテゴリ</TableColumn>
-          <TableColumn>日付</TableColumn>
-          <TableColumn>ステータス</TableColumn>
-          <TableColumn align="center">アクション</TableColumn>
+          {POST_COLUMNS.map((column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === 'actions' ? 'end' : 'start'}
+            >
+              {column.name}
+            </TableColumn>
+          ))}
         </TableHeader>
         <TableBody>
           {posts.map((post) => (

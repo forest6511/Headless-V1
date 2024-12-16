@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/lib/api'
+import { ROUTES } from '@/config/routes'
 
 export function useTokenRefresh() {
   const router = useRouter()
@@ -16,8 +17,8 @@ export function useTokenRefresh() {
       const authResponse = await authApi.refresh()
 
       if (!authResponse) {
-        console.error('[ERROR] Token refresh failed, redirecting to /admin')
-        router.push('/admin')
+        console.error('[ERROR] Token refresh failed, redirecting to /')
+        router.push(ROUTES.HOME)
         return
       }
     } catch (error) {

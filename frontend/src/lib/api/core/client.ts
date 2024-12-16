@@ -1,3 +1,5 @@
+import { ROUTES } from '@/config/routes'
+
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
@@ -44,14 +46,8 @@ export const apiClient = {
     logResponse(url, response)
 
     if (response.status === 401 || response.status === 403) {
-      if (process.env.NODE_ENV === 'production') {
-        window.location.href = '/admin'
-      } else {
-        console.error('認証エラーが発生しました')
-      }
-      const error = new ApiError(response.status, 'API request unauthorized')
-      logError(url, error)
-      throw error
+      console.error('認証エラーが発生しました', response.status)
+      window.location.href = ROUTES.ADMIN.BASE
     }
 
     if (!response.ok) {

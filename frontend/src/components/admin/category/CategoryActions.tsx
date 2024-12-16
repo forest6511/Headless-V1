@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { categoryApi } from '@/lib/api'
 import toast from 'react-hot-toast'
+import { ROUTES } from '@/config/routes'
 
 interface CategoryActionsProps {
   categoryId: string
@@ -27,7 +28,7 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleEdit = () => {
-    router.push(`/admin/dashboard/categories/edit/${categoryId}`)
+    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.EDIT(categoryId))
   }
 
   const handleDelete = async () => {

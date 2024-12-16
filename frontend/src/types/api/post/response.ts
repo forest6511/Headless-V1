@@ -1,21 +1,9 @@
-import { TaxonomyType } from '@/types/api/taxonomy/types'
-
 // /api/posts/list
 export interface PostListResponse {
   totalCount: number
   posts: PostWithCategoryId[]
   totalPages: number
   pageSize: number
-}
-
-export interface Taxonomies {
-  id: string
-  name: string
-  taxonomyType: TaxonomyType
-  slug: string
-  description: string | null
-  parentId: string | null
-  createdAt: string
 }
 
 export interface PostWithCategoryId {
@@ -25,13 +13,12 @@ export interface PostWithCategoryId {
   content: string
   excerpt: string
   postStatus: string
-  featuredImageId?: string
-  metaTitle?: string
-  metaDescription?: string
-  metaKeywords?: string
-  robotsMetaTag?: string
-  ogTitle?: string
-  ogDescription?: string
+  featuredImageId: string | null
+  metaTitle: string | null
+  metaDescription: string | null
+  metaKeywords: string | null
+  ogTitle: string | null
+  ogDescription: string | null
   updateAt: string
   categoryId: string
 }

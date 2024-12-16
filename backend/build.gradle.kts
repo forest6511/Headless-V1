@@ -3,18 +3,18 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.0"
 	id("io.spring.dependency-management") version "1.1.6"
-	id("org.asciidoctor.jvm.convert") version "3.3.2"
+	id("org.asciidoctor.jvm.convert") version "4.0.3"
 	id("org.jooq.jooq-codegen-gradle") version "3.19.15"
 	id("org.flywaydb.flyway") version "9.22.1"
+	id("java")
 }
 
 group = "com.headblog"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {

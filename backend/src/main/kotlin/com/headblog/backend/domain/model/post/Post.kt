@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.post
 
-import com.headblog.backend.domain.model.taxonomy.TaxonomyId
+import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -16,10 +16,9 @@ class Post private constructor(
     val metaTitle: String?,
     val metaDescription: String?,
     val metaKeywords: String?,
-    val robotsMetaTag: String?,
     val ogTitle: String?,
     val ogDescription: String?,
-    val categoryId: TaxonomyId
+    val categoryId: CategoryId
 ) {
     companion object {
         fun create(
@@ -33,7 +32,6 @@ class Post private constructor(
             metaTitle: String?,
             metaDescription: String?,
             metaKeywords: String?,
-            robotsMetaTag: String?,
             ogTitle: String?,
             ogDescription: String?,
             categoryId: UUID
@@ -49,10 +47,9 @@ class Post private constructor(
                 metaTitle = metaTitle,
                 metaDescription = metaDescription,
                 metaKeywords = metaKeywords,
-                robotsMetaTag = robotsMetaTag,
                 ogTitle = ogTitle,
                 ogDescription = ogDescription,
-                categoryId = TaxonomyId(categoryId),
+                categoryId = CategoryId(categoryId),
             )
         }
     }

@@ -4,8 +4,8 @@ export { apiClient } from './core/client'
 // auth
 export * from './auth/api'
 
-// taxonomy
-export * from './taxonomy/api'
+// category
+export * from '@/lib/api/category/api'
 
 // post
 export * from './post/api'

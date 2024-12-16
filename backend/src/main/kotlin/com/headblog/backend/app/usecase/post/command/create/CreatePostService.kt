@@ -1,9 +1,9 @@
 package com.headblog.backend.app.usecase.post.command.create
 
 import com.headblog.backend.domain.model.post.Post
+import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostTaxonomyRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class CreatePostService(
     private val idGenerator: IdGenerator<EntityId>,
     private val postRepository: PostRepository,
-    private val postTaxonomyRepository: PostTaxonomyRepository,
+    private val postCategoryRepository: PostCategoryRepository,
 ) : CreatePostUseCase {
 
     private val logger = LoggerFactory.getLogger(CreatePostService::class.java)
@@ -40,14 +40,13 @@ class CreatePostService(
             metaTitle = command.metaTitle,
             metaDescription = command.metaDescription,
             metaKeywords = command.metaKeywords,
-            robotsMetaTag = command.robotsMetaTag,
             ogTitle = command.ogTitle,
             ogDescription = command.ogDescription,
             categoryId = command.categoryId,
         )
 
         postRepository.save(post)
-        postTaxonomyRepository.addRelation(post.id, post.categoryId)
+        postCategoryRepository.addRelation(post.id, post.categoryId)
         return post.id
     }
 }

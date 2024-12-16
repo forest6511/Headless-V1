@@ -39,15 +39,14 @@ class SecurityConfig(
             .httpBasic { httpBasic -> httpBasic.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    // GETリクエストは認証なし
-                    .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/admin/auth/signup").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/admin/auth/signin").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
-                    // POST, PUT, DELETEは認証必須
-                    .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
-                    .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
+                    // GET, POST, PUT, DELETEは認証必須
+                    .requestMatchers(HttpMethod.GET, "/api/admin/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/admin/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/admin/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/admin/**").authenticated()
                     .anyRequest().denyAll()
             }
             // JWTを使用した認証を、通常のユーザー名・パスワード認証

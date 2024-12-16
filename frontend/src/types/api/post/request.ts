@@ -5,22 +5,28 @@ interface Post {
   content: string
   excerpt: string
   postStatus: string
-  featuredImageId?: string
+  featuredImageId: string | null
   createdAt: Date
   updatedAt: Date
-  metaTitle?: string
-  metaDescription?: string
-  metaKeywords?: string
-  robotsMetaTag?: string
-  ogTitle?: string
-  ogDescription?: string
+  metaTitle: string | null
+  metaDescription: string | null
+  metaKeywords: string | null
+  robotsMetaTag: string | null
+  ogTitle: string | null
+  ogDescription: string | null
   categoryId: string
 }
 
 // 投稿作成時用のインターフェース
-interface CreatePostRequest
+export interface CreatePostRequest
   extends Omit<Post, 'id' | 'createdAt' | 'updatedAt'> {}
 
 // 投稿更新時用のインターフェース
 interface UpdatePostRequest
   extends Partial<Omit<Post, 'id' | 'createdAt' | 'updatedAt'>> {}
+
+// 投稿一覧用のインターフェース
+export interface ListPostRequest {
+  cursorPostId?: string
+  pageSize?: number
+}

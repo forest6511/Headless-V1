@@ -36,10 +36,6 @@ export class ApiError extends Error {
   }
 }
 
-const isNonGetMethod = (method: HttpMethod): boolean => {
-  return method !== 'GET'
-}
-
 export const apiClient = {
   router: null as any,
 
@@ -78,29 +74,24 @@ export const apiClient = {
   },
 
   async request<T>(endpoint: string, config: RequestConfig): Promise<T> {
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-    const url = isNonGetMethod(config.method)
-      ? endpoint
-      : `${baseUrl}${endpoint}`
-
     const requestHeaders = {
       'Content-Type': 'application/json',
       ...config.headers,
     }
 
-    logRequest(url, config.method, config.body)
+    logRequest(endpoint, config.method, config.body)
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(endpoint, {
         ...config,
         headers: requestHeaders,
         body: config.body ? JSON.stringify(config.body) : undefined,
         credentials: 'include',
       })
 
-      return await this.handleResponse<T>(url, response)
+      return await this.handleResponse<T>(endpoint, response)
     } catch (error) {
-      logError(url, error)
+      logError(endpoint, error)
       throw error
     }
   },

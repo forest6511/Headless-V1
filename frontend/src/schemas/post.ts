@@ -23,32 +23,34 @@ export const PostSchema = z.object({
     .string()
     .min(1, 'ステータスは必須です')
     .max(50, 'ステータスは50文字以内で入力してください'),
-  featuredImageId: z.string().nullable().optional(),
+  featuredImageId: z
+    .string()
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
   metaTitle: z
     .string()
     .max(255, 'メタタイトルは255文字以内で入力してください')
-    .optional(),
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
   metaDescription: z
     .string()
     .max(150, 'メタディスクリプションは150文字以内で入力してください')
-    .nullable()
-    .optional(),
-  metaKeywords: z.string().nullable().optional(),
-  robotsMetaTag: z
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullable(),
+  metaKeywords: z
     .string()
-    .max(50, 'robotsメタタグは50文字以内で入力してください')
-    .nullable()
-    .optional(),
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
   ogTitle: z
     .string()
     .max(255, 'OGタイトルは255文字以内で入力してください')
-    .nullable()
-    .optional(),
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
   ogDescription: z
     .string()
     .max(150, 'OGディスクリプションは150文字以内で入力してください')
-    .nullable()
-    .optional(),
+    .transform((val) => (val === '' ? null : val)) // empty to null
+    .nullish(),
   categoryId: z
     .string()
     .min(1, 'カテゴリは必須です')

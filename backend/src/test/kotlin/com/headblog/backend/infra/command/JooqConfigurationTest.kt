@@ -28,12 +28,13 @@ class JooqConfigurationTest {
             "social_connections",
             "refresh_tokens",
             "posts",
-            "taxonomies",
-            "post_taxonomies",
-            "media"
-        )
+            "categories",
+            "post_categories",
+            "medias"
+        ).sorted().toSet()
 
-        val actualTables = dsl.meta().tables.map { it.name.lowercase() }.filter { it in expectedTables }.toSet()
+        val actualTables =
+            dsl.meta().tables.map { it.name.lowercase() }.filter { it in expectedTables }.sorted().toSet()
         assertEquals(expectedTables, actualTables)
     }
 

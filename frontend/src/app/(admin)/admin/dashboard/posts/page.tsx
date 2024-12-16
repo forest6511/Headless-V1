@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Key } from 'react'
+import { useState, Key, useEffect } from 'react'
 import Link from 'next/link'
 import { Edit, Trash2, Plus } from 'lucide-react'
 import {
@@ -15,6 +15,7 @@ import {
   Chip,
 } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
+import { postApi } from '@/lib/api'
 
 const statuses = [
   { value: 'draft', label: '下書き' },
@@ -47,6 +48,22 @@ export default function PostsPage() {
       console.log('削除:', id)
     }
   }
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const result = await postApi.getPostList({
+          cursorPostId: undefined,
+          pageSize: 3,
+        })
+        console.log('Fetched Posts:', result)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      }
+    }
+
+    fetchPosts()
+  }, [])
 
   const getStatusColor = (status: string) => {
     return status === 'published' ? 'success' : 'warning'

@@ -1,10 +1,9 @@
 package com.headblog.backend.app.usecase.post.query
 
-import com.headblog.backend.app.usecase.taxonomy.query.TaxonomyDto
 import java.time.LocalDateTime
 import java.util.*
 
-data class PostWithTaxonomyDto(
+data class PostWithTaxonomyIdDto(
     val id: UUID,
     val title: String,
     val slug: String,
@@ -19,5 +18,5 @@ data class PostWithTaxonomyDto(
     val ogTitle: String?,
     val ogDescription: String?,
     val updateAt: LocalDateTime,
-    val taxonomies: List<TaxonomyDto>
+    val categoryId: UUID
 )

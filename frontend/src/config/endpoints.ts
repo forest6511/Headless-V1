@@ -10,5 +10,6 @@ export const API_ENDPOINTS = {
   },
   POST: {
     POST: '/api/posts/post',
+    LIST: '/api/posts/list',
   },
 } as const

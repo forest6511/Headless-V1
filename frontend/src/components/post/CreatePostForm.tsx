@@ -22,6 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ApiError } from '@/lib/api/core/client'
 import { useRouter } from 'next/navigation'
 import { buildCategoryOptions } from '@/lib/utils/taxonomy'
+import { CreatePostRequest } from '@/types/api/post/request'
 
 interface CreatePostFormProps {
   redirectPath: string
@@ -44,7 +45,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
-      await postApi.createPost(data as Post)
+      await postApi.createPost(data as CreatePostRequest)
       toast.success(`投稿の登録に成功しました`)
       router.push(redirectPath)
     } catch (error) {

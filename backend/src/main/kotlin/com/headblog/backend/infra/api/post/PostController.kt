@@ -2,18 +2,25 @@ package com.headblog.backend.infra.api.post
 
 import com.headblog.backend.app.usecase.post.command.create.CreatePostCommand
 import com.headblog.backend.app.usecase.post.command.create.CreatePostUseCase
+import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.query.PostDto
+import com.headblog.backend.app.usecase.post.query.PostListDto
 import com.headblog.backend.infra.api.post.request.CreatePostRequest
 import java.util.*
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+
 
 @RestController
 @RequestMapping("/api/posts")
 class PostController(
     private val createPostUseCase: CreatePostUseCase,
+    private val getPostQueryService: GetPostQueryService
 ) {
 
     @PostMapping("/post")
@@ -21,6 +28,15 @@ class PostController(
         val command = request.toCommand()
         val id = createPostUseCase.execute(command)
         return ResponseEntity.ok(id.value)
+    }
+
+    @GetMapping("/list")
+    fun getPosts(
+        @RequestParam(required = false) cursorPostId: UUID?,
+        @RequestParam(defaultValue = "10") pageSize: Int
+    ): ResponseEntity<PostListDto> {
+        val posts: PostListDto = getPostQueryService.findPostList(cursorPostId, pageSize)
+        return ResponseEntity.ok(posts)
     }
 
     // toCommand メソッド

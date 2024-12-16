@@ -1,7 +1,7 @@
 package com.headblog.backend.domain.model.post
 
 import com.headblog.backend.app.usecase.post.query.PostDto
-import com.headblog.backend.app.usecase.post.query.PostWithTaxonomyDto
+import com.headblog.backend.app.usecase.post.query.PostWithTaxonomyIdDto
 import java.util.*
 
 interface PostRepository {
@@ -13,7 +13,7 @@ interface PostRepository {
     fun findAll(
         cursorPostId: UUID?,
         pageSize: Int,
-    ): List<PostWithTaxonomyDto>
+    ): List<PostWithTaxonomyIdDto>
 
     fun count(): Int
 }

@@ -129,7 +129,7 @@ class PostRepositoryImplTest {
         // Then
         assertNotNull(lastPage)
         assertEquals(5, lastPage.size)  // 最後のページは5件
-        // 逆順で取得されることを確認
+        // 降順で取得されることを確認
         assertEquals("Test Post 5", lastPage[0].title)
         assertEquals("Test Post 4", lastPage[1].title)
         assertEquals("Test Post 3", lastPage[2].title)

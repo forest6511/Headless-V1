@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.post
 
-import com.headblog.backend.domain.model.taxonomy.CategoryId
+import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*

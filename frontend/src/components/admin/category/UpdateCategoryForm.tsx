@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  UpdateCategoryData,
-  updateCategorySchema,
-} from '@/schemas/category'
+import { UpdateCategoryData, updateCategorySchema } from '@/schemas/category'
 import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { useForm } from 'react-hook-form'

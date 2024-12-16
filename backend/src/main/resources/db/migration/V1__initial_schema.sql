@@ -103,12 +103,12 @@ CREATE TABLE taxonomies
 COMMENT ON TABLE taxonomies IS 'Table for storing taxonomies like categories and tags';
 
 -- Column comments
-COMMENT ON COLUMN taxonomies.id IS 'Unique identifier for each taxonomy';
-COMMENT ON COLUMN taxonomies.name IS 'Name of the taxonomy (e.g., category, tag)';
-COMMENT ON COLUMN taxonomies.slug IS 'Unique slug for the taxonomy, used in URLs';
-COMMENT ON COLUMN taxonomies.description IS 'Description of the taxonomy';
-COMMENT ON COLUMN taxonomies.parent_id IS 'Reference to the parent taxonomy, if applicable';
-COMMENT ON COLUMN taxonomies.created_at IS 'Timestamp when the taxonomy was created';
+COMMENT ON COLUMN taxonomies.id IS 'Unique identifier for each category';
+COMMENT ON COLUMN taxonomies.name IS 'Name of the category (e.g., category, tag)';
+COMMENT ON COLUMN taxonomies.slug IS 'Unique slug for the category, used in URLs';
+COMMENT ON COLUMN taxonomies.description IS 'Description of the category';
+COMMENT ON COLUMN taxonomies.parent_id IS 'Reference to the parent category, if applicable';
+COMMENT ON COLUMN taxonomies.created_at IS 'Timestamp when the category was created';
 
 
 -- Post-Taxonomies Relationship table
@@ -121,7 +121,7 @@ CREATE TABLE post_taxonomies
 
 COMMENT ON TABLE post_taxonomies IS 'Table for storing many-to-many relationships between posts and taxonomies';
 COMMENT ON COLUMN post_taxonomies.post_id IS 'Reference to the post in the posts table';
-COMMENT ON COLUMN post_taxonomies.taxonomy_id IS 'Reference to the taxonomy in the taxonomies table';
+COMMENT ON COLUMN post_taxonomies.taxonomy_id IS 'Reference to the category in the taxonomies table';
 
 -- Media table
 CREATE TABLE media

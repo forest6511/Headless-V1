@@ -4,8 +4,8 @@ import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostStatus
 import com.headblog.backend.domain.model.post.PostTaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.Taxonomy
-import com.headblog.backend.domain.model.taxonomy.TaxonomyRepository
+import com.headblog.backend.domain.model.category.Category
+import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -27,7 +27,7 @@ class PostRepositoryImplTest {
     lateinit var postRepository: PostRepository
 
     @Autowired
-    lateinit var taxonomyRepository: TaxonomyRepository
+    lateinit var categoryRepository: CategoryRepository
 
     @Autowired
     lateinit var postTaxonomyRepository: PostTaxonomyRepository
@@ -35,13 +35,13 @@ class PostRepositoryImplTest {
     @Autowired
     lateinit var idGenerator: IdGenerator<EntityId>
 
-    private lateinit var defaultTaxonomy: Taxonomy
+    private lateinit var defaultCategory: Category
 
     @BeforeEach
     fun setup() {
         // デフォルトのタクソノミーを作成
-        defaultTaxonomy = createTaxonomy("Default Category", "default-category")
-        taxonomyRepository.save(defaultTaxonomy)
+        defaultCategory = createTaxonomy("Default Category", "default-category")
+        categoryRepository.save(defaultCategory)
     }
 
     @Test
@@ -165,16 +165,16 @@ class PostRepositoryImplTest {
                 metaKeywords = null,
                 ogTitle = null,
                 ogDescription = null,
-                categoryId = defaultTaxonomy.id.value
+                categoryId = defaultCategory.id.value
             )
             postRepository.save(post)
-            postTaxonomyRepository.addRelation(post.id, defaultTaxonomy.id)
+            postTaxonomyRepository.addRelation(post.id, defaultCategory.id)
             post
         }
     }
 
-    private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Taxonomy =
-        Taxonomy.create(
+    private fun createTaxonomy(name: String, slug: String, parentId: UUID? = null): Category =
+        Category.create(
             id = idGenerator,
             name = name,
             slug = slug,

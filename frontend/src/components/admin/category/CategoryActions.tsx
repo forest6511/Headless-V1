@@ -19,7 +19,7 @@ interface CategoryActionsProps {
 }
 
 export const CategoryActions: React.FC<CategoryActionsProps> = ({
-                                                                  categoryId,
+  categoryId,
   onDelete,
 }) => {
   const router = useRouter()

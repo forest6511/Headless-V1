@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api'
 import { API_ENDPOINTS } from '@/config/endpoints'
-import {CategoryListResponse} from '@/types/api/category/response'
+import { CategoryListResponse } from '@/types/api/category/response'
 import {
   CreateCategoryRequest,
   DeleteCategoryRequest,

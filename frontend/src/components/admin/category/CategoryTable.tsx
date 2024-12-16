@@ -20,12 +20,12 @@ interface CategoryTableProps {
 }
 
 export const CategoryTable: React.FC<CategoryTableProps> = ({
-                                                              categories,
+  categories,
   onDelete,
   isLoading = false,
 }) => {
   const renderCell = (
-      category: CategoryListResponse,
+    category: CategoryListResponse,
     columnKey: React.Key
   ): React.ReactNode => {
     switch (columnKey) {

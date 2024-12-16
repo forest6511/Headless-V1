@@ -1,8 +1,5 @@
-import {CategoryListResponse} from '@/types/api/category/response'
-import {
-  CreateCategoryData,
-  UpdateCategoryData,
-} from '@/schemas/category'
+import { CategoryListResponse } from '@/types/api/category/response'
+import { CreateCategoryData, UpdateCategoryData } from '@/schemas/category'
 
 export const NOSETTING_SLUG = 'nosetting'
 
@@ -19,13 +16,13 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
 }
 
 export const formatCategoryOptions = (categories: CategoryListResponse[]) =>
-    categories.map((category) => ({
+  categories.map((category) => ({
     key: category.id,
     label: category.name,
   }))
 
 export const formatCategoryOptionsWithoutNoSetting = (
-    categories: CategoryListResponse[]
+  categories: CategoryListResponse[]
 ) =>
   categories
     .filter((category) => category.slug !== NOSETTING_SLUG)

@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.post
 
-import com.headblog.backend.domain.model.taxonomy.CategoryId
+import com.headblog.backend.domain.model.category.CategoryId
 
 interface PostTaxonomyRepository {
     fun addRelation(postId: PostId, categoryId: CategoryId): Int

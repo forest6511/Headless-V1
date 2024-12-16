@@ -1,8 +1,8 @@
 package com.headblog.backend.infra.repository.post
 
+import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostTaxonomyRepository
-import com.headblog.backend.domain.model.taxonomy.CategoryId
 import com.headblog.infra.jooq.tables.references.POST_TAXONOMIES
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository

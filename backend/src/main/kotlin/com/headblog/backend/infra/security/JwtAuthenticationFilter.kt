@@ -5,7 +5,6 @@ import com.headblog.backend.infra.service.auth.UserAuthenticationService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -15,14 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthenticationFilter(
     private val userAuthenticationService: UserAuthenticationService
 ) : OncePerRequestFilter() {
-
-    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        val isGetRequest = request.method == HttpMethod.GET.name()
-        if (isGetRequest) {
-            logger.info("skipping jwt authentication filter for GET request: ${request.requestURI}")
-        }
-        return isGetRequest
-    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,

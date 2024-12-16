@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
     // アクセストークンがない場合、管理画面のログインページにリダイレクト
     if (!accessToken) {
       // サーバーサイドでリダイレクトを処理し、クライアントに適切なレスポンスを返却
-      return NextResponse.redirect(new URL('/admin', request.url))
+      return NextResponse.redirect(new URL('/', request.url))
     }
 
     // アクセストークンがある場合、そのまま次の処理へ進む

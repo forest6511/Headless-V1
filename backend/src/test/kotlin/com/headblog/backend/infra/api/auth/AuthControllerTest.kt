@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.api.auth
 
-import com.headblog.backend.infra.api.auth.request.SignInRequest
+import com.headblog.backend.infra.api.admin.auth.request.SignInRequest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +30,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/signin")
+            MockMvcRequestBuilders.post("/api/admin/auth/signin")
                 .contentType("application/json")
                 .content("""{"email": "${request.email}", "password": "${request.password}"}""")
         )
@@ -53,7 +53,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/signin")
+            MockMvcRequestBuilders.post("/api/admin/auth/signin")
                 .contentType("application/json")
                 .content("""{"email": "${request.email}", "password": "${request.password}"}""")
         ).andExpect(status().isUnauthorized)
@@ -68,7 +68,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/auth/signin")
+            MockMvcRequestBuilders.post("/api/admin/auth/signin")
                 .contentType("application/json")
                 .content("""{"email": "${request.email}", "password": "${request.password}"}""")
         ).andExpect(status().isUnauthorized)

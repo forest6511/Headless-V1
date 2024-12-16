@@ -1,15 +1,15 @@
-export const API_ENDPOINTS = {
+export const ADMIN_API_ENDPOINTS = {
   AUTH: {
-    SIGNUP: '/api/auth/signup',
-    SIGNIN: '/api/auth/signin',
-    REFRESH_TOKEN: '/api/auth/refresh',
+    SIGNUP: '/api/admin/auth/signup',
+    SIGNIN: '/api/admin/auth/signin',
+    REFRESH_TOKEN: '/api/admin/auth/refresh',
   },
   CATEGORY: {
-    CATEGORIES: '/api/categories/categories',
-    CATEGORY: '/api/categories/category',
+    CATEGORIES: '/api/admin/categories/categories',
+    CATEGORY: '/api/admin/categories/category',
   },
   POST: {
-    POST: '/api/posts/post',
-    LIST: '/api/posts/list',
+    POST: '/api/admin/posts/post',
+    LIST: '/api/admin/posts/list',
   },
 } as const

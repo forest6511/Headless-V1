@@ -3,9 +3,9 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.0"
 	id("io.spring.dependency-management") version "1.1.6"
-	id("org.asciidoctor.jvm.convert") version "3.3.2"
-	id("org.jooq.jooq-codegen-gradle") version "3.19.15"
-	id("org.flywaydb.flyway") version "9.22.1"
+	id("org.asciidoctor.jvm.convert") version "4.0.3"
+ 	id("org.jooq.jooq-codegen-gradle") version "3.19.15"
+	id("org.flywaydb.flyway") version "11.1.0"
 }
 
 group = "com.headblog"
@@ -31,8 +31,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.flywaydb:flyway-core:10.19.0")
-	implementation("org.flywaydb:flyway-database-postgresql:10.19.0")
+
+	implementation("org.flywaydb:flyway-core:11.1.0")
+	runtimeOnly("org.flywaydb:flyway-database-postgresql:11.1.0")
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -57,6 +59,12 @@ dependencies {
 kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
+	}
+}
+
+buildscript {
+	dependencies {
+		classpath("org.flywaydb:flyway-database-postgresql:11.1.0")
 	}
 }
 

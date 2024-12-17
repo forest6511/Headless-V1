@@ -12,8 +12,3 @@ export interface CreateCategoryRequest extends BaseCategoryRequest {}
 export interface UpdateCategoryRequest extends BaseCategoryRequest {
   id: string
 }
-
-// 削除リクエスト
-export interface DeleteCategoryRequest {
-  id: string
-}

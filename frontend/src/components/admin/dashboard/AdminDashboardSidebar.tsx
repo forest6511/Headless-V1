@@ -3,15 +3,20 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FileText, FolderTree, Users } from 'lucide-react'
+import { ROUTES } from '@/config/routes'
 
 const menuItems = [
   {
     title: 'コンテンツ',
     submenu: [
-      { title: '記事投稿', href: '/admin/dashboard/posts', icon: FileText },
+      {
+        title: '記事投稿',
+        href: ROUTES.ADMIN.DASHBOARD.POSTS.BASE,
+        icon: FileText,
+      },
       {
         title: 'カテゴリ',
-        href: '/admin/dashboard/categories',
+        href: ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE,
         icon: FolderTree,
       },
     ],

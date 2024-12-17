@@ -1,3 +1,6 @@
+import { ROUTES } from '@/config/routes'
+import { redirect } from 'next/navigation'
+
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
@@ -37,21 +40,14 @@ export class ApiError extends Error {
 }
 
 export const apiClient = {
-  router: null as any,
 
   async handleResponse<T>(url: string, response: Response): Promise<T> {
     const responseData = await response.json()
     logResponse(url, response)
 
     if (response.status === 401 || response.status === 403) {
-      if (process.env.NODE_ENV === 'production') {
-        window.location.href = '/admin'
-      } else {
-        console.error('認証エラーが発生しました')
-      }
-      const error = new ApiError(response.status, 'API request unauthorized')
-      logError(url, error)
-      throw error
+      console.error('認証エラーが発生しました', response.status)
+      redirect(ROUTES.HOME)
     }
 
     if (!response.ok) {

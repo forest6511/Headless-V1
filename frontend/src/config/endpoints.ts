@@ -5,11 +5,9 @@ export const ADMIN_API_ENDPOINTS = {
     REFRESH_TOKEN: '/api/admin/auth/refresh',
   },
   CATEGORY: {
-    CATEGORIES: '/api/admin/categories/categories',
-    CATEGORY: '/api/admin/categories/category',
+    CATEGORY: '/api/admin/categories',
   },
   POST: {
-    POST: '/api/admin/posts/post',
-    LIST: '/api/admin/posts/list',
+    POST: '/api/admin/posts',
   },
 } as const

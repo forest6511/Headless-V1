@@ -6,6 +6,7 @@ import { Button, Input } from '@nextui-org/react'
 import { SigninFormData, signInSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api'
 import { useRouter } from 'next/navigation'
+import { ROUTES } from '@/config/routes'
 
 export default function SignInForm() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      router.push('/admin/dashboard')
+      router.push(ROUTES.ADMIN.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }

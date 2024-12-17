@@ -1,4 +1,5 @@
 import { ROUTES } from '@/config/routes'
+import { redirect } from 'next/navigation'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
@@ -39,7 +40,6 @@ export class ApiError extends Error {
 }
 
 export const apiClient = {
-  router: null as any,
 
   async handleResponse<T>(url: string, response: Response): Promise<T> {
     const responseData = await response.json()
@@ -47,7 +47,7 @@ export const apiClient = {
 
     if (response.status === 401 || response.status === 403) {
       console.error('認証エラーが発生しました', response.status)
-      window.location.href = ROUTES.ADMIN.BASE
+      redirect(ROUTES.HOME)
     }
 
     if (!response.ok) {

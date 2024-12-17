@@ -70,7 +70,7 @@ export default function PostsPage() {
     }
 
     fetchPosts()
-  }, [page])　// pageの変更を変更をトリガーとする
+  }, [page]) // pageの変更を変更をトリガーとする
 
   const handleEdit = (id: string) => {
     router.push(ROUTES.ADMIN.DASHBOARD.POSTS.EDIT(id))

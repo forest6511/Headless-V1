@@ -49,7 +49,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
-      console.log("submit data",data)
+      console.log('submit data', data)
       await postApi.createPost(data as CreatePostRequest)
       toast.success(`投稿の登録に成功しました`)
       router.push(redirectPath)

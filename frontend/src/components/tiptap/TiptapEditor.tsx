@@ -14,7 +14,7 @@ import { ListItem } from '@tiptap/extension-list-item'
 import { BulletList } from '@tiptap/extension-bullet-list'
 import { Italic } from '@tiptap/extension-italic'
 import { Link } from '@tiptap/extension-link'
-import {Blockquote} from "@tiptap/extension-blockquote";
+import { Blockquote } from '@tiptap/extension-blockquote'
 
 const lowlight = createLowlight(common)
 
@@ -114,8 +114,8 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
 
       // Blockquote内のPタグを除去
       html = html.replace(
-          /<blockquote[^>]*><p[^>]*>(.*?)<\/p><\/blockquote>/g,
-          `<blockquote class="${CSS_CLASS_NAME_PREFIX}-blockquote">$1</blockquote>`
+        /<blockquote[^>]*><p[^>]*>(.*?)<\/p><\/blockquote>/g,
+        `<blockquote class="${CSS_CLASS_NAME_PREFIX}-blockquote">$1</blockquote>`
       )
 
       // 改行を除去した文字数

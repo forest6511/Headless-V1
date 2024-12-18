@@ -1,6 +1,6 @@
 'use client'
 
-import { CreatePostForm } from '@/components/post/CreatePostForm'
+import { CreatePostForm } from '@/components/admin/post/CreatePostForm'
 import { ROUTES } from '@/config/routes'
 
 export default function NewPostPage() {

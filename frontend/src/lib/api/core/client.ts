@@ -40,7 +40,6 @@ export class ApiError extends Error {
 }
 
 export const apiClient = {
-
   async handleResponse<T>(url: string, response: Response): Promise<T> {
     const responseData = await response.json()
     logResponse(url, response)

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Card,
@@ -23,6 +23,7 @@ import { ApiError } from '@/lib/api/core/client'
 import { useRouter } from 'next/navigation'
 import { createCategoryOptions } from '@/lib/utils/category'
 import { CreatePostRequest } from '@/types/api/post/request'
+import TiptapEditor from '@/components/tiptap/TiptapEditor'
 
 interface CreatePostFormProps {
   redirectPath: string
@@ -33,18 +34,22 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isValid },
   } = useForm<CreatePostFormData>({
     resolver: zodResolver(createPostSchema),
     defaultValues: {},
-    mode: 'onChange',
   })
 
   const { categories } = useCategories()
   const categoryOptions = createCategoryOptions(categories)
+  const contentHtml = watch('content') // contentの値を監視
+  const [textLength, setTextLength] = useState(0) // 文字数を監視
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
+      console.log('submit data', data)
       await postApi.createPost(data as CreatePostRequest)
       toast.success(`投稿の登録に成功しました`)
       router.push(redirectPath)
@@ -106,21 +111,44 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
       </Card>
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold">本文と抜粋</h2>
+          <h2 className="text-lg font-semibold">記事内容</h2>
         </CardHeader>
         <CardBody className="space-y-4">
-          <div id="content-textarea-wrapper">
-            <Textarea
-              {...register('content')}
-              label="本文"
-              placeholder="記事の本文を入力"
-              disableAutosize
-              isInvalid={!!errors.content}
+          <div>
+            {/* zod validationが効かないので、hidden項目に設定 */}
+            <input type="hidden" {...register('content')} />
+            <TiptapEditor
+              value={watch('content')}
+              onChange={(html, length) => {
+                setValue('content', html, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+                setTextLength(length)
+              }}
             />
-            <p className={'text-tiny text-danger'}>
-              {errors?.content?.message}
-            </p>
+            {errors?.content?.message && (
+              <p className="text-xs text-danger mt-2">
+                {errors.content.message}
+              </p>
+            )}
           </div>
+          {/* HTMLプレビュー */}
+          <div className="mt-4 border-t pt-4">
+            <h3 className="text-md font-semibold mb-2">
+              プレビュー　文字数: {textLength}
+            </h3>
+            <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
+              {contentHtml || ''}
+            </pre>
+          </div>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-semibold">抜粋情報</h2>
+        </CardHeader>
+        <CardBody>
           <Textarea
             {...register('excerpt')}
             label="抜粋"

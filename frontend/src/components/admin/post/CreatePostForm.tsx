@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Card,
@@ -45,9 +45,11 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
   const { categories } = useCategories()
   const categoryOptions = createCategoryOptions(categories)
   const contentHtml = watch('content') // contentの値を監視
+  const [textLength, setTextLength] = useState(0) // 文字数を監視
 
   const onSubmit = async (data: CreatePostFormData) => {
     try {
+      console.log("submit data",data)
       await postApi.createPost(data as CreatePostRequest)
       toast.success(`投稿の登録に成功しました`)
       router.push(redirectPath)
@@ -117,11 +119,12 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
             <input type="hidden" {...register('content')} />
             <TiptapEditor
               value={watch('content')}
-              onChange={(html) => {
+              onChange={(html, length) => {
                 setValue('content', html, {
                   shouldValidate: true,
                   shouldDirty: true,
                 })
+                setTextLength(length)
               }}
             />
             {errors?.content?.message && (
@@ -132,7 +135,9 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
           </div>
           {/* HTMLプレビュー */}
           <div className="mt-4 border-t pt-4">
-            <h3 className="text-md font-semibold mb-2">プレビュー</h3>
+            <h3 className="text-md font-semibold mb-2">
+              プレビュー　文字数: {textLength}
+            </h3>
             <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
               {contentHtml || ''}
             </pre>

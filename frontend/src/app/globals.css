@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-#content-textarea-wrapper > div > div {
-  height: 600px !important;
-}
-
 h1.cms-heading {
   font-size: 2rem;
   color: #11181c;

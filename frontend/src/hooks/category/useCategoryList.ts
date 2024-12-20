@@ -1,31 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { categoryApi } from '@/lib/api'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 
-export const useCategories = () => {
+export const useCategoryList = () => {
   const setCategories = useCategoryStore((state) => state.setCategories)
   const categories = useCategoryStore((state) => state.categories)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
-  const fetchCategories = async () => {
+  const fetchCategoryList = useCallback(async () => {
     try {
       setIsLoading(true)
       const data = await categoryApi.getCategories()
       setCategories(data) // Zustandに保存
     } catch (error) {
       setError(error as Error)
-      throw error
+      console.error('Error fetching categories:', error)
     } finally {
       setIsLoading(false)
     }
-  }
-
-  useEffect(() => {
-    fetchCategories().catch((error) => {
-      console.error('Error fetching categories:', error)
-    })
   }, [setCategories])
 
-  return { categories, isLoading, error, refetch: fetchCategories }
+  useEffect(() => {
+    fetchCategoryList().catch((error) => {
+      console.error('Error during initial fetch:', error)
+    })
+  }, [fetchCategoryList])
+
+  return { categories, isLoading, error, refetch: fetchCategoryList }
 }

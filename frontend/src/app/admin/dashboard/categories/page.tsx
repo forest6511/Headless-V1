@@ -2,15 +2,24 @@
 
 import { AddCategoryButton } from '@/components/admin/category/AddCategoryButton'
 import { CategoryTable } from '@/components/admin/category/CategoryTable'
-import { useCategories } from '@/hooks/category/useCategories'
+import { useCategoryList } from '@/hooks/category/useCategoryList'
+import { useCallback } from 'react'
+import { ROUTES } from '@/config/routes'
+import { useRouter } from 'next/navigation'
 
 export default function CategoryList() {
-  const { categories, isLoading, error, refetch } = useCategories()
+  const router = useRouter()
+
+  const { categories, isLoading, error, refetch } = useCategoryList()
+
+  const handleCategoryEdit = (id: string) => {
+    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.EDIT(id))
+  }
 
   // 子コンポーネントへデータ再取得関数を渡す
-  const handleDelete = async () => {
+  const handleCategoryDeleted = useCallback(async () => {
     await refetch()
-  }
+  }, [refetch])
 
   if (error) {
     return <div>エラーが発生しました: {error.message}</div>
@@ -23,7 +32,8 @@ export default function CategoryList() {
       </div>
       <CategoryTable
         categories={categories}
-        onDelete={handleDelete}
+        onEdit={handleCategoryEdit}
+        onDelete={handleCategoryDeleted}
         isLoading={isLoading}
       />
     </div>

@@ -16,16 +16,17 @@ interface Post {
   categoryId: string
 }
 
-// 投稿作成時用のインターフェース
+// 記事作成時用のインターフェース
 export interface CreatePostRequest
   extends Omit<Post, 'id' | 'createdAt' | 'updatedAt'> {}
 
-// 投稿更新時用のインターフェース
-export interface UpdatePostRequest extends Partial<Omit<Post, 'createdAt' | 'updatedAt'>> {
+// 記事更新時用のインターフェース
+export interface UpdatePostRequest
+  extends Partial<Omit<Post, 'createdAt' | 'updatedAt'>> {
   id: string
 }
 
-// 投稿一覧用のインターフェース
+// 記事一覧用のインターフェース
 export interface ListPostRequest {
   cursorPostId?: string
   pageSize?: number

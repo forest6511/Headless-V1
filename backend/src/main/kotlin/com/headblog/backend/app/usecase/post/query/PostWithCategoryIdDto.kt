@@ -16,6 +16,7 @@ data class PostWithCategoryIdDto(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
+    val createdAt: LocalDateTime,
     val updateAt: LocalDateTime,
     val categoryId: UUID
 )

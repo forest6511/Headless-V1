@@ -15,12 +15,14 @@ import React from 'react'
 
 interface CategoryTableProps {
   categories: CategoryListResponse[]
+  onEdit: (id: string) => void
   onDelete: () => void
   isLoading?: boolean
 }
 
 export const CategoryTable: React.FC<CategoryTableProps> = ({
   categories,
+  onEdit,
   onDelete,
   isLoading = false,
 }) => {
@@ -47,7 +49,13 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
           </Link>
         )
       case 'actions':
-        return <CategoryActions categoryId={category.id} onDelete={onDelete} />
+        return (
+          <CategoryActions
+            categoryId={category.id}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        )
       default:
         const cellValue = category[columnKey as keyof CategoryListResponse]
         return cellValue !== null && typeof cellValue !== 'object'

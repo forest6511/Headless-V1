@@ -19,6 +19,7 @@ class UserRepositoryImpl(
             .set(USERS.EMAIL, user.email.value)
             .set(USERS.PASSWORD_HASH, user.passwordHash.value)
             .set(USERS.ROLE, user.role.name)
+            .set(USERS.ENABLED, user.enable)
             .set(USERS.CREATED_AT, user.createdAt)
             .set(USERS.UPDATED_AT, user.updatedAt)
             .execute()
@@ -28,18 +29,16 @@ class UserRepositoryImpl(
     override fun findByEmail(email: Email): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.EMAIL.eq(email.value))
-            // TODO add condition enable=true. changing the default value to 'FALSE'.
+            .and(USERS.ENABLED.eq(true))
             .fetchOne()
-
         return result?.into(User::class.java)
     }
 
     override fun findById(userId: UserId): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.ID.eq(userId.value))
-            // TODO add condition enable=true. changing the default value to 'FALSE'.
+            .and(USERS.ENABLED.eq(true))
             .fetchOne()
-
         return result?.into(User::class.java)
     }
 }

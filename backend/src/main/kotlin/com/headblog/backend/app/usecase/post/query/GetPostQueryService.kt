@@ -4,4 +4,5 @@ import java.util.*
 
 interface GetPostQueryService {
     fun findPostList(cursorPostId: UUID?, pageSize: Int): PostListDto
+    fun findPostById(postId: UUID): PostDto
 }

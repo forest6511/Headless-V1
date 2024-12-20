@@ -4,7 +4,7 @@ CREATE TABLE users
     id            uuid PRIMARY KEY,
     email         varchar(255) NOT NULL UNIQUE,
     password_hash varchar(255),
-    enabled       boolean      NOT NULL DEFAULT TRUE,
+    enabled       boolean      NOT NULL DEFAULT FALSE,
     role          varchar(50)  NOT NULL,
     created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -14,7 +14,7 @@ COMMENT ON TABLE users IS 'Table for storing user authentication details';
 COMMENT ON COLUMN users.id IS 'Unique identifier for each user';
 COMMENT ON COLUMN users.email IS 'User''s email address, must be unique';
 COMMENT ON COLUMN users.password_hash IS 'Hashed password for user authentication';
-COMMENT ON COLUMN users.enabled IS 'Indicates if the user account is active';
+COMMENT ON COLUMN users.enabled IS 'Default is false. Automatically set to true after user verification';
 COMMENT ON COLUMN users.role IS 'Role assigned to the user (e.g., admin, editor, user)';
 COMMENT ON COLUMN users.created_at IS 'Timestamp when the user was created';
 COMMENT ON COLUMN users.updated_at IS 'Timestamp when the user was last updated';

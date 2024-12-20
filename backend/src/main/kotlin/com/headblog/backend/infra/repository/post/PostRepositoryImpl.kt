@@ -4,7 +4,6 @@ import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.infra.jooq.tables.references.CATEGORIES
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import java.time.LocalDateTime
@@ -58,6 +57,15 @@ class PostRepositoryImpl(
             .where(POSTS.ID.eq(post.id.value))
             .execute()
     }
+
+    override fun findById(id: UUID): PostDto? =
+        dsl.select()
+            .from(POSTS)
+            .innerJoin(POST_CATEGORIES)
+            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .where(POSTS.ID.eq(id))
+            .fetchOne()
+            ?.toPostDto()
 
     override fun findBySlug(slug: String): PostDto? =
         dsl.select()
@@ -114,7 +122,7 @@ class PostRepositoryImpl(
             metaKeywords = get(POSTS.META_KEYWORDS),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
-            categoryId = get(CATEGORIES.ID)!!
+            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!
         )
     }
 

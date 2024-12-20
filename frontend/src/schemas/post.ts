@@ -57,14 +57,16 @@ export const PostSchema = z.object({
     .uuid('カテゴリIDが正しくありません'),
 })
 
+// 登録時(idを除外）
 export const createPostSchema = PostSchema.omit({
   id: true,
 })
 
-export const updatePostSchema = PostSchema.partial().omit({
-  id: true,
-})
+// 更新用（全フィールド必須）
+export const updatePostSchema = PostSchema
 
-export type Post = z.infer<typeof PostSchema>
 export type CreatePostFormData = z.infer<typeof createPostSchema>
 export type UpdatePostFormData = z.infer<typeof updatePostSchema>
+
+// フォーム共通の型定義
+export type PostFormData = CreatePostFormData & Partial<UpdatePostFormData>

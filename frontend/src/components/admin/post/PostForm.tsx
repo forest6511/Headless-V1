@@ -1,6 +1,5 @@
-'use client'
-
-import React, { useState } from 'react'
+import { PostFormData } from '@/schemas/post'
+import { usePostForm } from '@/hooks/post/usePostForm'
 import {
   Button,
   Card,
@@ -11,58 +10,36 @@ import {
   SelectItem,
   Textarea,
 } from '@nextui-org/react'
-import { Save } from 'lucide-react'
-import { CreatePostFormData, createPostSchema } from '@/schemas/post'
 import { PostStatuses } from '@/types/api/post/types'
-import { useCategories } from '@/hooks/category/useCategories'
-import { postApi } from '@/lib/api'
-import toast from 'react-hot-toast'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ApiError } from '@/lib/api/core/client'
-import { useRouter } from 'next/navigation'
-import { createCategoryOptions } from '@/lib/utils/category'
-import { CreatePostRequest } from '@/types/api/post/request'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
+import { Save } from 'lucide-react'
+import React from 'react'
+import { useCategories } from '@/hooks/category/useCategories'
+import { createCategoryOptions } from '@/lib/utils/category'
 
-interface CreatePostFormProps {
+interface PostFormProps {
   redirectPath: string
+  initialData?: PostFormData
+  mode: 'create' | 'update'
 }
 
-export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
-  const router = useRouter()
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isValid },
-  } = useForm<CreatePostFormData>({
-    resolver: zodResolver(createPostSchema),
-    defaultValues: {},
-  })
-
+export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
   const { categories } = useCategories()
   const categoryOptions = createCategoryOptions(categories)
-  const contentHtml = watch('content') // contentの値を監視
-  const [textLength, setTextLength] = useState(0) // 文字数を監視
-
-  const onSubmit = async (data: CreatePostFormData) => {
-    try {
-      console.log('submit data', data)
-      await postApi.createPost(data as CreatePostRequest)
-      toast.success(`投稿の登録に成功しました`)
-      router.push(redirectPath)
-    } catch (error) {
-      console.error('投稿の登録に失敗しました', error)
-      if (error instanceof ApiError) {
-        toast.error(`投稿の登録に失敗しました。 ${error?.details}`)
-      }
-    }
-  }
+  const { form, textLength, contentHtml, onSubmit, handleEditorChange } =
+    usePostForm({
+      redirectPath,
+      initialData,
+      mode,
+    })
+  const {
+    register,
+    formState: { errors },
+    watch,
+  } = form
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       <Card>
         <CardHeader>
           <h2 className="text-lg font-semibold">基本情報</h2>
@@ -119,13 +96,7 @@ export function CreatePostForm({ redirectPath }: CreatePostFormProps) {
             <input type="hidden" {...register('content')} />
             <TiptapEditor
               value={watch('content')}
-              onChange={(html, length) => {
-                setValue('content', html, {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                })
-                setTextLength(length)
-              }}
+              onChange={handleEditorChange}
             />
             {errors?.content?.message && (
               <p className="text-xs text-danger mt-2">

@@ -1,13 +1,28 @@
 import { apiClient } from '@/lib/api'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
-import { CreatePostRequest, ListPostRequest } from '@/types/api/post/request'
-import { PostListResponse } from '@/types/api/post/response'
+import {
+  CreatePostRequest,
+  ListPostRequest,
+  UpdatePostRequest,
+} from '@/types/api/post/request'
+import { PostListResponse, PostWithCategoryId } from '@/types/api/post/response'
 
 export const postApi = {
   createPost: (payload: CreatePostRequest) => {
     return apiClient.request(ADMIN_API_ENDPOINTS.POST.POST, {
       method: 'POST',
       body: payload,
+    })
+  },
+  updatePost: (payload: UpdatePostRequest) => {
+    return apiClient.request(ADMIN_API_ENDPOINTS.POST.POST, {
+      method: 'PUT',
+      body: payload,
+    })
+  },
+  getPost: (id: string): Promise<PostWithCategoryId> => {
+    return apiClient.request(`${ADMIN_API_ENDPOINTS.POST.POST}/${id}`, {
+      method: 'GET',
     })
   },
   getPostList: (params: ListPostRequest): Promise<PostListResponse> => {

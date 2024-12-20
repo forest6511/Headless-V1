@@ -19,6 +19,13 @@ class PostCategoryRepositoryImpl(
             .execute()
     }
 
+    override fun updateRelation(postId: PostId, categoryId: CategoryId): Int {
+        return dsl.update(POST_CATEGORIES)
+            .set(POST_CATEGORIES.CATEGORY_ID, categoryId.value)
+            .where(POST_CATEGORIES.POST_ID.eq(postId.value))
+            .execute()
+    }
+
     override fun deleteRelation(postId: PostId, categoryId: CategoryId): Int {
         return dsl.deleteFrom(POST_CATEGORIES)
             .where(POST_CATEGORIES.POST_ID.eq(postId.value))

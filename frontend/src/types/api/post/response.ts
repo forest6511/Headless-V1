@@ -6,6 +6,7 @@ export interface PostListResponse {
   pageSize: number
 }
 
+// /api/posts/{id}
 export interface PostWithCategoryId {
   id: string
   title: string

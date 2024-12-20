@@ -22,7 +22,7 @@ class SignInServiceTest {
     fun `should sign in successfully with correct credentials`() {
         // Given
         val command = SignInCommand(
-            email = Email.of("admin@example.com"),
+            email = "admin@example.com",
             password = "correct_password"
         )
 
@@ -40,7 +40,7 @@ class SignInServiceTest {
     fun `should fail sign in with incorrect password`() {
         // Given
         val command = SignInCommand(
-            email = Email.of("test@example.com"),
+            email = "test@example.com",
             // test@example.comの正しいパスワードは'incorrect_password'
             password = "mistake_password"
         )
@@ -57,7 +57,7 @@ class SignInServiceTest {
     fun `should fail sign in with non-existing email`() {
         // Given
         val command = SignInCommand(
-            email = Email.of("nonexistent@example.com"),
+            email = "nonexistent@example.com",
             password = "some_password"
         )
 
@@ -66,5 +66,21 @@ class SignInServiceTest {
             signInService.execute(command)
         }
         assertEquals("invalid credentials for email: nonexistent@example.com", exception.message)
+    }
+
+    @Test
+    @DisplayName("有効化されていないユーザーでサインインを試みると失敗する")
+    fun `should fail sign in when user is not enabled`() {
+        // Given
+        val command = SignInCommand(
+            email = "admin-enable-fale@example.com",
+            password = "correct_password"
+        )
+
+        // When / Then
+        val exception = assertThrows(Exception::class.java) {
+            signInService.execute(command)
+        }
+        assertEquals("invalid credentials for email: admin-enable-fale@example.com", exception.message)
     }
 }

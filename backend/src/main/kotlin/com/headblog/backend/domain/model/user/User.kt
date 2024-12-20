@@ -13,6 +13,7 @@ class User private constructor(
     val email: Email,
     val passwordHash: PasswordHash,
     val role: UserRole,
+    val enable: Boolean,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 ) : UserDetails {
@@ -20,16 +21,18 @@ class User private constructor(
     companion object {
         fun create(
             id: IdGenerator<EntityId>,
-            email: Email,
+            email: String,
             rawPassword: String,
             passwordEncoder: PasswordEncoder,
             role: UserRole = UserRole.USER,
+            enable: Boolean = false,
             currentTime: LocalDateTime = LocalDateTime.now()
         ): User = User(
             id = UserId(id.generate().value),
-            email = email,
+            email = Email.of(email),
             passwordHash = PasswordHash.of(passwordEncoder.encode(rawPassword)),
             role = role,
+            enable = enable,
             createdAt = currentTime,
             updatedAt = currentTime
         )
@@ -62,6 +65,6 @@ class User private constructor(
     }
 
     override fun isEnabled(): Boolean {
-        return true
+        return enable
     }
 }

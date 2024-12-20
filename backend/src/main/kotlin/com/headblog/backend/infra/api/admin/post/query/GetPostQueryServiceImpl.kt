@@ -1,8 +1,10 @@
 package com.headblog.backend.infra.api.admin.post.query
 
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostListDto
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
 
@@ -27,5 +29,9 @@ class GetPostQueryServiceImpl(
             totalPages = totalPages,
             pageSize = pageSize
         )
+    }
+
+    override fun findPostById(postId: UUID): PostDto {
+        return postRepository.findById(postId)?: throw AppConflictException("Post not found. id: $postId")
     }
 }

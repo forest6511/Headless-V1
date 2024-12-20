@@ -1,8 +1,9 @@
-package com.headblog.backend.app.usecase.post.command.create
+package com.headblog.backend.app.usecase.post.command.update
 
 import java.util.*
 
-data class CreatePostCommand(
+data class UpdatePostCommand(
+    val id: UUID,
     val title: String,
     val slug: String,
     val content: String,

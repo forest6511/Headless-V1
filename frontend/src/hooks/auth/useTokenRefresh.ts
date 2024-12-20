@@ -29,7 +29,7 @@ export function useTokenRefresh() {
   }
 
   useEffect(() => {
-    // 25分間隔でトークンをリフレッシュ
+    // 25分間隔でトークンをリフレッシュ(TODO)
     const intervalId = setInterval(checkAndRefreshToken, 25 * 60 * 1000)
     return () => {
       clearInterval(intervalId)

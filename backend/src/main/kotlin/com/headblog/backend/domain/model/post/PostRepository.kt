@@ -9,6 +9,7 @@ interface PostRepository {
     fun update(post: Post): Int
     fun delete(post: Post): Int
     fun findBySlug(slug: String): PostDto?
+    fun findById(id: UUID): PostDto?
 
     fun findAll(
         cursorPostId: UUID?,

@@ -52,5 +52,37 @@ class Post private constructor(
                 categoryId = CategoryId(categoryId),
             )
         }
+
+        fun fromCommand(
+            id: UUID,
+            title: String,
+            slug: String,
+            content: String,
+            excerpt: String,
+            postStatus: String,
+            featuredImageId: UUID?,
+            metaTitle: String?,
+            metaDescription: String?,
+            metaKeywords: String?,
+            ogTitle: String?,
+            ogDescription: String?,
+            categoryId: UUID
+        ): Post {
+            return Post(
+                id = PostId(id),
+                title = title,
+                slug = Slug.of(slug),
+                content = content,
+                excerpt = excerpt,
+                postStatus = PostStatus.of(postStatus),
+                featuredImageId = featuredImageId,
+                metaTitle = metaTitle,
+                metaDescription = metaDescription,
+                metaKeywords = metaKeywords,
+                ogTitle = ogTitle,
+                ogDescription = ogDescription,
+                categoryId = CategoryId(categoryId),
+            )
+        }
     }
 }

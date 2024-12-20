@@ -10,7 +10,6 @@ import com.headblog.backend.app.usecase.auth.command.signup.SignUpCommand
 import com.headblog.backend.app.usecase.auth.command.signup.SignUpResponse
 import com.headblog.backend.app.usecase.auth.command.signup.SignUpUseCase
 import com.headblog.backend.domain.model.auth.JwtToken
-import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.infra.api.admin.auth.handler.AuthenticationResponseHandler
 import com.headblog.backend.infra.api.admin.auth.request.RefreshTokenRequest
 import com.headblog.backend.infra.api.admin.auth.request.SignInRequest
@@ -54,14 +53,14 @@ class AuthController(
     // toCommand メソッド
     private fun SignUpRequest.toCommand(): SignUpCommand {
         return SignUpCommand(
-            email = Email.of(this.email),
+            email = this.email,
             password = this.password
         )
     }
 
     private fun SignInRequest.toCommand(): SignInCommand {
         return SignInCommand(
-            email = Email.of(this.email),
+            email = this.email,
             password = this.password
         )
     }

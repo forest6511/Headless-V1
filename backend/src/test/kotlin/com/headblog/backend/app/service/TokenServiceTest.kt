@@ -2,7 +2,6 @@ package com.headblog.backend.app.service
 
 import com.auth0.jwt.JWT
 import com.headblog.backend.domain.model.auth.AuthTokens
-import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserRole
 import com.headblog.backend.infra.service.auth.TokenService
@@ -37,7 +36,7 @@ class TokenServiceTest {
     fun setUp() {
         user = User.create(
             id = idGenerator,
-            email = Email.of("admin@example.com"),
+            email = "admin@example.com",
             rawPassword = "correct_password",
             passwordEncoder = passwordEncoder,
             role = UserRole.ADMIN,

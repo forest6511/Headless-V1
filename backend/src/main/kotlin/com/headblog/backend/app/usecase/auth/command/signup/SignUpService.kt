@@ -23,13 +23,7 @@ class SignUpService(
     private val logger = LoggerFactory.getLogger(SignUpService::class.java)
 
     override fun execute(command: SignUpCommand): SignUpResponse {
-        logger.info("attempting to sign up user with email: ${command.email.value}")
-
-        // check if the email already exists
-        userRepository.findByEmail(command.email)?.let {
-            logger.error("email already exists: ${command.email.value}")
-            throw AuthenticationCredentialsNotFoundException("email already exists: ${command.email.value}")
-        }
+        logger.info("attempting to sign up user with email: ${command.email}")
 
         // create the user
         val user = User.create(
@@ -39,15 +33,21 @@ class SignUpService(
             passwordEncoder
         )
 
+        // check if the email already exists
+        userRepository.findByEmail(user.email)?.let {
+            logger.error("email already exists: ${user.email.value}")
+            throw AuthenticationCredentialsNotFoundException("email already exists: ${user.email.value}")
+        }
+
         // save the user to the repository
         val savedUser = userRepository.save(user)
 
         // generate JWT token
-        logger.info("generating jwt token for user with email: ${command.email.value}")
+        logger.info("generating jwt token for user with email: ${user.email.value}")
         val authTokens = tokenService.createAuthTokens(savedUser)
 
         // return result with user id and JWT token
-        logger.info("sign-up successful for email: ${command.email.value}")
+        logger.info("sign-up successful for email: ${savedUser.email}")
         return SignUpResponse(
             email = savedUser.email,
             authTokens = authTokens

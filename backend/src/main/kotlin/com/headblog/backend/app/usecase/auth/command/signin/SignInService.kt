@@ -1,5 +1,6 @@
 package com.headblog.backend.app.usecase.auth.command.signin
 
+import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.backend.infra.service.auth.TokenService
 import org.slf4j.LoggerFactory
@@ -19,26 +20,28 @@ class SignInService(
     private val logger = LoggerFactory.getLogger(SignInService::class.java)
 
     override fun execute(command: SignInCommand): SignInResponse {
-        logger.info("signing in user with email: ${command.email.value}")
+        logger.info("signing in user with email: ${command.email}")
+
+        val email = Email.of(command.email)
 
         // ユーザーを取得
-        val user = userRepository.findByEmail(command.email)
+        val user = userRepository.findByEmail(email)
             ?: run {
-                logger.error("invalid credentials, user not found for email: ${command.email.value}")
-                throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${command.email.value}")
+                logger.error("invalid credentials, user not found for email: ${email.value}")
+                throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${email.value}")
             }
 
         // パスワードを検証
         if (!passwordEncoder.matches(command.password, user.passwordHash.value)) {
-            logger.error("invalid credentials, incorrect password for email: ${command.email.value}")
-            throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${command.email.value}")
+            logger.error("invalid credentials, incorrect password for email: ${email.value}")
+            throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${email.value}")
         }
 
         // JWTトークン生成
-        logger.info("generating JWT token for user with email: ${command.email.value}")
+        logger.info("generating JWT token for user with email: ${email.value}")
         val authTokens = tokenService.createAuthTokens(user)
 
-        logger.info("sign-in successful for email: ${command.email.value}")
+        logger.info("sign-in successful for email: ${user.email}")
         return SignInResponse(
             email = user.email,
             authTokens = authTokens

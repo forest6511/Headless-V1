@@ -20,6 +20,11 @@ export const postApi = {
       body: payload,
     })
   },
+  deletePost: (id: string) => {
+    return apiClient.request(`${ADMIN_API_ENDPOINTS.POST.POST}/${id}`, {
+      method: 'DELETE',
+    })
+  },
   getPost: (id: string): Promise<PostWithCategoryId> => {
     return apiClient.request(`${ADMIN_API_ENDPOINTS.POST.POST}/${id}`, {
       method: 'GET',

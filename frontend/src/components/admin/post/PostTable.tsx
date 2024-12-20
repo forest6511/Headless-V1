@@ -1,6 +1,5 @@
-import { Key } from 'react'
+import React, { Key } from 'react'
 import Link from 'next/link'
-import { Edit, Trash2 } from 'lucide-react'
 import {
   Table,
   TableHeader,
@@ -8,7 +7,6 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-  Button,
   Chip,
   Pagination,
 } from '@nextui-org/react'
@@ -17,6 +15,7 @@ import { POST_COLUMNS } from '@/config/constants'
 import { PostStatuses } from '@/types/api/post/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
 import { CategoryListResponse } from '@/types/api/category/response'
+import { PostActions } from '@/components/admin/post/PostActions'
 
 interface PostTableProps {
   posts: PostWithCategoryId[]
@@ -25,7 +24,7 @@ interface PostTableProps {
   totalPages: number
   onPageChange: (page: number) => void
   onEdit: (id: string) => void
-  onDelete: (id: string) => void
+  onDelete: () => void
 }
 
 export const PostTable = ({
@@ -43,6 +42,18 @@ export const PostTable = ({
 
   const getStatusLabel = (status: string) => {
     return PostStatuses.find((s) => s.value === status)?.label || status
+  }
+
+  // TODO 共通化
+  const formatDateTime = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
   }
 
   return (
@@ -73,41 +84,19 @@ export const PostTable = ({
               <TableCell>
                 {getBreadcrumbForCategory(post.categoryId, categories)}
               </TableCell>
-              <TableCell>
-                {/* TODO 共通化 */}
-                {new Date(post.updateAt).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </TableCell>
+              <TableCell>{formatDateTime(post.createdAt)}</TableCell>
+              <TableCell>{formatDateTime(post.updateAt)}</TableCell>
               <TableCell>
                 <Chip color={getStatusColor(post.postStatus)} variant="flat">
                   {getStatusLabel(post.postStatus)}
                 </Chip>
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2 justify-end">
-                  <Button
-                    isIconOnly
-                    color="warning"
-                    aria-label="編集"
-                    onPress={() => onEdit(post.id)}
-                  >
-                    <Edit size={20} />
-                  </Button>
-                  <Button
-                    isIconOnly
-                    color="danger"
-                    aria-label="削除"
-                    onPress={() => onDelete(post.id)}
-                  >
-                    <Trash2 size={20} />
-                  </Button>
-                </div>
+                <PostActions
+                  postId={post.id}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
               </TableCell>
             </TableRow>
           ))}

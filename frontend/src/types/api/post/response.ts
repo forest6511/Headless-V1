@@ -20,6 +20,7 @@ export interface PostWithCategoryId {
   metaKeywords: string | null
   ogTitle: string | null
   ogDescription: string | null
+  createdAt: string
   updateAt: string
   categoryId: string
 }

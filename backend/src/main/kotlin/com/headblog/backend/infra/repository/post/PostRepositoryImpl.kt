@@ -140,6 +140,7 @@ class PostRepositoryImpl(
             metaKeywords = get(POSTS.META_KEYWORDS),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
+            createdAt = get(POSTS.CREATED_AT)!!,
             updateAt = get(POSTS.UPDATED_AT)!!,
             categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
         )

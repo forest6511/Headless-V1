@@ -14,7 +14,7 @@ import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
 import { Save } from 'lucide-react'
 import React from 'react'
-import { useCategories } from '@/hooks/category/useCategories'
+import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
 
 interface PostFormProps {
@@ -24,7 +24,7 @@ interface PostFormProps {
 }
 
 export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
-  const { categories } = useCategories()
+  const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(categories)
   const { form, textLength, contentHtml, onSubmit, handleEditorChange } =
     usePostForm({

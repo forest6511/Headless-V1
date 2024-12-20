@@ -9,17 +9,17 @@ import {
 } from '@nextui-org/react'
 import { Edit, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
-import { categoryApi } from '@/lib/api'
+import { postApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 
-interface CategoryActionsProps {
-  categoryId: string
+interface PostActionsProps {
+  postId: string
   onEdit: (id: string) => void
   onDelete: () => void
 }
 
-export const CategoryActions: React.FC<CategoryActionsProps> = ({
-  categoryId,
+export const PostActions: React.FC<PostActionsProps> = ({
+  postId,
   onEdit,
   onDelete,
 }) => {
@@ -27,19 +27,19 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleEdit = () => {
-    onEdit(categoryId)
+    onEdit(postId)
   }
 
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      await categoryApi.deleteCategory(categoryId)
-      toast.success('カテゴリーを削除しました')
-      // カテゴリー再取得
+      await postApi.deletePost(postId)
+      toast.success('記事を削除しました')
+      // 記事再取得
       onDelete()
     } catch (error) {
-      console.error('カテゴリーの削除に失敗しました:', error)
-      toast.error('カテゴリーの削除に失敗しました')
+      console.error('記事の削除に失敗しました:', error)
+      toast.error('記事の削除に失敗しました')
     } finally {
       setIsDeleting(false)
     }
@@ -65,10 +65,9 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>カテゴリーの削除</ModalHeader>
+              <ModalHeader>記事の削除</ModalHeader>
               <ModalBody>
-                このカテゴリーを削除してもよろしいですか？
-                この操作は取り消せません。
+                この記事を削除してもよろしいですか？ この操作は取り消せません。
               </ModalBody>
               <ModalFooter>
                 <Button color="default" variant="light" onPress={onClose}>

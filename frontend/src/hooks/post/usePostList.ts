@@ -6,7 +6,7 @@ export const usePostList = (rowsPerPage: number = 10) => {
   const [posts, setPosts] = useState<PostWithCategoryId[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [pageCursors, setPageCursors] = useState<{ [key: number]: string }>({})
+  const [nextCursor, setNextCursor] = useState<string | undefined>(undefined)
   const [hasNextPage, setHasNextPage] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
@@ -14,28 +14,21 @@ export const usePostList = (rowsPerPage: number = 10) => {
   const fetchPosts = useCallback(async () => {
     setIsLoading(true)
     try {
-      let currentCursor: string | undefined =
-        page === 1 ? undefined : pageCursors[page - 1]
-
       const result: PostListResponse = await postApi.getPostList({
-        cursorPostId: currentCursor,
+        cursorPostId: page === 1 ? undefined : nextCursor,
         pageSize: rowsPerPage,
       })
 
-      // 次のページが存在するかチェック（pageSize + 1件取得されている）
-      setHasNextPage(result.posts.length > rowsPerPage)
-
-      // 表示用のpostsは1件のみ（次ページチェック用の要素を除外）
+      // 表示用のデータを設定
       const displayPosts = result.posts.slice(0, rowsPerPage)
       setPosts(displayPosts)
       setTotalPages(result.totalPages)
+      setHasNextPage(page < result.totalPages)
 
-      // 次のページのカーソルを保存（最後の要素のIDをカーソルとして使用）
-      if (result.posts.length > rowsPerPage) {
-        setPageCursors((prev) => ({
-          ...prev,
-          [page]: result.posts[rowsPerPage - 1].id,
-        }))
+      // カーソルを設定 - 現在のページの最後の要素のIDをカーソルとして使用
+      if (displayPosts.length > 0) {
+        const nextPageStartId = displayPosts[displayPosts.length - 1].id
+        setNextCursor(nextPageStartId)
       }
     } catch (error) {
       setError(error as Error)
@@ -43,11 +36,11 @@ export const usePostList = (rowsPerPage: number = 10) => {
     } finally {
       setIsLoading(false)
     }
-  }, [page, rowsPerPage, pageCursors])
+  }, [page, rowsPerPage])
 
   useEffect(() => {
     void fetchPosts()
-  }, [fetchPosts])
+  }, [page])
 
   return {
     posts,

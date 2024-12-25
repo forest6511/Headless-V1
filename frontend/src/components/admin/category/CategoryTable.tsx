@@ -35,7 +35,7 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
       case 'name':
         return category.name ? (
           <Link
-            href={ROUTES.ADMIN.DASHBOARD.CATEGORIES.EDIT(category.id)}
+            href={ROUTES.DASHBOARD.CATEGORIES.EDIT(category.id)}
             className="text-blue-500 hover:text-blue-700"
           >
             {category.name}

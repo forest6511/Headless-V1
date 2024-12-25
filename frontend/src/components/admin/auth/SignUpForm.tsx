@@ -27,7 +27,7 @@ export default function SignUpForm() {
       })
 
       // TODO メール確認などは省略。将来的にサインアップ機能は削除予定(バックエンドのデプロイ前)
-      router.push(ROUTES.ADMIN.DASHBOARD.BASE)
+      router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }

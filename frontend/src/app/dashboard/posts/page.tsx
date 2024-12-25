@@ -25,7 +25,7 @@ export default function PostsPage() {
     usePostList(ROWS_PER_PAGE)
 
   const handlePostEdit = (id: string) => {
-    router.push(ROUTES.ADMIN.DASHBOARD.POSTS.EDIT(id))
+    router.push(ROUTES.DASHBOARD.POSTS.EDIT(id))
   }
 
   const handlePostDeleted = useCallback(async () => {

@@ -13,7 +13,7 @@ export default function CategoryList() {
   const { categories, isLoading, error, refetch } = useCategoryList()
 
   const handleCategoryEdit = (id: string) => {
-    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.EDIT(id))
+    router.push(ROUTES.DASHBOARD.CATEGORIES.EDIT(id))
   }
 
   // 子コンポーネントへデータ再取得関数を渡す

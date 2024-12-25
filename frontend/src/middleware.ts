@@ -10,9 +10,9 @@ export async function middleware(request: NextRequest) {
   // クッキーからアクセストークンを取得（サーバーサイドの責任として、ブラウザから送信されたクッキーを解析）
   const accessToken = request.cookies.get('access_token')?.value
 
-  // /admin/dashboard で始まるリクエストパスをチェック
+  // /dashboard で始まるリクエストパスをチェック
   // サーバーサイドでリクエストのパスを解析し、該当するルートへのアクセスを制御
-  if (request.nextUrl.pathname.startsWith('/admin/dashboard')) {
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
     // アクセストークンがない場合、管理画面のログインページにリダイレクト
     if (!accessToken) {
       // サーバーサイドでリダイレクトを処理し、クライアントに適切なレスポンスを返却
@@ -34,6 +34,6 @@ export async function middleware(request: NextRequest) {
  * サーバーサイドで特定のルートに対してのみミドルウェアを適用する仕組みを提供。
  */
 export const config = {
-  // /admin/dashboard 以下のすべてのパスに対してミドルウェアを適用
-  matcher: '/admin/dashboard/:path*',
+  // /dashboard 以下のすべてのパスに対してミドルウェアを適用
+  matcher: '/dashboard/:path*',
 }

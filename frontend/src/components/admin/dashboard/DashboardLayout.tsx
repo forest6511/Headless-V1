@@ -3,7 +3,7 @@
 import { useTokenRefresh } from '@/hooks/auth/useTokenRefresh'
 import React from 'react'
 
-export default function AdminDashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode

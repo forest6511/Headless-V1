@@ -14,13 +14,13 @@ export const usePostDetail = (postId: string) => {
       try {
         const fetchedPost = await postApi.getPost(postId)
         if (!fetchedPost) {
-          router.push(ROUTES.ADMIN.DASHBOARD.POSTS.BASE)
+          router.push(ROUTES.DASHBOARD.POSTS.BASE)
         } else {
           setPost(fetchedPost)
         }
       } catch (error) {
         console.error('Error fetching post:', error)
-        router.push(ROUTES.ADMIN.DASHBOARD.POSTS.BASE)
+        router.push(ROUTES.DASHBOARD.POSTS.BASE)
       } finally {
         setIsLoading(false)
       }

@@ -9,9 +9,7 @@ export default function NewCategoryPage() {
     <Card className="max-w-2xl mx-auto">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの新規作成</h1>
-        <CreateCategoryForm
-          redirectPath={ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE}
-        />
+        <CreateCategoryForm redirectPath={ROUTES.DASHBOARD.CATEGORIES.BASE} />
       </CardBody>
     </Card>
   )

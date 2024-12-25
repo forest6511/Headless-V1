@@ -20,7 +20,7 @@ export default function EditCategoryPage({ params }: Props) {
   const category = categories.find((t) => t.id === params.id)
 
   if (!category) {
-    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE)
+    router.push(ROUTES.DASHBOARD.CATEGORIES.BASE)
     return null
   }
 
@@ -37,7 +37,7 @@ export default function EditCategoryPage({ params }: Props) {
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの編集</h1>
         <UpdateCategoryForm
-          redirectPath={ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE}
+          redirectPath={ROUTES.DASHBOARD.CATEGORIES.BASE}
           initialData={defaultValues}
         />
       </CardBody>

@@ -75,7 +75,7 @@ export const PostTable = ({
             <TableRow key={post.id as Key}>
               <TableCell>
                 <Link
-                  href={ROUTES.ADMIN.DASHBOARD.POSTS.EDIT(post.id)}
+                  href={ROUTES.DASHBOARD.POSTS.EDIT(post.id)}
                   className="text-blue-500 hover:text-blue-700"
                 >
                   {post.title}

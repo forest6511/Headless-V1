@@ -23,7 +23,7 @@ export default function EditPostPage({ params }: Props) {
         <h1 className="text-2xl font-bold mb-6">記事の編集</h1>
         <PostForm
           mode="update"
-          redirectPath={ROUTES.ADMIN.DASHBOARD.POSTS.BASE}
+          redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
           initialData={post}
         />
       </CardBody>

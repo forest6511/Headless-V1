@@ -35,8 +35,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
 
       - name: Set environment variables
         run: |
@@ -61,16 +61,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: "18.x"
 
       - name: Install dependencies
         run: |
-          cd frontend
+          cd frontend-admin
           npm install
 
       - name: Build the project
         run: |
-          cd frontend
+          cd frontend-admin
           npm run build
 
       - name: Deploy to Vercel (Preview)
@@ -78,6 +78,6 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          cd frontend
+          cd frontend-admin
           npm install -g vercel
           vercel --token $VERCEL_TOKEN --confirm

@@ -6,7 +6,7 @@ import { AuthResponse } from '@/types/api/auth/response'
 
 export async function POST(_request: Request) {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const refreshToken = cookieStore.get('refresh_token')
 
     const refreshUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${ADMIN_API_ENDPOINTS.AUTH.REFRESH_TOKEN}`

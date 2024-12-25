@@ -17,7 +17,7 @@ async function handleRequest(
   method: string
 ): Promise<NextResponse> {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const accessToken = cookieStore.get('access_token')
 
     if (!accessToken?.value) {

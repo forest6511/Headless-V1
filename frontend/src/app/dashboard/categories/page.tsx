@@ -1,7 +1,7 @@
 'use client'
 
-import { AddCategoryButton } from '@/components/admin/category/AddCategoryButton'
-import { CategoryTable } from '@/components/admin/category/CategoryTable'
+import { AddCategoryButton } from '@/components/category/AddCategoryButton'
+import { CategoryTable } from '@/components/category/CategoryTable'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { useCallback } from 'react'
 import { ROUTES } from '@/config/routes'

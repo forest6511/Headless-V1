@@ -2,7 +2,7 @@
 
 import { Card, CardBody } from '@nextui-org/react'
 import { ROUTES } from '@/config/routes'
-import { PostForm } from '@/components/admin/post/PostForm'
+import { PostForm } from '@/components/post/PostForm'
 import { usePostDetail } from '@/hooks/post/usePostDetail'
 
 interface Props {

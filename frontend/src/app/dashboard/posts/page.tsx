@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation'
 import { usePostList } from '@/hooks/post/usePostList'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
-import { PostTable } from '@/components/admin/post/PostTable'
+import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
-import { AddPostButton } from '@/components/admin/post/AddPostButton'
+import { AddPostButton } from '@/components/post/AddPostButton'
 import { useCallback } from 'react'
 
 const ROWS_PER_PAGE = 10

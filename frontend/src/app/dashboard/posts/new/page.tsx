@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardBody } from '@nextui-org/react'
-import { PostForm } from '@/components/admin/post/PostForm'
+import { PostForm } from '@/components/post/PostForm'
 import { ROUTES } from '@/config/routes'
 
 export default function NewPostPage() {

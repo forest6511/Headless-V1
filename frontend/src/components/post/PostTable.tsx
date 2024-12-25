@@ -15,7 +15,7 @@ import { POST_COLUMNS } from '@/config/constants'
 import { PostStatuses } from '@/types/api/post/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
 import { CategoryListResponse } from '@/types/api/category/response'
-import { PostActions } from '@/components/admin/post/PostActions'
+import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
 
 interface PostTableProps {

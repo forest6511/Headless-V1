@@ -1,8 +1,8 @@
 'use client'
 
-import DashboardLayout from '@/components/admin/dashboard/DashboardLayout'
-import DashboardHeader from '@/components/admin/dashboard/DashboardHeader'
-import DashboardSidebar from '@/components/admin/dashboard/DashboardSidebar'
+import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardHeader from '@/components/dashboard/DashboardHeader'
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
 import React from 'react'
 
 export default function DashboardPageLayout({

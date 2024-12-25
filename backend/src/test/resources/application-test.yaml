@@ -26,7 +26,6 @@ jwt:
   expiration: 1800000 # 30 minutes
   refresh-expiration: 3600000 # 60 minutes
 
-
 logging:
   level:
     org.flywaydb: DEBUG
@@ -36,10 +35,10 @@ server:
   port: 8081
 
 cookie:
-  secure: ${COOKIE_SECURE:false}           # HTTP プロトコルを許可
-  domain: ${COOKIE_DOMAIN:localhost}       # ローカル用ドメイン
-  same-site: ${COOKIE_SAME_SITE:Lax}       # クロスオリジンのリスクを減らす
-  http-only: ${COOKIE_HTTP_ONLY:true}      # JavaScript からのアクセスを禁止
+  secure: ${COOKIE_SECURE:false} # HTTP プロトコルを許可
+  domain: ${COOKIE_DOMAIN:localhost} # ローカル用ドメイン
+  same-site: ${COOKIE_SAME_SITE:Lax} # クロスオリジンのリスクを減らす
+  http-only: ${COOKIE_HTTP_ONLY:true} # JavaScript からのアクセスを禁止
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

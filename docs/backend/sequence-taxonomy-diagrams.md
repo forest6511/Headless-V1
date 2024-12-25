@@ -1,6 +1,7 @@
 # シーケンス図
 
 ## カテゴリー作成（POST）
+
 ```mermaid
 sequenceDiagram
     actor Client
@@ -23,6 +24,7 @@ sequenceDiagram
 ```
 
 ## カテゴリー取得（GET）
+
 ```mermaid
 sequenceDiagram
     actor Client

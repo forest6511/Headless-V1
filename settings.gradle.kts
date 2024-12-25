@@ -1,3 +1,4 @@
 rootProject.name = "headblog"
 include("backend")
-include("frontend")
+include("frontend-admin")
+include("frontend-user")

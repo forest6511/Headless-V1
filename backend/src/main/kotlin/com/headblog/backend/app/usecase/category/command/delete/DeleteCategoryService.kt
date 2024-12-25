@@ -27,7 +27,7 @@ class DeleteCategoryService(
             ?: throw AppConflictException("Category with ID $deleteId not found")
 
         // デフォルトカテゴリーの取得（削除禁止の確認）
-        val defaultCategory = categoryRepository.findBySlug(Slug.DEFAULT_SLUG)
+        val defaultCategory: CategoryDto = categoryRepository.findBySlug(Slug.DEFAULT_SLUG)
             ?: throw AppConflictException("Default category not found")
 
         if (categoryDto.slug == Slug.DEFAULT_SLUG) {
@@ -44,14 +44,25 @@ class DeleteCategoryService(
             createdAt = categoryDto.createdAt
         )
 
+        // 削除カテゴリの紐付け対象を変更
+        // TODO 親カテゴリは存在しない（deleteCategory.parentId == null）が、子カテゴリが存在する場合は、子カテゴリもdeleteCategoryへ
+        val replacementCategory: CategoryDto = if (deleteCategory.parentId == null) {
+            // 親カテゴリの場合は、未設定カテゴリへ変更
+            defaultCategory
+        } else {
+            // 親カテゴリが存在する場合は親カテゴリへ変更
+            categoryRepository.findById(deleteCategory.parentId.value)
+                ?: throw AppConflictException("Parent Category with ID ${deleteCategory.parentId.value} not found")
+        }
+
         // 再帰的に子カテゴリーを処理
-        updateChildrenParentRecursively(deleteCategory.id.value, defaultCategory)
+        updateChildrenParentRecursively(deleteCategory.id.value, replacementCategory)
 
         // 投稿との紐付けを解除しデフォルトカテゴリに再割り当て
         val associatedPostIds: List<PostId> = postCategoryRepository.findPostsByCategoryId(deleteCategory.id)
         associatedPostIds.forEach { postId ->
             postCategoryRepository.deleteRelation(postId, deleteCategory.id)
-            postCategoryRepository.addRelation(postId, CategoryId(defaultCategory.id))
+            postCategoryRepository.addRelation(postId, CategoryId(replacementCategory.id))
         }
 
         // カテゴリーの削除
@@ -60,15 +71,15 @@ class DeleteCategoryService(
         return deleteCategory.id
     }
 
-    private fun updateChildrenParentRecursively(currentParentId: UUID, defaultCategory: CategoryDto) {
-        // デフォルトカテゴリーをCategoryオブジェクトに変換
+    private fun updateChildrenParentRecursively(currentParentId: UUID, replacementCategory: CategoryDto) {
+        // 変更カテゴリーをCategoryオブジェクトに変換
         val category = Category.fromDto(
-            id = defaultCategory.id,
-            name = defaultCategory.name,
-            slug = defaultCategory.slug,
-            description = defaultCategory.description,
-            parentId = defaultCategory.parentId,
-            createdAt = defaultCategory.createdAt
+            id = replacementCategory.id,
+            name = replacementCategory.name,
+            slug = replacementCategory.slug,
+            description = replacementCategory.description,
+            parentId = replacementCategory.parentId,
+            createdAt = replacementCategory.createdAt
         )
 
         // 現在の親IDを持つ全ての子カテゴリーを取得
@@ -81,7 +92,7 @@ class DeleteCategoryService(
 
             // この子カテゴリーが持つ子カテゴリーを再帰的に処理
             if (categoryRepository.existsByParentId(child.id.value)) {
-                updateChildrenParentRecursively(child.id.value, defaultCategory)
+                updateChildrenParentRecursively(child.id.value, replacementCategory)
             }
         }
     }

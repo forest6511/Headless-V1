@@ -2,7 +2,7 @@
 
 import { Card, CardBody } from '@nextui-org/react'
 import { ROUTES } from '@/config/routes'
-import { PostForm } from '@/components/admin/post/PostForm'
+import { PostForm } from '@/components/post/PostForm'
 import { usePostDetail } from '@/hooks/post/usePostDetail'
 
 interface Props {
@@ -23,7 +23,7 @@ export default function EditPostPage({ params }: Props) {
         <h1 className="text-2xl font-bold mb-6">記事の編集</h1>
         <PostForm
           mode="update"
-          redirectPath={ROUTES.ADMIN.DASHBOARD.POSTS.BASE}
+          redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
           initialData={post}
         />
       </CardBody>

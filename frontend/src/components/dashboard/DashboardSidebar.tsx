@@ -11,25 +11,23 @@ const menuItems = [
     submenu: [
       {
         title: '記事投稿',
-        href: ROUTES.ADMIN.DASHBOARD.POSTS.BASE,
+        href: ROUTES.DASHBOARD.POSTS.BASE,
         icon: FileText,
       },
       {
         title: 'カテゴリ',
-        href: ROUTES.ADMIN.DASHBOARD.CATEGORIES.BASE,
+        href: ROUTES.DASHBOARD.CATEGORIES.BASE,
         icon: FolderTree,
       },
     ],
   },
   {
     title: '権限管理',
-    submenu: [
-      { title: 'ユーザー', href: '/admin/dashboard/users', icon: Users },
-    ],
+    submenu: [{ title: 'ユーザー', href: '/dashboard/users', icon: Users }],
   },
 ]
 
-export default function AdminDashboardSidebar() {
+export default function DashboardSidebar() {
   const pathname = usePathname()
 
   return (

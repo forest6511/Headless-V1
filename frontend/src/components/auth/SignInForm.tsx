@@ -3,31 +3,28 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
-import { SignupFormData, signupSchema } from '@/schemas/auth'
-import { useRouter } from 'next/navigation'
+import { SigninFormData, signInSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api'
+import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/config/routes'
 
-export default function SignUpForm() {
+export default function SignInForm() {
   const router = useRouter()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<SigninFormData>({
+    resolver: zodResolver(signInSchema),
   })
 
-  const onSubmit = async (data: SignupFormData) => {
-    console.log(data)
+  const onSubmit = async (data: SigninFormData) => {
     try {
-      authApi.signup({
+      await authApi.signin({
         email: data.email,
         password: data.password,
       })
-
-      // TODO メール確認などは省略。将来的にサインアップ機能は削除予定(バックエンドのデプロイ前)
-      router.push(ROUTES.ADMIN.DASHBOARD.BASE)
+      router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }
@@ -51,16 +48,8 @@ export default function SignUpForm() {
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
       />
-      <Input
-        {...register('confirmPassword')}
-        label="パスワード（確認）"
-        placeholder="パスワードを再入力"
-        type="password"
-        isInvalid={!!errors.confirmPassword}
-        errorMessage={errors.confirmPassword?.message}
-      />
       <Button type="submit" color="primary" className="w-full">
-        サインアップ
+        ログイン
       </Button>
     </form>
   )

@@ -1,20 +1,16 @@
 export const ROUTES = {
   HOME: '/',
-  ADMIN: {
-    BASE: '/admin',
-    DASHBOARD: {
-      BASE: '/admin/dashboard',
-      CATEGORIES: {
-        BASE: '/admin/dashboard/categories',
-        NEW: '/admin/dashboard/categories/new',
-        EDIT: (categoryId: string) =>
-          `/admin/dashboard/categories/edit/${categoryId}`,
-      },
-      POSTS: {
-        BASE: '/admin/dashboard/posts',
-        NEW: '/admin/dashboard/posts/new',
-        EDIT: (postId: string) => `/admin/dashboard/posts/edit/${postId}`,
-      },
+  DASHBOARD: {
+    BASE: '/dashboard',
+    CATEGORIES: {
+      BASE: '/dashboard/categories',
+      NEW: '/dashboard/categories/new',
+      EDIT: (categoryId: string) => `/dashboard/categories/edit/${categoryId}`,
+    },
+    POSTS: {
+      BASE: '/dashboard/posts',
+      NEW: '/dashboard/posts/new',
+      EDIT: (postId: string) => `/dashboard/posts/edit/${postId}`,
     },
   },
 }

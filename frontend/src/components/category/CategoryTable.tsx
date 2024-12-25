@@ -1,5 +1,4 @@
 import {
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +11,8 @@ import { CategoryListResponse } from '@/types/api/category/response'
 import { CategoryActions } from './CategoryActions'
 import { CATEGORY_COLUMNS } from '@/config/constants'
 import React from 'react'
+import { ROUTES } from '@/config/routes'
+import Link from 'next/link'
 
 interface CategoryTableProps {
   categories: CategoryListResponse[]
@@ -33,7 +34,12 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
     switch (columnKey) {
       case 'name':
         return category.name ? (
-          <Link href={`/categories/${category.slug}`}>{category.name}</Link>
+          <Link
+            href={ROUTES.DASHBOARD.CATEGORIES.EDIT(category.id)}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            {category.name}
+          </Link>
         ) : null
       case 'breadcrumb':
         if (Array.isArray(category.breadcrumbs)) {

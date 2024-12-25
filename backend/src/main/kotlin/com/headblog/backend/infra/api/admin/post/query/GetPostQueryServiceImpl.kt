@@ -32,6 +32,6 @@ class GetPostQueryServiceImpl(
     }
 
     override fun findPostById(postId: UUID): PostDto {
-        return postRepository.findById(postId)?: throw AppConflictException("Post not found. id: $postId")
+        return postRepository.findById(postId) ?: throw AppConflictException("Post not found. id: $postId")
     }
 }

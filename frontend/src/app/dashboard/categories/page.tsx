@@ -1,7 +1,7 @@
 'use client'
 
-import { AddCategoryButton } from '@/components/admin/category/AddCategoryButton'
-import { CategoryTable } from '@/components/admin/category/CategoryTable'
+import { AddCategoryButton } from '@/components/category/AddCategoryButton'
+import { CategoryTable } from '@/components/category/CategoryTable'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { useCallback } from 'react'
 import { ROUTES } from '@/config/routes'
@@ -13,7 +13,7 @@ export default function CategoryList() {
   const { categories, isLoading, error, refetch } = useCategoryList()
 
   const handleCategoryEdit = (id: string) => {
-    router.push(ROUTES.ADMIN.DASHBOARD.CATEGORIES.EDIT(id))
+    router.push(ROUTES.DASHBOARD.CATEGORIES.EDIT(id))
   }
 
   // 子コンポーネントへデータ再取得関数を渡す

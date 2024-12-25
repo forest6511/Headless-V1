@@ -3,7 +3,7 @@
 import { Button } from '@nextui-org/react'
 import { LayoutDashboard, LogOut } from 'lucide-react'
 
-export default function AdminDashboardHeader() {
+export default function DashboardHeader() {
   return (
     <header className="bg-[#6366F1] text-white shadow-md p-4 flex justify-between items-center">
       <div className="flex items-center gap-2">

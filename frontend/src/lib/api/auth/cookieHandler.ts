@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+import { cookies, type UnsafeUnwrappedCookies } from 'next/headers'
 import type { AuthResponse } from '@/types/api/auth/response'
 
 /**
@@ -6,7 +6,8 @@ import type { AuthResponse } from '@/types/api/auth/response'
  * 本番環境ではセキュリティ属性を適切に設定
  */
 export const handleAuthCookies = (authResponse: AuthResponse) => {
-  const cookieStore = cookies()
+  // https://nextjs.org/docs/app/building-your-application/upgrading/version-15#temporary-synchronous-usage
+  const cookieStore = cookies() as unknown as UnsafeUnwrappedCookies
 
   const isProduction = process.env.NODE_ENV === 'production'
 

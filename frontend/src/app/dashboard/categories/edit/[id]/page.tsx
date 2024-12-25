@@ -1,4 +1,5 @@
 'use client'
+import { use } from 'react'
 
 import { Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
@@ -7,12 +8,13 @@ import { UpdateCategoryForm } from '@/components/category/UpdateCategoryForm'
 import { ROUTES } from '@/config/routes'
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function EditCategoryPage({ params }: Props) {
+export default function EditCategoryPage(props: Props) {
+  const params = use(props.params)
   const router = useRouter()
   const categories = useCategoryStore((state) => state.categories)
 

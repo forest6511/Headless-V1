@@ -1,4 +1,4 @@
-import { cookies, type UnsafeUnwrappedCookies } from 'next/headers'
+import { cookies } from 'next/headers'
 import type { AuthResponse } from '@/types/api/auth/response'
 
 /**

@@ -4,12 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { SignupFormData, signupSchema } from '@/schemas/auth'
-import { useRouter } from 'next/navigation'
 import { authApi } from '@/lib/api'
 import toast from 'react-hot-toast'
 
 export default function SignUpForm() {
-  const router = useRouter()
   const {
     register,
     handleSubmit,

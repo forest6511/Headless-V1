@@ -17,7 +17,8 @@ spring:
     property-naming-strategy: LOWER_CAMEL_CASE
 
 jwt:
-  secret: "BzFwqL2+1XKvNmL9RzGv3J0RwskKPJ4JmC3TPwmKS0v3JK9L4Km6RX3JL="
+  # openssl rand -base64 32
+  secret: "IJnor7miOnPl/MxO9uDZQQXkt8BfFrgenVeyLK7SFEQ="
   expiration: 1800000 # 30 minutes
   refresh-expiration: 3600000 # 60 minutes
 

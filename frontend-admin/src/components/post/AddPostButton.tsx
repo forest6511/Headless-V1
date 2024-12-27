@@ -10,7 +10,7 @@ export const AddPostButton = () => {
     <Button
       color="primary"
       startContent={<Plus size={20} />}
-      onClick={() => router.push(ROUTES.DASHBOARD.POSTS.NEW)}
+      onPress={() => router.push(ROUTES.DASHBOARD.POSTS.NEW)}
     >
       新規追加
     </Button>

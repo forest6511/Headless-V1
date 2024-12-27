@@ -10,7 +10,7 @@ export const AddCategoryButton = () => {
     <Button
       color="primary"
       startContent={<Plus size={20} />}
-      onClick={() => router.push(ROUTES.DASHBOARD.CATEGORIES.NEW)}
+      onPress={() => router.push(ROUTES.DASHBOARD.CATEGORIES.NEW)}
     >
       新規追加
     </Button>

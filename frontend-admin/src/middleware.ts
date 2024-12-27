@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
 
 /**
  * ミドルウェア関数：認証とリダイレクトを処理
@@ -20,8 +21,15 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url))
     }
 
-    // アクセストークンがある場合、そのまま次の処理へ進む
-    return NextResponse.next()
+    // accessTokenをsecretで検証
+    try {
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+      await jwtVerify(accessToken, secret)
+      // アクセストークンがある場合、そのまま次の処理へ進む
+      return NextResponse.next()
+    } catch {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
   }
 
   // 上記以外のルートでは特別な処理をせず、そのまま次の処理へ進む

@@ -5,9 +5,9 @@ import type { AuthResponse } from '@/types/api/auth/response'
  * 認証トークンをサーバーサイドでクッキーに設定する
  * 本番環境ではセキュリティ属性を適切に設定
  */
-export const handleAuthCookies = (authResponse: AuthResponse) => {
+export const handleAuthCookies = async (authResponse: AuthResponse) => {
   // https://nextjs.org/docs/app/building-your-application/upgrading/version-15#temporary-synchronous-usage
-  const cookieStore = cookies() as unknown as UnsafeUnwrappedCookies
+  const cookieStore = await cookies()
 
   const isProduction = process.env.NODE_ENV === 'production'
 

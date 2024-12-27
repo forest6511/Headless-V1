@@ -35,7 +35,7 @@ export async function POST(_request: Request) {
     }
 
     const authResponse: AuthResponse = await response.json()
-    handleAuthCookies(authResponse)
+    await handleAuthCookies(authResponse)
 
     return NextResponse.json(authResponse)
   } catch (error) {

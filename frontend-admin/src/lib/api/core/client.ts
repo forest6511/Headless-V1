@@ -1,5 +1,4 @@
 import { ROUTES } from '@/config/routes'
-import { redirect } from 'next/navigation'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
@@ -46,7 +45,7 @@ export const apiClient = {
 
     if (response.status === 401 || response.status === 403) {
       console.error('認証エラーが発生しました', response.status)
-      redirect(ROUTES.HOME)
+      window.location.href = ROUTES.HOME
     }
 
     if (!response.ok) {

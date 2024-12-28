@@ -1,14 +1,44 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import {
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 interface LeftSidebarProps {
   className?: string
   inLayout?: boolean
 }
+
+const navLinks = [
+  {
+    category: 'テクノロジー',
+    items: [
+      'テクノロジー',
+      'サイエンス',
+      'IT',
+      'ガジェット',
+      'AI',
+      'プログラミング',
+      'VR・AR',
+      '3DCG',
+    ],
+  },
+  {
+    category: 'カルチャー',
+    items: [
+      'マンガ',
+      '恋愛',
+      'アート',
+      '読書',
+      '芸能',
+      '創作',
+      '小説',
+      '写真',
+      'デザイン',
+      'アウトドア',
+      '乗り物',
+      'ホビー・玩具',
+    ],
+  },
+]
 
 export function LeftSidebar({
   className = '',
@@ -33,87 +63,48 @@ export function LeftSidebar({
             </Button>
           </div>
         </div>
+
+        {navLinks.map((section) => (
+          <div className="mt-4" key={section.category}>
+            <Link className="mb-2 text-sm font-semibold" href="/">
+              {section.category}
+            </Link>
+            <nav className="-space-y-1">
+              {section.items.map((item) => (
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  asChild
+                  key={item}
+                >
+                  <Link href={`/${item.toLowerCase()}`}>{item}</Link>
+                </Button>
+              ))}
+            </nav>
+          </div>
+        ))}
+
         <div className="mt-4">
-          <Link className="mb-2 text-sm font-semibold"　href="/">テスト</Link>
+          <Link className="mb-2 text-sm font-semibold" href="/">
+            その他
+          </Link>
           <nav className="-space-y-1">
             <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/">
-                ホーム
-              </Link>
+              <Link href="/code-of-conduct">行動規範</Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/dev-plus">
-                DEV++
-              </Link>
+              <Link href="/privacy">プライバシーポリシー</Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/podcasts">
-                ポッドキャスト
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/videos">
-                ビデオ
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/tags">
-                タグ
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/help">
-                DEV ヘルプ
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/shop">
-                フォーラムショップ
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/advertise">
-                DEVで広告
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/challenges">
-                DEVチャレンジ
-              </Link>
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" asChild>
-              <Link href="/showcase">
-                DEVショーケース
-              </Link>
+              <Link href="/terms">利用規約</Link>
             </Button>
           </nav>
         </div>
-
-        <div className="mt-4">
-          <Link className="mb-2 text-sm font-semibold"　href="/">その他</Link>
-            <nav className="-space-y-1">
-              <Button variant="ghost" className="w-full justify-start" asChild>
-                <Link href="/code-of-conduct">
-                  行動規範
-                </Link>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start" asChild>
-                <Link href="/privacy">
-                  プライバシーポリシー
-                </Link>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start" asChild>
-                <Link href="/terms">
-                  利用規約
-                </Link>
-              </Button>
-            </nav>
-          </div>
-        </div>
       </div>
-      )
+    </div>
+  )
 
-      if (inLayout) {
+  if (inLayout) {
     return (
       <aside className={`hidden lg:block w-64 min-h-screen ${className}`}>
         <div className="sticky top-16 overflow-y-auto h-[calc(100vh-4rem)]">

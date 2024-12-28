@@ -63,21 +63,40 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Install dependencies
+      - name: Install dependencies of frontend-admin
         run: |
           cd frontend-admin
           npm install
 
-      - name: Build the project
+      - name: Build the admin project
         run: |
           cd frontend-admin
           npm run build
 
-      - name: Deploy to Vercel (Preview)
+      - name: Deploy Admin to Vercel (Preview)
         if: success() && github.event_name == 'pull_request'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           cd frontend-admin
+          npm install -g vercel
+          vercel --token $VERCEL_TOKEN --confirm
+
+      - name: Install dependencies of frontend-user
+        run: |
+          cd frontend-user
+          npm install
+
+      - name: Build the user project
+        run: |
+          cd frontend-user
+          npm run build
+
+      - name: Deploy User to Vercel (Preview)
+        if: success() && github.event_name == 'pull_request'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          cd frontend-user
           npm install -g vercel
           vercel --token $VERCEL_TOKEN --confirm

@@ -55,8 +55,8 @@ type PageProps = {
 }
 
 export default async function ArticlePage({ params }: PageProps) {
-  const { id } = await params;
-  const article = await getArticle(id);
+  const { id } = await params
+  const article = await getArticle(id)
 
   if (!article) {
     return <div className="p-4">記事が見つかりません</div>

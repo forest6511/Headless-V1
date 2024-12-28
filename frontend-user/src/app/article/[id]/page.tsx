@@ -25,7 +25,6 @@ interface Article {
 }
 
 async function getArticle(id: string): Promise<Article | null> {
-  // この例では静的なデータを返していますが、実際にはAPIやCMSからデータを取得します
   const articles: Article[] = [
     {
       id: '1',
@@ -51,17 +50,13 @@ async function getArticle(id: string): Promise<Article | null> {
   return articles.find((article) => article.id === id) || null
 }
 
-export async function generateStaticParams() {
-  // この例では静的なIDを返していますが、実際にはAPIやCMSからデータを取得します
-  return [{ id: '1' }]
+type PageProps = {
+  params: { id: string }
 }
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: { id: string }
-}) {
-  const article = await getArticle(params.id)
+export default async function ArticlePage({ params }: PageProps) {
+  const { id } = await params;
+  const article = await getArticle(id);
 
   if (!article) {
     return <div className="p-4">記事が見つかりません</div>
@@ -102,12 +97,6 @@ export default async function ArticlePage({
               <Link href="#" className="font-medium hover:text-blue-600">
                 {article.author.name}
               </Link>
-              {article.author.role && (
-                <>
-                  <span className="mx-2 text-muted-foreground">for</span>
-                  <span className="font-medium">{article.author.role}</span>
-                </>
-              )}
             </div>
             <p className="text-sm text-muted-foreground">{article.date}</p>
           </div>

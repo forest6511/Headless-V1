@@ -132,7 +132,7 @@ export default async function ArticlePage({
         />
 
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 border-t gap-4">
+        <div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">
               <ThumbsUp className="mr-1 h-4 w-4" />
@@ -143,11 +143,11 @@ export default async function ArticlePage({
               <span className="text-sm">{article.comments}</span>
             </Button>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <Bookmark className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>

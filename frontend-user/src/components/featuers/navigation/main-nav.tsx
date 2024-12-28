@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Menu, Search } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { LeftSidebar } from './left-sidebar'
+import { LeftSidebar } from '../../layouts/sidebar/left-sidebar'
 
 export function MainNav() {
   return (
@@ -22,7 +22,7 @@ export function MainNav() {
             </SheetContent>
           </Sheet>
 
-          <Link href="/" className="flex items-center lg:ml-0 -ml-4">
+          <Link href="/public" className="flex items-center lg:ml-0 -ml-4">
             <div className="bg-black text-white px-2 py-1 text-xl font-bold">
               Log
             </div>

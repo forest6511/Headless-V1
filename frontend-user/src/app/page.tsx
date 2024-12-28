@@ -1,163 +1,61 @@
-import { ArticleCard } from '@/components/article-card'
+import { MainNav } from "@/components/main-nav"
+import { LeftSidebar } from "@/components/left-sidebar"
+import { RightSidebar } from "@/components/right-sidebar"
+import { ArticleCard } from "@/components/article-card"
+import { Footer } from "@/components/footer"
 
-// 記事データの型定義
-interface Article {
-  id: string
-  category: string
-  date: string
-  title: string
-  tags: string[]
-  likes: number
-  comments: number
-  readTime: string
-}
-
-// 記事データを取得する関数（実際にはAPIやCMSから取得します）
-async function getArticles(): Promise<Article[]> {
-  // この例では静的なデータを返していますが、実際にはAPIやCMSからデータを取得します
-  return [
+export default function Home() {
+  const articles = [
     {
-      id: '1',
-      category: 'プログラミング',
-      date: '2024年1月1日',
-      title: 'Next.jsとTypeScriptで始める最新のWeb��発',
-      tags: ['Next.js', 'TypeScript', 'React'],
-      likes: 42,
-      comments: 15,
-      readTime: '10分',
+      title: "Next.jsでミドルウェアをこのように使用する必要があります",
+      description: "Next.jsのミドルウェアは見過ごされがちですが、その可能性を理解すれば、ゲームチェンジャーとなります。もしあなたがまだ使用していないのなら...",
+      author: {
+        name: "Kliukhinkonstantin",
+        image: "/placeholder.svg",
+        role: "Stackademic"
+      },
+      date: "11月6日",
+      reactions: 247,
+      comments: 5,
+      tags: ["nextjs", "middleware", "webdev"]
     },
     {
-      id: '2',
-      category: 'インフラ',
-      date: '2024年1月2日',
-      title: 'DockerとKubernetesによるマイクロサービスアーキテクチャ入門',
-      tags: ['Docker', 'Kubernetes', 'マイクロサービス'],
-      likes: 38,
+      title: "フロントエンド開発者が知っておくべき重要なパフォーマンス最適化",
+      description: "現代のウェブアプリケーションでは、パフォーマンスが極めて重要です。このガイドでは、重要な最適化テクニックを紹介します...",
+      author: {
+        name: "テック太郎",
+        image: "/placeholder.svg"
+      },
+      date: "12月27日",
+      reactions: 183,
       comments: 12,
-      readTime: '15分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
-    {
-      id: '3',
-      category: 'デザイン',
-      date: '2024年1月3日',
-      title: 'UIデザインの基本原則：使いやすさとユーザー体験の向上',
-      tags: ['UI/UX', 'デザイン', 'ユーザー体験'],
-      likes: 56,
-      comments: 23,
-      readTime: '8分',
-    },
+      tags: ["performance", "frontend", "optimization"]
+    }
   ]
-}
-
-export default async function Home() {
-  const articles = await getArticles()
 
   return (
-    <div className="py-6">
-      <div className="grid grid-cols-1 gap-8 pb-24">
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            category={article.category}
-            date={article.date}
-            title={article.title}
-            tags={article.tags}
-            likes={article.likes}
-            comments={article.comments}
-            readTime={article.readTime}
-          />
-        ))}
+    <div className="min-h-screen">
+      <MainNav />
+      <div className="mx-auto max-w-[1440px] px-0 sm:px-4">
+        <div className="flex">
+          <LeftSidebar inLayout />
+          <main className="flex-1 min-w-0 min-h-[calc(100vh-4rem)]">
+            <div className="px-0 sm:px-4 py-4">
+              {articles.map((article, index) => (
+                <ArticleCard key={index} {...article} />
+              ))}
+            </div>
+            <div className="block lg:hidden">
+              <RightSidebar />
+            </div>
+          </main>
+          <div className="hidden lg:block">
+            <RightSidebar />
+          </div>
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }
+

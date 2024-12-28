@@ -4,6 +4,9 @@ import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.domain.model.post.PostTagsRepository
+import com.headblog.backend.domain.model.tag.TagId
+import com.headblog.backend.domain.model.tag.TagRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -15,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional
 class DeletePostService(
     private val postRepository: PostRepository,
     private val postCategoryRepository: PostCategoryRepository,
+    private val tagRepository: TagRepository,
+    private val postTagsRepository: PostTagsRepository
 ) : DeletePostUseCase {
 
     private val logger = LoggerFactory.getLogger(DeletePostService::class.java)
@@ -39,7 +44,19 @@ class DeletePostService(
             categoryId = postDto.categoryId,
         )
 
+        // category
         postCategoryRepository.deleteRelation(post.id, post.categoryId)
+
+        // tags
+        postDto.tags.forEach { tagDto ->
+            val tagId = TagId(tagDto.id)
+            postTagsRepository.removeTagFromPost(post.id, tagId)
+            if (postTagsRepository.findPostsByTagId(tagId).isEmpty()) {
+                tagRepository.delete(tagId)
+            }
+        }
+
+        // post
         postRepository.delete(post)
         return post.id
     }

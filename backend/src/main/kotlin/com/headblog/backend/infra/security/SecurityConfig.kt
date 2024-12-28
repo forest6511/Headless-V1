@@ -32,7 +32,6 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            // TODO CORS/CSRFはバックエンドへデプロイする前に必ず設定する！
             .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .csrf { csrf -> csrf.disable() }
             .formLogin { formLogin -> formLogin.disable() }

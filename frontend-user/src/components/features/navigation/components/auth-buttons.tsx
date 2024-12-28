@@ -11,5 +11,5 @@ export function AuthButtons() {
         <Link href="/create-account">Sign up</Link>
       </Button>
     </nav>
-  );
+  )
 }

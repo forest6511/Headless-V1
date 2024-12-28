@@ -2,10 +2,13 @@ package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdDto
+import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
+import com.headblog.infra.jooq.tables.references.POST_TAGS
+import com.headblog.infra.jooq.tables.references.TAGS
 import java.time.LocalDateTime
 import java.util.*
 import org.jooq.DSLContext
@@ -107,6 +110,22 @@ class PostRepositoryImpl(
             .innerJoin(POST_CATEGORIES)
             .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
 
+    private fun fetchTagsForPost(postId: UUID): List<TagDto> {
+        return dsl.select(TAGS.ID, TAGS.NAME, TAGS.SLUG)
+            .from(TAGS)
+            .join(POST_TAGS)
+            .on(TAGS.ID.eq(POST_TAGS.TAG_ID))
+            .where(POST_TAGS.POST_ID.eq(postId))
+            .fetch()
+            .map { record ->
+                TagDto(
+                    id = record.get(TAGS.ID)!!,
+                    name = record.get(TAGS.NAME)!!,
+                    slug = record.get(TAGS.SLUG)!!
+                )
+            }
+    }
+
     // toDto
     private fun Record.toPostDto(): PostDto {
         return PostDto(
@@ -122,7 +141,8 @@ class PostRepositoryImpl(
             metaKeywords = get(POSTS.META_KEYWORDS),
             ogTitle = get(POSTS.OG_TITLE),
             ogDescription = get(POSTS.OG_DESCRIPTION),
-            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!
+            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
+            tags = fetchTagsForPost(get(POSTS.ID)!!)
         )
     }
 
@@ -143,6 +163,7 @@ class PostRepositoryImpl(
             createdAt = get(POSTS.CREATED_AT)!!,
             updateAt = get(POSTS.UPDATED_AT)!!,
             categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
+            tags = fetchTagsForPost(get(POSTS.ID)!!)
         )
     }
 }

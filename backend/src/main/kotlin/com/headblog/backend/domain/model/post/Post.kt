@@ -18,7 +18,7 @@ class Post private constructor(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
-    val categoryId: CategoryId
+    val categoryId: CategoryId,
 ) {
     companion object {
         fun create(
@@ -34,7 +34,7 @@ class Post private constructor(
             metaKeywords: String?,
             ogTitle: String?,
             ogDescription: String?,
-            categoryId: UUID
+            categoryId: UUID,
         ): Post {
             return Post(
                 id = PostId(id.generate().value),
@@ -66,7 +66,7 @@ class Post private constructor(
             metaKeywords: String?,
             ogTitle: String?,
             ogDescription: String?,
-            categoryId: UUID
+            categoryId: UUID,
         ): Post {
             return Post(
                 id = PostId(id),

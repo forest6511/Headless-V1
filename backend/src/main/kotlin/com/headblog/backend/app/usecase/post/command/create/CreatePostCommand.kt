@@ -14,5 +14,6 @@ data class CreatePostCommand(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
-    val categoryId: UUID
+    val categoryId: UUID,
+    val tagNames: Set<String> = emptySet()
 )

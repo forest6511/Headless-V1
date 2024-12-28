@@ -15,5 +15,6 @@ data class UpdatePostCommand(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
-    val categoryId: UUID
+    val categoryId: UUID,
+    val tagNames: Set<String> = emptySet()
 )

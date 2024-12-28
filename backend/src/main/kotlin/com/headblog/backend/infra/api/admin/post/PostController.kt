@@ -87,6 +87,7 @@ class PostController(
             ogTitle = this.ogTitle,
             ogDescription = this.ogDescription,
             categoryId = this.categoryId,
+            tagNames = this.tagNames,
         )
     }
 
@@ -105,6 +106,7 @@ class PostController(
             ogTitle = this.ogTitle,
             ogDescription = this.ogDescription,
             categoryId = this.categoryId,
+            tagNames = this.tagNames,
         )
     }
 }

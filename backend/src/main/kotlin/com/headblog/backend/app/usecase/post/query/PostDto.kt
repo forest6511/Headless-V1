@@ -1,5 +1,6 @@
 package com.headblog.backend.app.usecase.post.query
 
+import com.headblog.backend.app.usecase.tag.query.TagDto
 import java.util.*
 
 data class PostDto(
@@ -15,5 +16,6 @@ data class PostDto(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
-    val categoryId: UUID
+    val categoryId: UUID,
+    val tags: List<TagDto>,
 )

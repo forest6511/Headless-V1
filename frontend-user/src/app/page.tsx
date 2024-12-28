@@ -1,8 +1,4 @@
-import { MainNav } from "@/components/main-nav"
-import { LeftSidebar } from "@/components/left-sidebar"
-import { RightSidebar } from "@/components/right-sidebar"
 import { ArticleCard } from "@/components/article-card"
-import { Footer } from "@/components/footer"
 
 export default function Home() {
   const articles = [
@@ -34,27 +30,10 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen">
-      <MainNav />
-      <div className="mx-auto max-w-[1440px] px-0 sm:px-4">
-        <div className="flex">
-          <LeftSidebar inLayout />
-          <main className="flex-1 min-w-0 min-h-[calc(100vh-4rem)]">
-            <div className="px-0 sm:px-4 py-4">
-              {articles.map((article, index) => (
-                <ArticleCard key={index} {...article} />
-              ))}
-            </div>
-            <div className="block lg:hidden">
-              <RightSidebar />
-            </div>
-          </main>
-          <div className="hidden lg:block">
-            <RightSidebar />
-          </div>
-        </div>
-      </div>
-      <Footer />
+    <div className="py-4">
+      {articles.map((article, index) => (
+        <ArticleCard key={index} {...article} />
+      ))}
     </div>
   )
 }

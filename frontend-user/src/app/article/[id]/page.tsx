@@ -1,7 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { ThumbsUp, MessageSquare, Bookmark, MoreHorizontal, ChevronRight } from 'lucide-react'
-import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import {
+  ThumbsUp,
+  MessageSquare,
+  Bookmark,
+  MoreHorizontal,
+  ChevronRight,
+} from 'lucide-react'
+import Link from 'next/link'
 
 interface Article {
   id: string
@@ -22,8 +28,8 @@ async function getArticle(id: string): Promise<Article | null> {
   // この例では静的なデータを返していますが、実際にはAPIやCMSからデータを取得します
   const articles: Article[] = [
     {
-      id: "1",
-      title: "Next.jsでミドルウェアをこのように使用する必要があります",
+      id: '1',
+      title: 'Next.jsでミドルウェアをこのように使用する必要があります',
       content: `
         <p>Next.jsのミドルウェアは見過ごされがちですが、その可能性を理解すれば、ゲームチェンジャーとなります。</p>
         <h2>ミドルウェアとは？</h2>
@@ -32,28 +38,27 @@ async function getArticle(id: string): Promise<Article | null> {
         <p>プロジェクトのルートディレクトリに middleware.ts ファイルを作成することで、ミドルウェアを追加できます。</p>
       `,
       author: {
-        name: "Kliukhinkonstantin",
-        image: "/placeholder.svg",
-        role: "Stackademic"
+        name: 'テック太郎',
+        image: '/placeholder.svg',
       },
-      date: "11月6日",
+      date: '11月6日',
       reactions: 247,
       comments: 5,
-      tags: ["nextjs", "middleware", "webdev"]
-    }
+      tags: ['nextjs', 'middleware', 'webdev'],
+    },
   ]
 
-  return articles.find(article => article.id === id) || null
+  return articles.find((article) => article.id === id) || null
 }
 
 export async function generateStaticParams() {
   // この例では静的なIDを返していますが、実際にはAPIやCMSからデータを取得します
-  return [{ id: "1" }]
+  return [{ id: '1' }]
 }
 
 export default async function ArticlePage({
-                                            params,
-                                          }: {
+  params,
+}: {
   params: { id: string }
 }) {
   const article = await getArticle(params.id)
@@ -82,9 +87,7 @@ export default async function ArticlePage({
           <li>
             <ChevronRight className="h-4 w-4" />
           </li>
-          <li className="text-foreground font-medium">
-            {article.title}
-          </li>
+          <li className="text-foreground font-medium">{article.title}</li>
         </ol>
       </nav>
 
@@ -131,14 +134,21 @@ export default async function ArticlePage({
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
-
         <div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-muted-foreground"
+            >
               <ThumbsUp className="mr-1 h-4 w-4" />
               <span className="text-sm">{article.reactions}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-muted-foreground"
+            >
               <MessageSquare className="mr-1 h-4 w-4" />
               <span className="text-sm">{article.comments}</span>
             </Button>
@@ -152,9 +162,7 @@ export default async function ArticlePage({
             </Button>
           </div>
         </div>
-
       </article>
     </div>
   )
 }
-

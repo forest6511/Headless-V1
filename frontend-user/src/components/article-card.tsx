@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { Bookmark, MoreHorizontal, ThumbsUp, MessageSquare } from 'lucide-react'
 
 interface ArticleCardProps {
@@ -18,14 +18,14 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({
-                              title,
-                              description,
-                              author,
-                              date,
-                              reactions,
-                              comments,
-                              tags = [],
-                            }: ArticleCardProps) {
+  title,
+  description,
+  author,
+  date,
+  reactions,
+  comments,
+  tags = [],
+}: ArticleCardProps) {
   return (
     <div className="border-y sm:border sm:rounded-lg mb-3 last:mb-0 sm:mb-4">
       <div className="p-4 sm:p-6">
@@ -36,7 +36,10 @@ export function ArticleCard({
           </Avatar>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <Link href="#" className="font-medium hover:text-blue-600 truncate">
+              <Link
+                href="#"
+                className="font-medium hover:text-blue-600 truncate"
+              >
                 {author.name}
               </Link>
               {author.role && (
@@ -74,11 +77,19 @@ export function ArticleCard({
 
         <div className="flex flex-wrap items-center justify-between gap-2 mt-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-muted-foreground h-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground h-8"
+            >
               <ThumbsUp className="mr-1 h-4 w-4" />
               <span className="text-sm">{reactions} リアクション</span>
             </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground h-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground h-8"
+            >
               <MessageSquare className="mr-1 h-4 w-4" />
               <span className="text-sm">{comments} コメント</span>
             </Button>
@@ -96,4 +107,3 @@ export function ArticleCard({
     </div>
   )
 }
-

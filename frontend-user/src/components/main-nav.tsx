@@ -1,9 +1,9 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Menu, Search } from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { LeftSidebar } from "./left-sidebar"
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { LeftSidebar } from './left-sidebar'
 
 export function MainNav() {
   return (
@@ -13,7 +13,7 @@ export function MainNav() {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" className="lg:hidden">
-                <Menu style={{ width: '24px', height: '24px' }}/>
+                <Menu style={{ width: '24px', height: '24px' }} />
                 <span className="sr-only">メニューを開く</span>
               </Button>
             </SheetTrigger>
@@ -23,19 +23,16 @@ export function MainNav() {
           </Sheet>
 
           <Link href="/" className="flex items-center lg:ml-0 -ml-4">
-            <div className="bg-black text-white px-2 py-1 text-xl font-bold">Log</div>
+            <div className="bg-black text-white px-2 py-1 text-xl font-bold">
+              Log
+            </div>
           </Link>
 
           <div className="flex flex-1 items-center justify-end gap-4">
             <div className="relative hidden md:block flex-1 max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="検索..."
-                className="pl-8"
-              />
-              <span className="absolute right-2.5 top-2.5 text-xs text-muted-foreground">
-              </span>
+              <Input type="search" placeholder="検索..." className="pl-8" />
+              <span className="absolute right-2.5 top-2.5 text-xs text-muted-foreground"></span>
             </div>
             <Button variant="ghost" size="icon" className="md:hidden">
               <Search className="h-5 w-5" />
@@ -55,4 +52,3 @@ export function MainNav() {
     </header>
   )
 }
-

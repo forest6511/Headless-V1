@@ -1,9 +1,40 @@
-import { Button } from '@nextui-org/button'
+import { ArticleCard } from '@/components/article-card'
 
 export default function Home() {
+  const articles = [
+    {
+      title: 'Next.jsでミドルウェアをこのように使用する必要があります',
+      description:
+        'Next.jsのミドルウェアは見過ごされがちですが、その可能性を理解すれば、ゲームチェンジャーとなります。もしあなたがまだ使用していないのなら...',
+      author: {
+        name: 'テック太郎',
+        image: '/placeholder.svg',
+      },
+      date: '11月6日',
+      reactions: 247,
+      comments: 5,
+      tags: ['nextjs', 'middleware', 'webdev'],
+    },
+    {
+      title: 'フロントエンド開発者が知っておくべき重要なパフォーマンス最適化',
+      description:
+        '現代のウェブアプリケーションでは、パフォーマンスが極めて重要です。このガイドでは、重要な最適化テクニックを紹介します...',
+      author: {
+        name: 'テック太郎',
+        image: '/placeholder.svg',
+      },
+      date: '12月27日',
+      reactions: 183,
+      comments: 12,
+      tags: ['performance', 'frontend', 'optimization'],
+    },
+  ]
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <Button>Click me</Button>
+    <div className="py-4">
+      {articles.map((article, index) => (
+        <ArticleCard key={index} {...article} />
+      ))}
     </div>
   )
 }

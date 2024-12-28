@@ -51,7 +51,7 @@ async function getArticle(id: string): Promise<Article | null> {
 }
 
 type PageProps = {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function ArticlePage({ params }: PageProps) {

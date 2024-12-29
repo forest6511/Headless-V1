@@ -3,7 +3,6 @@ import { usePostForm } from '@/hooks/post/usePostForm'
 import {
   Accordion,
   AccordionItem,
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -14,7 +13,7 @@ import {
 } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
-import { ChevronDown, Save } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import React from 'react'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
@@ -23,9 +22,10 @@ interface PostFormProps {
   redirectPath: string
   initialData?: PostFormData
   mode: 'create' | 'update'
+  id: string
 }
 
-export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
+export function PostForm({ redirectPath, initialData, mode, id = 'post-form' }: PostFormProps) {
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(categories)
   const { form, textLength, contentHtml, onSubmit, handleEditorChange } =
@@ -41,7 +41,7 @@ export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
   } = form
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-row-reverse gap-6">
+    <form onSubmit={onSubmit} className="flex flex-row-reverse gap-6" id={id}>
       <div className="w-1/3 space-y-6">
         <Card>
           <CardHeader>
@@ -212,15 +212,6 @@ export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
             </Card>
           </AccordionItem>
         </Accordion>
-        <div className="flex justify-start">
-          <Button
-            type="submit"
-            color="primary"
-            startContent={<Save size={20} />}
-          >
-            保存
-          </Button>
-        </div>
       </div>
     </form>
   )

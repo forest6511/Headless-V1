@@ -17,7 +17,7 @@ interface ArticleCardProps {
 
 export function ArticleCard(props: ArticleCardProps) {
   return (
-    <article className="border-y sm:border sm:rounded-lg mb-3 last:mb-0 sm:mb-4">
+    <article className="border-y sm:border sm:rounded-md mb-3 last:mb-0 sm:mb-4">
       <div className="p-4 sm:p-6">
         <ArticleHeader author={props.author} date={props.date} />
         <ArticleContent

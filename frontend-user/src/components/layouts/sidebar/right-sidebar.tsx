@@ -1,9 +1,9 @@
 import Link from 'next/link'
 export function RightSidebar() {
   return (
-    <aside className="w-full lg:w-80 px-0 sm:px-4 lg:pl-4">
+    <aside className="w-full lg:w-80 px-0 sm:px-4 lg:pl-0">
       <div className="sticky top-16 pt-0 lg:pt-4">
-        <div className="border-y sm:border sm:rounded-lg bg-background mb-3 sm:mb-4">
+        <div className="border-y sm:border sm:rounded-md bg-background mb-3 sm:mb-4">
           <div className="p-4">
             <div className="text-base font-semibold mb-4">👋 テスト</div>
             <div className="space-y-4">

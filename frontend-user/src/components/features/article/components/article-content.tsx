@@ -14,7 +14,7 @@ export function ArticleContent({
 }: ArticleContentProps) {
   return (
     <div className="space-y-2">
-      <Link href="#" className="block">
+      <Link href="/articles/1" className="block">
         <h2 className="text-xl sm:text-2xl font-bold hover:text-blue-600 break-words">
           {title}
         </h2>

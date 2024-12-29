@@ -8,7 +8,7 @@ export function MainNav() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="mx-auto max-w-[1440px] px-4">
-        <div className="flex h-16 items-center gap-4">
+        <div className="flex h-14 items-center gap-4">
           <MobileMenu /> {/* SheetTrigger部分 */}
           <Logo />
           <div className="flex flex-1 items-center justify-end gap-4">

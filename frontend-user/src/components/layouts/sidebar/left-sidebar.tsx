@@ -66,7 +66,7 @@ export function LeftSidebar({
 
         {navLinks.map((section) => (
           <div className="mt-4" key={section.category}>
-            <Link className="mb-2 text-sm font-semibold" href="/">
+            <Link className="mb-2 text-sm font-semibold" href="/public">
               {section.category}
             </Link>
             <nav className="-space-y-1">
@@ -85,7 +85,7 @@ export function LeftSidebar({
         ))}
 
         <div className="mt-4">
-          <Link className="mb-2 text-sm font-semibold" href="/">
+          <Link className="mb-2 text-sm font-semibold" href="/public">
             その他
           </Link>
           <nav className="-space-y-1">

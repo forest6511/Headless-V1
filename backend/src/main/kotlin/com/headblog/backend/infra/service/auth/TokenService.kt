@@ -21,7 +21,7 @@ class TokenService(
     private val logger = LoggerFactory.getLogger(TokenService::class.java)
 
     fun createAuthTokens(user: User): AuthTokens {
-//        logger.info("generating jwt authentication result for user: ${user.id.value}")
+        logger.debug("generating jwt authentication result for user: ${user.id.value}")
 
         val accessToken = createToken(user, expiration)
         val refreshToken = createToken(user, refreshExpiration)
@@ -32,9 +32,9 @@ class TokenService(
             expiresAt = expiration.toDate(),
             refreshExpiresAt = refreshExpiration.toDate()
         )
-//        .also {
-//            logger.info("jwt authentication result generated for user: ${user.id.value}")
-//        }
+            .also {
+                logger.debug("jwt authentication result generated for user: ${user.id.value}")
+            }
     }
 
     private fun createToken(user: User, duration: Long): JwtToken =
@@ -48,12 +48,12 @@ class TokenService(
             .withExpiresAt(duration.toDate())
             .sign(Algorithm.HMAC256(secret))
             .let { JwtToken.of(it) }
-//            .also { logger.info("token generated successfully for user: {}", user.id.value) }
+            .also { logger.debug("token generated successfully for user: {}", user.id.value) }
 
     fun validateAccessToken(token: JwtToken): Email =
         validateToken(token) { decodedJWT ->
             decodedJWT.getClaim("email").asString().let {
-                logger.info("access token validated successfully, email: $it")
+                logger.debug("access token validated successfully, email: $it")
                 Email.of(it)
             }
         }
@@ -61,9 +61,9 @@ class TokenService(
     fun validateRefreshToken(token: JwtToken): String? =
         validateToken(token) { decodedJWT ->
             decodedJWT.subject
-//            .also {
-//                logger.info("refresh token validated successfully, subject: $it")
-//            }
+                .also {
+                    logger.debug("refresh token validated successfully, subject: $it")
+                }
         }
 
     private fun <T> validateToken(token: JwtToken, claimExtractor: (DecodedJWT) -> T): T = try {

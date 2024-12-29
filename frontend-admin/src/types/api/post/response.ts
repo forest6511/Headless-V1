@@ -1,13 +1,13 @@
 // /api/posts/list
 export interface PostListResponse {
   totalCount: number
-  posts: PostWithCategoryId[]
+  posts: PostWithCategoryResponse[]
   totalPages: number
   pageSize: number
 }
 
 // /api/posts/{id}
-export interface PostWithCategoryId {
+export interface PostWithCategoryResponse {
   id: string
   title: string
   slug: string
@@ -23,4 +23,5 @@ export interface PostWithCategoryId {
   createdAt: string
   updateAt: string
   categoryId: string
+  tagNames: string
 }

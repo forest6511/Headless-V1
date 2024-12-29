@@ -10,7 +10,7 @@ import {
   Chip,
   Pagination,
 } from '@nextui-org/react'
-import { PostWithCategoryId } from '@/types/api/post/response'
+import { PostWithCategoryResponse } from '@/types/api/post/response'
 import { POST_COLUMNS } from '@/config/constants'
 import { PostStatuses } from '@/types/api/post/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
@@ -19,7 +19,7 @@ import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
 
 interface PostTableProps {
-  posts: PostWithCategoryId[]
+  posts: PostWithCategoryResponse[]
   categories: CategoryListResponse[]
   page: number
   totalPages: number
@@ -85,6 +85,7 @@ export const PostTable = ({
               <TableCell>
                 {getBreadcrumbForCategory(post.categoryId, categories)}
               </TableCell>
+              <TableCell>{post.tagNames}</TableCell>
               <TableCell>{formatDateTime(post.createdAt)}</TableCell>
               <TableCell>{formatDateTime(post.updateAt)}</TableCell>
               <TableCell>

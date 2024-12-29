@@ -116,12 +116,12 @@ COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated,
 -- Categories table
 CREATE TABLE categories
 (
-    id            uuid PRIMARY KEY,
-    name          varchar(255) NOT NULL,
-    slug          varchar(255) NOT NULL UNIQUE,
-    description   varchar(255),
-    parent_id     uuid REFERENCES categories (id),
-    created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id          uuid PRIMARY KEY,
+    name        varchar(255) NOT NULL,
+    slug        varchar(255) NOT NULL UNIQUE,
+    description varchar(255),
+    parent_id   uuid REFERENCES categories (id),
+    created_at  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE categories IS 'Table for storing categories';
@@ -133,6 +133,20 @@ COMMENT ON COLUMN categories.description IS 'Description of the category';
 COMMENT ON COLUMN categories.parent_id IS 'Reference to the parent category for hierarchical categorization';
 COMMENT ON COLUMN categories.created_at IS 'Timestamp when the category was created';
 
+-- Categories tags
+CREATE TABLE tags
+(
+    id         uuid PRIMARY KEY,
+    name       varchar(255) NOT NULL UNIQUE,
+    slug       varchar(255) NOT NULL UNIQUE,
+    created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+COMMENT ON TABLE tags IS 'Table for storing tags';
+COMMENT ON COLUMN tags.id IS 'Unique identifier for each tag';
+COMMENT ON COLUMN tags.name IS 'Name of the tag';
+COMMENT ON COLUMN tags.slug IS 'Unique slug for the tag, used in URLs';
+COMMENT ON COLUMN tags.created_at IS 'Timestamp when the tag was created';
 
 -- Post-Categories Relationship table
 CREATE TABLE post_categories
@@ -146,12 +160,26 @@ COMMENT ON TABLE post_categories IS 'Table for storing many-to-many relationship
 COMMENT ON COLUMN post_categories.post_id IS 'Reference to the post in the posts table';
 COMMENT ON COLUMN post_categories.category_id IS 'Reference to the category in the category table';
 
+-- Post-Tags Relationship table
+CREATE TABLE post_tags
+(
+    post_id uuid REFERENCES posts (id),
+    tag_id  uuid REFERENCES tags (id),
+    PRIMARY KEY (post_id, tag_id)
+);
+
+COMMENT ON TABLE post_tags IS 'Table for storing many-to-many relationships between posts and tags';
+COMMENT ON COLUMN post_tags.post_id IS 'Reference to the post in the posts table';
+COMMENT ON COLUMN post_tags.tag_id IS 'Reference to the tag in the tags table';
+
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
 CREATE INDEX idx_posts_status ON posts (status);
 CREATE INDEX idx_categories_slug ON categories (slug);
 CREATE INDEX idx_post_categories_category ON post_categories (category_id);
 CREATE INDEX idx_post_categories_post ON post_categories (post_id);
+CREATE INDEX idx_post_tags_post ON post_tags (post_id);
+CREATE INDEX idx_post_tags_tag ON post_tags (tag_id);
 
 -- Insert the specified data into the categories table
 INSERT INTO categories (

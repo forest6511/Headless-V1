@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
-import { PostWithCategoryId, PostListResponse } from '@/types/api/post/response'
+import {
+  PostWithCategoryResponse,
+  PostListResponse,
+} from '@/types/api/post/response'
 import { postApi } from '@/lib/api'
 
 export const usePostList = (rowsPerPage: number = 10) => {
-  const [posts, setPosts] = useState<PostWithCategoryId[]>([])
+  const [posts, setPosts] = useState<PostWithCategoryResponse[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [nextCursor, setNextCursor] = useState<string | undefined>(undefined)

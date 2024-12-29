@@ -55,6 +55,26 @@ export const PostSchema = z.object({
     .string()
     .min(1, 'カテゴリは必須です')
     .uuid('カテゴリIDが正しくありません'),
+  tagNames: z
+    .string()
+    .optional()
+    .refine(
+      (val) => {
+        // 空文字列の場合は許可
+        if (val === '' || val === null || val === undefined) return true
+        // 末尾のカンマを削除
+        const trimmedVal = val.replace(/,+$/, '')
+        // カンマ区切りでタグをチェック
+        const tags = trimmedVal.split(',').map((tag) => tag.trim())
+        // タグ数のチェック
+        if (tags.length > 3) return false
+        // 各タグが #英数字 の形式かチェック
+        return tags.every((tag) => /^#[a-zA-Z0-9]+$/.test(tag))
+      },
+      {
+        message: 'タグは#英数字の形式で、カンマ区切り、最大3個まで入力できます',
+      }
+    ),
 })
 
 // 登録時(idを除外）

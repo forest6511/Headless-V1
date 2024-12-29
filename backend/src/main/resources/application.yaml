@@ -24,8 +24,8 @@ jwt:
 
 logging:
   level:
-    com.headblog.backend: DEBUG
-    org.flywaydb: DEBUG
+    com.headblog.backend: INFO
+    org.flywaydb: INFO
     org.jooq: WARN
 
 server:

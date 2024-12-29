@@ -1,4 +1,4 @@
-import { ArticleCard } from '@/components/article-card'
+import { ArticleCard } from '@/components/features/article'
 
 export default function Home() {
   const articles = [

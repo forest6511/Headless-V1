@@ -6,8 +6,8 @@ import com.headblog.backend.app.usecase.post.command.delete.DeletePostUseCase
 import com.headblog.backend.app.usecase.post.command.update.UpdatePostCommand
 import com.headblog.backend.app.usecase.post.command.update.UpdatePostUseCase
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
-import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostListDto
+import com.headblog.backend.app.usecase.post.query.PostResponse
 import com.headblog.backend.infra.api.admin.post.request.CreatePostRequest
 import com.headblog.backend.infra.api.admin.post.request.UpdatePostRequest
 import java.util.*
@@ -66,9 +66,9 @@ class PostController(
     }
 
     @GetMapping("/{id}")
-    fun getPost(@PathVariable id: UUID): ResponseEntity<PostDto> {
+    fun getPost(@PathVariable id: UUID): ResponseEntity<PostResponse> {
         logger.debug("getPost with id {}", id)
-        val post: PostDto = getPostQueryService.findPostById(id)
+        val post: PostResponse = getPostQueryService.findPostById(id)
         return ResponseEntity.ok(post)
     }
 
@@ -87,6 +87,7 @@ class PostController(
             ogTitle = this.ogTitle,
             ogDescription = this.ogDescription,
             categoryId = this.categoryId,
+            tagNames = this.tagNames,
         )
     }
 
@@ -105,6 +106,7 @@ class PostController(
             ogTitle = this.ogTitle,
             ogDescription = this.ogDescription,
             categoryId = this.categoryId,
+            tagNames = this.tagNames,
         )
     }
 }

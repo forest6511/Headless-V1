@@ -1,5 +1,6 @@
 package com.headblog.backend.app.usecase.post.query
 
+import com.headblog.backend.app.usecase.tag.query.TagDto
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,5 +19,6 @@ data class PostWithCategoryIdDto(
     val ogDescription: String?,
     val createdAt: LocalDateTime,
     val updateAt: LocalDateTime,
-    val categoryId: UUID
+    val categoryId: UUID,
+    val tags: List<TagDto>,
 )

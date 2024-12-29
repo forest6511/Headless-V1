@@ -44,4 +44,6 @@ data class UpdatePostRequest(
 
     @field:NotNull(message = "Category id is required")
     val categoryId: UUID,
+
+    val tagNames: Set<String> = emptySet(),
 )

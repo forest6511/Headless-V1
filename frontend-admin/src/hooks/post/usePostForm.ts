@@ -37,11 +37,18 @@ export const usePostForm = ({
 
   const onSubmit = async (data: PostFormData) => {
     try {
+      const processedData = {
+        ...data,
+        tagNames: data.tagNames
+          ? data.tagNames.split(',').map((tag) => tag.trim())
+          : [],
+      }
+
       if (mode === 'create') {
-        await postApi.createPost(data as CreatePostRequest)
+        await postApi.createPost(processedData as CreatePostRequest)
         toast.success('投稿の作成に成功しました')
       } else {
-        await postApi.updatePost(data as UpdatePostRequest)
+        await postApi.updatePost(processedData as UpdatePostRequest)
         toast.success('投稿の更新に成功しました')
       }
       router.push(redirectPath)

@@ -25,7 +25,7 @@ class JwtAuthenticationFilter(
         logRequestDetails(request)
 
         extractToken(request)?.let {
-            logger.info("token extracted from request: $it")
+            logger.debug("token extracted from request: $it")
             val jwtToken = JwtToken.of(it)
 
             try {
@@ -49,7 +49,7 @@ class JwtAuthenticationFilter(
     }
 
     private fun extractToken(request: HttpServletRequest): String? {
-        logger.info("extracting token from request: ${request.requestURL}")
+        logger.debug("extracting token from request: ${request.requestURL}")
         return request.getHeader("Authorization")
             ?.takeIf { it.startsWith("Bearer ") }
             ?.substring(7)

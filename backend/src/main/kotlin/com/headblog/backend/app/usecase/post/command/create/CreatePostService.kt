@@ -1,6 +1,7 @@
 package com.headblog.backend.app.usecase.post.command.create
 
 import com.headblog.backend.domain.model.post.Post
+import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class CreatePostService(
     private val idGenerator: IdGenerator<EntityId>,
     private val postRepository: PostRepository,
+    private val postCategoryRepository: PostCategoryRepository,
     private val tagRepository: TagRepository,
     private val postTagsRepository: PostTagsRepository
 ) : CreatePostUseCase {
@@ -32,6 +34,7 @@ class CreatePostService(
 
         val post = createPost(command)
         postRepository.save(post)
+        postCategoryRepository.addRelation(post.id, post.categoryId)
 
         command.tagNames.forEach { tagName ->
             val tagId = tagRepository.findByName(tagName)?.let { TagId(it.id) } ?: createAndSaveTag(tagName)

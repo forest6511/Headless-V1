@@ -59,6 +59,13 @@ export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
             isInvalid={!!errors.slug}
             errorMessage={errors?.slug?.message}
           />
+          <Input
+            {...register('tagNames')}
+            label="ハッシュタグ"
+            placeholder="#をつけてカンマ形式で入力. ex #beauty, #diet"
+            isInvalid={!!errors.tagNames}
+            errorMessage={errors?.tagNames?.message}
+          />
           <Select
             {...register('categoryId')}
             label="カテゴリ"

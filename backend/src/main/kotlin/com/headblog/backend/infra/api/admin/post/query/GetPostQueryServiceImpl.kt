@@ -1,8 +1,9 @@
 package com.headblog.backend.infra.api.admin.post.query
 
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
-import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.PostListDto
+import com.headblog.backend.app.usecase.post.query.PostResponse
+import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdResponse
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
@@ -22,6 +23,27 @@ class GetPostQueryServiceImpl(
 
         // 投稿リストを取得
         val posts = postRepository.findAll(cursorPostId, pageSize)
+            .map {
+                val postWithCategoryIdResponse = PostWithCategoryIdResponse(
+                    id = it.id,
+                    title = it.title,
+                    slug = it.slug,
+                    content = it.content,
+                    excerpt = it.excerpt,
+                    postStatus = it.postStatus,
+                    featuredImageId = it.featuredImageId,
+                    metaTitle = it.metaTitle,
+                    metaDescription = it.metaDescription,
+                    metaKeywords = it.metaKeywords,
+                    ogTitle = it.ogTitle,
+                    ogDescription = it.ogDescription,
+                    createdAt = it.createdAt,
+                    updateAt = it.updateAt,
+                    categoryId = it.categoryId,
+                    tagNames = it.tags.joinToString { tag -> tag.name }
+                )
+                postWithCategoryIdResponse
+            }
 
         return PostListDto(
             totalCount = totalCount,
@@ -31,7 +53,24 @@ class GetPostQueryServiceImpl(
         )
     }
 
-    override fun findPostById(postId: UUID): PostDto {
-        return postRepository.findById(postId) ?: throw AppConflictException("Post not found. id: $postId")
+    override fun findPostById(postId: UUID): PostResponse {
+        return postRepository.findById(postId)?.let {
+            PostResponse(
+                id = it.id,
+                title = it.title,
+                slug = it.slug,
+                content = it.content,
+                excerpt = it.excerpt,
+                postStatus = it.postStatus,
+                featuredImageId = it.featuredImageId,
+                metaTitle = it.metaTitle,
+                metaDescription = it.metaDescription,
+                metaKeywords = it.metaKeywords,
+                ogTitle = it.ogTitle,
+                ogDescription = it.ogDescription,
+                categoryId = it.categoryId,
+                tagNames = it.tags.joinToString { it.name }
+            )
+        } ?: throw AppConflictException("Post not found. id: $postId")
     }
 }

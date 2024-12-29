@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { postApi } from '@/lib/api'
-import { PostWithCategoryId } from '@/types/api/post/response'
+import { PostWithCategoryResponse } from '@/types/api/post/response'
 import { ROUTES } from '@/config/routes'
 
 export const usePostDetail = (postId: string) => {
   const router = useRouter()
-  const [post, setPost] = useState<PostWithCategoryId | null>(null)
+  const [post, setPost] = useState<PostWithCategoryResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {

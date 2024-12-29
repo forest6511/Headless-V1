@@ -14,11 +14,11 @@ class UserAuthenticationService(
     private val logger = LoggerFactory.getLogger(UserAuthenticationService::class.java)
 
     fun getUserFromToken(token: JwtToken): User {
-        logger.info("validating token: ${token.value}")
+        logger.debug("validating token: ${token.value}")
 
         // トークンを検証し、メールアドレスを取得
         val email = tokenService.validateAccessToken(token)
-        logger.info("token validated successfully, extracted email: $email")
+        logger.debug("token validated successfully, extracted email: $email")
 
         // ユーザーをリポジトリから取得
         val user = userRepository.findByEmail(email)
@@ -27,7 +27,7 @@ class UserAuthenticationService(
                 throw NoSuchElementException("user not found with email: $email")
             }
 
-        logger.info("user found for email: $email")
+        logger.debug("user found for email: $email")
         return user
     }
 }

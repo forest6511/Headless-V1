@@ -14,6 +14,7 @@ interface Post {
   ogTitle: string | null
   ogDescription: string | null
   categoryId: string
+  tagNames: string[]
 }
 
 // 記事作成時用のインターフェース

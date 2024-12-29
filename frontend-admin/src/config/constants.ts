@@ -21,6 +21,7 @@ export const POST_COLUMNS = [
   { name: 'タイトル', uid: 'name' },
   { name: 'スラッグ', uid: 'slug' },
   { name: 'カテゴリ', uid: 'category' },
+  { name: 'タグ', uid: 'tag' },
   { name: '作成日時', uid: 'createAt' },
   { name: '最終更新日時', uid: 'updateAt' },
   { name: 'ステータス', uid: 'status' },

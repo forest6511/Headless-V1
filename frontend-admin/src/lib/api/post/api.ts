@@ -5,7 +5,10 @@ import {
   ListPostRequest,
   UpdatePostRequest,
 } from '@/types/api/post/request'
-import { PostListResponse, PostWithCategoryId } from '@/types/api/post/response'
+import {
+  PostListResponse,
+  PostWithCategoryResponse,
+} from '@/types/api/post/response'
 
 export const postApi = {
   createPost: (payload: CreatePostRequest) => {
@@ -25,7 +28,7 @@ export const postApi = {
       method: 'DELETE',
     })
   },
-  getPost: (id: string): Promise<PostWithCategoryId> => {
+  getPost: (id: string): Promise<PostWithCategoryResponse> => {
     return apiClient.request(`${ADMIN_API_ENDPOINTS.POST.POST}/${id}`, {
       method: 'GET',
     })

@@ -6,7 +6,7 @@ import { ROUTES } from '@/config/routes'
 
 export default function NewPostPage() {
   return (
-    <Card className="max-w-4xl mx-auto">
+    <Card className="w-full">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">記事の新規作成</h1>
         <PostForm mode="create" redirectPath={ROUTES.DASHBOARD.POSTS.BASE} />

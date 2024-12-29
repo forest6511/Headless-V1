@@ -21,7 +21,7 @@ export default function EditPostPage(props: Props) {
   if (!post) return null
 
   return (
-    <Card className="max-w-4xl mx-auto">
+    <Card className="w-full">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">記事の編集</h1>
         <PostForm

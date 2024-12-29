@@ -1,6 +1,8 @@
 import { PostFormData } from '@/schemas/post'
 import { usePostForm } from '@/hooks/post/usePostForm'
 import {
+  Accordion,
+  AccordionItem,
   Button,
   Card,
   CardBody,
@@ -12,7 +14,7 @@ import {
 } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
-import { Save } from 'lucide-react'
+import { ChevronDown, Save } from 'lucide-react'
 import React from 'react'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
@@ -137,55 +139,76 @@ export function PostForm({ redirectPath, initialData, mode }: PostFormProps) {
           />
         </CardBody>
       </Card>
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-semibold">SEO情報</h2>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <Input
-            {...register('metaTitle')}
-            label="メタタイトル"
-            placeholder="SEOメタタイトルを入力"
-            isInvalid={!!errors.metaTitle}
-            errorMessage={errors?.metaTitle?.message}
-          />
-          <Textarea
-            {...register('metaDescription')}
-            label="メタディスクリプション"
-            placeholder="SEOメタディスクリプションを入力"
-            isInvalid={!!errors.metaDescription}
-            errorMessage={errors.metaDescription?.message}
-          />
-          <Input
-            {...register('metaKeywords')}
-            label="メタキーワード"
-            placeholder="SEOメタキーワードをカンマ区切りで入力"
-            isInvalid={!!errors.metaKeywords}
-            errorMessage={errors?.metaKeywords?.message}
-          />
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-semibold">Open Graph情報</h2>
-        </CardHeader>
-        <CardBody className="space-y-4">
-          <Input
-            {...register('ogTitle')}
-            label="OGタイトル"
-            placeholder="OGタイトルを入力"
-            isInvalid={!!errors.ogTitle}
-            errorMessage={errors?.ogTitle?.message}
-          />
-          <Textarea
-            {...register('ogDescription')}
-            label="OG説明"
-            placeholder="OG説明を入力"
-            isInvalid={!!errors.ogDescription}
-            errorMessage={errors?.ogDescription?.message}
-          />
-        </CardBody>
-      </Card>
+      <Accordion>
+        <AccordionItem
+          key="seo-information"
+          aria-label="SEO情報"
+          title={
+            <div className="flex items-center w-full">
+              <ChevronDown className="text-default-500 w-5 h-5 mr-2" />
+              <h2 className="text-lg font-semibold">SEO情報</h2>
+            </div>
+          }
+        >
+          <Card>
+            <CardBody className="space-y-4">
+              <Input
+                {...register('metaTitle')}
+                label="メタタイトル"
+                placeholder="SEOメタタイトルを入力"
+                isInvalid={!!errors.metaTitle}
+                errorMessage={errors?.metaTitle?.message}
+              />
+              <Textarea
+                {...register('metaDescription')}
+                label="メタディスクリプション"
+                placeholder="SEOメタディスクリプションを入力"
+                isInvalid={!!errors.metaDescription}
+                errorMessage={errors.metaDescription?.message}
+              />
+              <Input
+                {...register('metaKeywords')}
+                label="メタキーワード"
+                placeholder="SEOメタキーワードをカンマ区切りで入力"
+                isInvalid={!!errors.metaKeywords}
+                errorMessage={errors?.metaKeywords?.message}
+              />
+            </CardBody>
+          </Card>
+        </AccordionItem>
+      </Accordion>
+
+      <Accordion>
+        <AccordionItem
+          key="open-graph"
+          aria-label="Open Graph情報"
+          title={
+            <div className="flex items-center w-full">
+              <ChevronDown className="text-default-500 w-5 h-5 mr-2" />
+              <h2 className="text-lg font-semibold">Open Graph情報</h2>
+            </div>
+          }
+        >
+          <Card>
+            <CardBody className="space-y-4">
+              <Input
+                {...register('ogTitle')}
+                label="OGタイトル"
+                placeholder="OGタイトルを入力"
+                isInvalid={!!errors.ogTitle}
+                errorMessage={errors?.ogTitle?.message}
+              />
+              <Textarea
+                {...register('ogDescription')}
+                label="OG説明"
+                placeholder="OG説明を入力"
+                isInvalid={!!errors.ogDescription}
+                errorMessage={errors?.ogDescription?.message}
+              />
+            </CardBody>
+          </Card>
+        </AccordionItem>
+      </Accordion>
       <div className="flex justify-start">
         <Button type="submit" color="primary" startContent={<Save size={20} />}>
           保存

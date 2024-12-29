@@ -96,6 +96,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         },
       }),
     ],
+    autofocus: true,
     content: value || EMPTY_CONTENT,
     editorProps: {
       attributes: {
@@ -138,7 +139,9 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   return (
     <div className="border border-gray-300 rounded-lg p-4">
       {editor && <Toolbar editor={editor} />}
-      <EditorContent editor={editor} />
+      <div className="overflow-y-auto">
+        <EditorContent editor={editor} className="prose max-w-none" />
+      </div>
     </div>
   )
 }

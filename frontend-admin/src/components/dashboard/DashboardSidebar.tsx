@@ -31,11 +31,11 @@ export default function DashboardSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-white border-r">
+    <aside className="w-48 bg-white border-r">
       <nav className="p-4">
         {menuItems.map((item, index) => (
           <div key={index} className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-500 mb-3 px-3">
+            <h2 className="text-sm font-semibold text-gray-500 mb-3 px-0">
               {item.title}
             </h2>
             <ul>
@@ -45,7 +45,7 @@ export default function DashboardSidebar() {
                   <li key={subIndex} className="mb-1">
                     <Link
                       href={subItem.href}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                      className={`flex items-center text-sm gap-2 px-3 py-2 rounded-lg transition-colors ${
                         pathname === subItem.href
                           ? 'bg-[#6366F1] text-white'
                           : 'text-gray-700 hover:bg-gray-100'

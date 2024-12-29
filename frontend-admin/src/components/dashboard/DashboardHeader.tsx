@@ -5,14 +5,15 @@ import { LayoutDashboard, LogOut } from 'lucide-react'
 
 export default function DashboardHeader() {
   return (
-    <header className="bg-[#6366F1] text-white shadow-md p-4 flex justify-between items-center">
+    <header className="bg-[#6366F1] text-white shadow-md p-3 flex justify-between items-center">
       <div className="flex items-center gap-2">
-        <LayoutDashboard className="w-6 h-6" />
-        <h1 className="text-xl font-bold">管理画面</h1>
+        <LayoutDashboard className="w-5 h-5" />
+        <h1 className="text-lg font-bold">管理画面</h1>
       </div>
       <Button
         variant="light"
-        startContent={<LogOut size={18} />}
+        size="md"
+        startContent={<LogOut size={20} />}
         className="text-white"
       >
         ログアウト

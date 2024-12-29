@@ -36,7 +36,7 @@ export const PostSchema = z.object({
     .string()
     .max(150, 'メタディスクリプションは150文字以内で入力してください')
     .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullable(),
+    .nullish(),
   metaKeywords: z
     .string()
     .transform((val) => (val === '' ? null : val)) // empty to null

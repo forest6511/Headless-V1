@@ -10,12 +10,11 @@ export default function NewPostPage() {
     <Card className="w-full">
       <CardBody>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">記事の新規作成</h1>
           <Button
             type="submit"
             form="post-form"
             color="primary"
-            size={'lg'}
+            size={'md'}
             startContent={<Save size={20} />}
           >
             記事の保存

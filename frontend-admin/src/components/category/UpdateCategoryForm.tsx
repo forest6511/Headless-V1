@@ -95,7 +95,7 @@ export const UpdateCategoryForm = ({
         errorMessage={errors.description?.message}
       />
 
-      <Button type="submit" color="primary">
+      <Button type="submit" color="primary" className={"bg-[rgb(0,111,238)]"}>
         カテゴリーを更新
       </Button>
     </form>

@@ -167,7 +167,7 @@ export function PostForm({ redirectPath, initialData, mode, id = 'post-form' }: 
                   label="メタディスクリプション"
                   placeholder="SEOメタディスクリプションを入力"
                   isInvalid={!!errors.metaDescription}
-                  errorMessage={errors.metaDescription?.message}
+                  errorMessage={errors?.metaDescription?.message}
                 />
                 <Input
                   {...register('metaKeywords')}

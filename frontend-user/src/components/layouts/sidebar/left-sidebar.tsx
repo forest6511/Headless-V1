@@ -118,7 +118,7 @@ export function LeftSidebar({
     <div className="flex flex-col h-full">
       <SheetHeader className="px-4 pt-4 border-b">
         <SheetTitle className="flex justify-between items-center mb-3">
-          <span>DEV Community</span>
+          <span>タイトル</span>
         </SheetTitle>
       </SheetHeader>
       <div className="flex-1 overflow-y-auto">{content}</div>

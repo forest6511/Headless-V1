@@ -5,12 +5,13 @@ import { MainNav } from '@/components/features/navigation'
 import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'
 import { Footer } from '@/components/layouts/footer'
+import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Community',
-  description: 'コミュニティプラットフォーム',
+  title: 'サイトタイトル',
+  description: 'サイトタイトル 説明',
 }
 
 export default function RootLayout({

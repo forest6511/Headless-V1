@@ -35,7 +35,7 @@ export default function EditCategoryPage(props: Props) {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className="w-full">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの編集</h1>
         <UpdateCategoryForm

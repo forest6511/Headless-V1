@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FileText, FolderTree, Users } from 'lucide-react'
+import { FileText, FolderTree, Image, Users } from 'lucide-react'
 import { ROUTES } from '@/config/routes'
 
 const menuItems = [
@@ -18,6 +18,11 @@ const menuItems = [
         title: 'カテゴリ',
         href: ROUTES.DASHBOARD.CATEGORIES.BASE,
         icon: FolderTree,
+      },
+      {
+        title: 'メディア',
+        href: ROUTES.DASHBOARD.Medias.BASE,
+        icon: Image,
       },
     ],
   },
@@ -47,7 +52,7 @@ export default function DashboardSidebar() {
                       href={subItem.href}
                       className={`flex items-center text-sm gap-2 px-3 py-2 rounded-lg transition-colors ${
                         pathname === subItem.href
-                          ? 'bg-[#6366F1] text-white'
+                          ? 'bg-[#00B900] text-white'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >

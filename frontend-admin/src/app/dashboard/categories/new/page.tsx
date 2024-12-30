@@ -6,7 +6,7 @@ import { ROUTES } from '@/config/routes'
 
 export default function NewCategoryPage() {
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className="w-full">
       <CardBody>
         <h1 className="text-2xl font-bold mb-6">カテゴリーの新規作成</h1>
         <CreateCategoryForm redirectPath={ROUTES.DASHBOARD.CATEGORIES.BASE} />

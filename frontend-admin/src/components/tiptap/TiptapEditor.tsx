@@ -15,6 +15,8 @@ import { BulletList } from '@tiptap/extension-bullet-list'
 import { Italic } from '@tiptap/extension-italic'
 import { Link } from '@tiptap/extension-link'
 import { Blockquote } from '@tiptap/extension-blockquote'
+import { Highlight } from '@tiptap/extension-highlight'
+import { Underline } from '@tiptap/extension-underline'
 
 const lowlight = createLowlight(common)
 
@@ -25,7 +27,7 @@ interface TiptapEditorProps {
 }
 
 export const CSS_CLASS_NAME_PREFIX = 'cms'
-const EMPTY_CONTENT = `<p class="${CSS_CLASS_NAME_PREFIX}-paragraph"></p>`
+const EMPTY_CONTENT = `<p class="${CSS_CLASS_NAME_PREFIX}"></p>`
 
 const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   const [isMounted, setIsMounted] = useState(false)
@@ -36,7 +38,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         history: false,
         paragraph: {
           HTMLAttributes: {
-            class: `${CSS_CLASS_NAME_PREFIX}-paragraph`,
+            class: `${CSS_CLASS_NAME_PREFIX}`,
           },
         },
         hardBreak: false,
@@ -44,55 +46,66 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
       // CSSの設定が必要ないなら下記は設定の必要なし
       OrderedList.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-ordered-list`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       BulletList.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-bullet-list`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       ListItem.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-list-item`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Heading.configure({
         levels: [1, 2, 3],
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-heading`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Bold.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-strong`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Italic.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-italic`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Image.configure({
         inline: true,
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-image`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Link.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-link`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       CodeBlockLowlight.configure({
         lowlight,
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-code-block`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
       Blockquote.configure({
         HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}-blockquote`,
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+      }),
+      Highlight.configure({
+        multicolor: true,
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+      }),
+      Underline.configure({
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
     ],
@@ -110,13 +123,13 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
       // ListItem内のPタグを除去
       html = html.replace(
         /<li[^>]*><p[^>]*>(.*?)<\/p><\/li>/g,
-        `<li class="${CSS_CLASS_NAME_PREFIX}-list-item">$1</li>`
+        `<li class="${CSS_CLASS_NAME_PREFIX}">$1</li>`
       )
 
       // Blockquote内のPタグを除去
       html = html.replace(
         /<blockquote[^>]*><p[^>]*>(.*?)<\/p><\/blockquote>/g,
-        `<blockquote class="${CSS_CLASS_NAME_PREFIX}-blockquote">$1</blockquote>`
+        `<blockquote class="${CSS_CLASS_NAME_PREFIX}">$1</blockquote>`
       )
 
       // 改行を除去した文字数

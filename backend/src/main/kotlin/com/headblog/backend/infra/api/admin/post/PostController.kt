@@ -6,10 +6,10 @@ import com.headblog.backend.app.usecase.post.command.delete.DeletePostUseCase
 import com.headblog.backend.app.usecase.post.command.update.UpdatePostCommand
 import com.headblog.backend.app.usecase.post.command.update.UpdatePostUseCase
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
-import com.headblog.backend.app.usecase.post.query.PostListDto
-import com.headblog.backend.app.usecase.post.query.PostResponse
 import com.headblog.backend.infra.api.admin.post.request.CreatePostRequest
 import com.headblog.backend.infra.api.admin.post.request.UpdatePostRequest
+import com.headblog.backend.infra.api.admin.post.response.PostListResponse
+import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -53,9 +53,9 @@ class PostController(
     fun listPosts(
         @RequestParam(required = false) cursorPostId: UUID?,
         @RequestParam(defaultValue = "10") pageSize: Int
-    ): ResponseEntity<PostListDto> {
+    ): ResponseEntity<PostListResponse> {
         logger.debug("cursorPostId {}", cursorPostId)
-        val posts: PostListDto = getPostQueryService.findPostList(cursorPostId, pageSize)
+        val posts: PostListResponse = getPostQueryService.findPostList(cursorPostId, pageSize)
         return ResponseEntity.ok(posts)
     }
 

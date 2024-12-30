@@ -56,26 +56,38 @@ COMMENT ON COLUMN refresh_tokens.created_at IS 'Timestamp when the refresh token
 -- Media table
 CREATE TABLE medias
 (
-    id          uuid PRIMARY KEY,
-    file_path   varchar(255) NOT NULL,
-    file_type   varchar(50)  NOT NULL,
-    file_size   bigint       NOT NULL,
-    title       varchar(255),
-    alt_text    varchar(255),
-    uploaded_by uuid REFERENCES users (id),
-    created_at  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id               uuid PRIMARY KEY,
+    file_path        varchar(255) NOT NULL,
+    file_type        varchar(50)  NOT NULL,
+    original_size    bigint       NOT NULL,
+    title            varchar(255),
+    alt_text         varchar(255),
+    uploaded_by      uuid REFERENCES users (id),
+    thumbnail_url    varchar(255) NOT NULL,
+    thumbnail_size   bigint       NOT NULL,
+    small_url        varchar(255) NOT NULL,
+    small_size       bigint       NOT NULL,
+    medium_url       varchar(255) NOT NULL,
+    medium_size      bigint       NOT NULL,
+    created_at       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMENT ON TABLE medias IS 'Table for storing media files like images and videos';
+COMMENT ON TABLE medias IS 'Table for storing media files like images and videos with multiple size URLs and their sizes';
 
 COMMENT ON COLUMN medias.id IS 'Unique identifier for each media file';
-COMMENT ON COLUMN medias.file_path IS 'Path to the media file';
-COMMENT ON COLUMN medias.file_type IS 'Type of the media file (e.g., image, video)';
-COMMENT ON COLUMN medias.file_size IS 'Size of the media file in bytes';
-COMMENT ON COLUMN medias.title IS 'Title of the media file';
-COMMENT ON COLUMN medias.alt_text IS 'Alternative text for the media file, used for accessibility';
-COMMENT ON COLUMN medias.uploaded_by IS 'Reference to the user who uploaded the media';
-COMMENT ON COLUMN medias.created_at IS 'Timestamp when the media was uploaded';
+COMMENT ON COLUMN medias.file_path IS 'Path to the original media file in the storage system';
+COMMENT ON COLUMN medias.file_type IS 'Type of the media file (e.g., image/jpeg, image/png)';
+COMMENT ON COLUMN medias.original_size IS 'File size of the original media file in bytes';
+COMMENT ON COLUMN medias.title IS 'Optional title or description for the media file';
+COMMENT ON COLUMN medias.alt_text IS 'Alternative text for the media file, used for accessibility or when the image cannot be displayed';
+COMMENT ON COLUMN medias.uploaded_by IS 'UUID of the user who uploaded the media file, referencing the users table';
+COMMENT ON COLUMN medias.thumbnail_url IS 'URL of the thumbnail version of the media file';
+COMMENT ON COLUMN medias.thumbnail_size IS 'File size of the thumbnail version in bytes';
+COMMENT ON COLUMN medias.small_url IS 'URL of the small version of the media file';
+COMMENT ON COLUMN medias.small_size IS 'File size of the small version in bytes';
+COMMENT ON COLUMN medias.medium_url IS 'URL of the medium version of the media file';
+COMMENT ON COLUMN medias.medium_size IS 'File size of the medium version in bytes';
+COMMENT ON COLUMN medias.created_at IS 'Timestamp when the media file was uploaded';
 
 -- Posts table
 CREATE TABLE posts

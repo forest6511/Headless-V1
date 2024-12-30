@@ -12,5 +12,10 @@ export const ROUTES = {
       NEW: '/dashboard/posts/new',
       EDIT: (postId: string) => `/dashboard/posts/edit/${postId}`,
     },
+    Medias: {
+      BASE: '/dashboard/medias',
+      NEW: '/dashboard/medias/new',
+      EDIT: (mediaId: string) => `/dashboard/posts/edit/${mediaId}`,
+    },
   },
 }

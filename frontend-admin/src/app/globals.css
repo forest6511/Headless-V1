@@ -2,22 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-h1.cms-heading {
+p.cms {
+  /* TODO */
+}
+
+h1.cms {
   font-size: 2rem;
   color: #11181c;
 }
 
-h2.cms-heading {
+h2.cms {
   font-size: 1.75rem;
   color: #11181c;
 }
 
-h3.cms-heading {
+h3.cms {
   font-size: 1.45rem;
   color: #11181c;
 }
 
-.cms-strong {
+strong.cms {
   font-weight: bold; /* 太字を強調 */
   color: #11181c; /* テキストカラー */
   background-color: #f3f4f6; /* 背景色で強調 */
@@ -26,7 +30,7 @@ h3.cms-heading {
   font-size: 1rem; /* 基本フォントサイズ */
 }
 
-.cms-ordered-list {
+ol.cms {
   list-style: decimal; /* 数字付きリスト */
   margin: 1rem 0; /* 上下の余白 */
   padding-left: 2rem; /* 左側の余白 */
@@ -34,7 +38,7 @@ h3.cms-heading {
   color: #11181c; /* リスト全体の文字色 */
 }
 
-.cms-bullet-list {
+ul.cms {
   list-style: disc; /* 通常の丸付きリスト */
   margin: 1rem 0; /* 上下の余白 */
   padding-left: 1.5rem; /* 左側のインデント */
@@ -42,23 +46,23 @@ h3.cms-heading {
   color: #11181c; /* 全体の文字色 */
 }
 
-.cms-list-item {
+li.cms {
   margin: 0.5rem 0; /* 各リストアイテムの上下余白 */
   line-height: 1.6; /* 行間 */
 }
 
-.cms-list-item::marker {
+li.cms::marker {
   color: #4b5563; /* マーカー（番号）の色 */
 }
 
-.cms-italic {
+em.cms {
   color: #6b7280; /* 薄いグレー (通常文字色より薄く設定) */
   font-style: italic; /* 斜体 */
   font-weight: normal; /* フォントウェイトは軽め */
   background-color: transparent; /* 背景を透明に設定 */
 }
 
-.cms-code-block {
+pre.cms {
   background-color: #000; /* 背景を黒色に */
   color: #fff; /* 文字色を白色に */
   border-radius: 0.2rem; /* 角を少しだけ丸くする */
@@ -68,30 +72,30 @@ h3.cms-heading {
   overflow-x: auto; /* 横スクロールを許可 */
 }
 
-.cms-code-block code {
+pre.cms code {
   display: block; /* コード全体をブロック表示 */
   white-space: pre; /* 改行を保持 */
   color: inherit; /* 親の文字色を継承 */
   font-size: 0.9rem; /* フォントサイズを調整 */
 }
 
-.cms-link {
+a.cms {
   color: blue; /* 通常のリンクの色 */
   text-decoration: underline; /* 下線を表示 */
   cursor: pointer; /* ポインタ表示 */
 }
 
-.cms-link:hover {
+a.cms:hover {
   color: darkblue; /* ホバー時の色 */
   text-decoration: underline; /* ホバー時も下線を維持 */
 }
 
-.cms-link:focus {
+a.cms:focus {
   outline: 2px solid #0078d4; /* フォーカス時のアクセシビリティ強化 */
   outline-offset: 2px; /* フォーカス枠を少し外側に */
 }
 
-.cms-blockquote {
+blockquote.cms {
   border-left: 4px solid #ccc; /* 左側のボーダーで引用を強調 */
   background-color: #f9f9f9; /* 引用部分の背景色を薄いグレーに */
   padding: 1rem 1.5rem; /* 内側の余白 */
@@ -100,4 +104,73 @@ h3.cms-heading {
   color: #555; /* テキスト色を少し薄いグレーに */
   font-size: 1rem; /* テキストサイズ */
   line-height: 1.6; /* 行間を広くして読みやすく */
+}
+
+img.cms {
+  /* TODO */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

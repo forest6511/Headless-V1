@@ -12,9 +12,11 @@ import {
 } from '@/components/ui/table'
 import { Loader2 } from 'lucide-react'
 
+type FileSelectActionHandler = (file: MediaFile) => void
+
 interface MediaGridProps {
   view: 'grid' | 'list'
-  onFileSelectAction: (file: MediaFile) => void
+  onFileSelectAction: FileSelectActionHandler
 }
 
 const ITEMS_PER_PAGE = 20

@@ -81,7 +81,7 @@ export default function Home() {
         />
       </div>
 
-      <MediaGrid view={view} onFileSelect={setSelectedFile} />
+      <MediaGrid view={view} onFileSelectAction={setSelectedFile} />
 
       <MediaUploadModal
         open={isUploadModalOpen}

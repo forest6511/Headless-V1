@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.api.admin.media
 
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -35,7 +35,7 @@ class MediaController {
                 smallSize = Random.nextLong(50_000, 200_000),
                 mediumUrl = "https://placehold.jp/150x150.png?text=medium$index",
                 mediumSize = Random.nextLong(200_000, 1_000_000),
-                uploadedAt = Instant.now().minusSeconds(Random.nextLong(0, 10_000_000))
+                uploadedAt = LocalDateTime.now()
             )
         }
     }
@@ -56,5 +56,5 @@ data class MediaFile(
     val smallSize: Long,
     val mediumUrl: String,
     val mediumSize: Long,
-    val uploadedAt: Instant
+    val uploadedAt: LocalDateTime
 )

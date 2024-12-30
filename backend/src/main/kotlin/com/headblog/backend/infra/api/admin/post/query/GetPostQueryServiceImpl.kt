@@ -1,10 +1,10 @@
 package com.headblog.backend.infra.api.admin.post.query
 
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
-import com.headblog.backend.app.usecase.post.query.PostListDto
-import com.headblog.backend.app.usecase.post.query.PostResponse
-import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdResponse
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.infra.api.admin.post.response.PostListResponse
+import com.headblog.backend.infra.api.admin.post.response.PostResponse
+import com.headblog.backend.infra.api.admin.post.response.PostWithCategoryIdResponse
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
@@ -14,7 +14,7 @@ class GetPostQueryServiceImpl(
     private val postRepository: PostRepository
 ) : GetPostQueryService {
 
-    override fun findPostList(cursorPostId: UUID?, pageSize: Int): PostListDto {
+    override fun findPostList(cursorPostId: UUID?, pageSize: Int): PostListResponse {
         // 総件数を取得
         val totalCount = postRepository.count()
 
@@ -45,7 +45,7 @@ class GetPostQueryServiceImpl(
                 postWithCategoryIdResponse
             }
 
-        return PostListDto(
+        return PostListResponse(
             totalCount = totalCount,
             posts = posts,
             totalPages = totalPages,

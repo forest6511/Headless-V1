@@ -1,8 +1,9 @@
-package com.headblog.backend.app.usecase.post.query
+package com.headblog.backend.infra.api.admin.post.response
 
+import java.time.LocalDateTime
 import java.util.*
 
-data class PostResponse(
+data class PostWithCategoryIdResponse(
     val id: UUID,
     val title: String,
     val slug: String,
@@ -15,6 +16,8 @@ data class PostResponse(
     val metaKeywords: String?,
     val ogTitle: String?,
     val ogDescription: String?,
+    val createdAt: LocalDateTime,
+    val updateAt: LocalDateTime,
     val categoryId: UUID,
     val tagNames: String?,
 )

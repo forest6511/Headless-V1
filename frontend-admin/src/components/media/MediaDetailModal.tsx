@@ -77,7 +77,7 @@ export function MediaDetailModal({
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-1">
-                更新日: {file.uploadedAt.toLocaleDateString('ja-JP')}
+                更新日: {new Date(file.uploadedAt).toLocaleDateString('ja-JP')}
               </p>
               <p className="text-sm text-muted-foreground">
                 アップロード: {file.uploadedBy}

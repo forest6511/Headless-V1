@@ -12,5 +12,5 @@ export interface MediaFile {
   smallSize: number
   mediumUrl: string
   mediumSize: number
-  uploadedAt: Date
+  uploadedAt: string
 }

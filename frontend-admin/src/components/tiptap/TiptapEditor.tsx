@@ -15,9 +15,8 @@ import { BulletList } from '@tiptap/extension-bullet-list'
 import { Italic } from '@tiptap/extension-italic'
 import { Link } from '@tiptap/extension-link'
 import { Blockquote } from '@tiptap/extension-blockquote'
-import {Highlight } from '@tiptap/extension-highlight'
+import { Highlight } from '@tiptap/extension-highlight'
 import { Underline } from '@tiptap/extension-underline'
-
 
 const lowlight = createLowlight(common)
 

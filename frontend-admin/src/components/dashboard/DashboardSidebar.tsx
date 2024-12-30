@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FileText, FolderTree, Users } from 'lucide-react'
+import { FileText, FolderTree, Image, Users } from 'lucide-react'
 import { ROUTES } from '@/config/routes'
 
 const menuItems = [
@@ -18,6 +18,11 @@ const menuItems = [
         title: 'カテゴリ',
         href: ROUTES.DASHBOARD.CATEGORIES.BASE,
         icon: FolderTree,
+      },
+      {
+        title: 'メディア',
+        href: ROUTES.DASHBOARD.Medias.BASE,
+        icon: Image,
       },
     ],
   },

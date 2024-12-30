@@ -25,7 +25,12 @@ interface PostFormProps {
   id: string
 }
 
-export function PostForm({ redirectPath, initialData, mode, id = 'post-form' }: PostFormProps) {
+export function PostForm({
+  redirectPath,
+  initialData,
+  mode,
+  id = 'post-form',
+}: PostFormProps) {
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(categories)
   const { form, textLength, contentHtml, onSubmit, handleEditorChange } =

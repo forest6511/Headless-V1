@@ -8,7 +8,7 @@ export const AddPostButton = () => {
 
   return (
     <Button
-      className={"bg-[rgb(0,111,238)]"}
+      className={'bg-[rgb(0,111,238)]'}
       color="primary"
       startContent={<Plus size={20} />}
       onPress={() => router.push(ROUTES.DASHBOARD.POSTS.NEW)}

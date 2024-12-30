@@ -265,7 +265,11 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
                   className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
                   style={{ backgroundColor: color.value }}
                   onClick={() => {
-                    editor.chain().focus().toggleHighlight({ color: color.value }).run()
+                    editor
+                      .chain()
+                      .focus()
+                      .toggleHighlight({ color: color.value })
+                      .run()
                   }}
                   title={color.label}
                 />

@@ -81,7 +81,7 @@ class CategoryRepositoryImpl(
             .map { (_, records) -> records.toCategoryWithPostIdsDto() }
     }
 
-    // TODO DTOを返却する
+    // TODO Categoryではなく、CategoryDtoを返却する
     override fun findAllByParentId(parentId: UUID): List<Category> {
         return dsl.select()
             .from(CATEGORIES)
@@ -99,12 +99,6 @@ class CategoryRepositoryImpl(
             }
     }
 
-
-    /**
-     * TODO HELP
-     * Add jOOQ-kotlin extension methods to help ignore nullability when mapping
-     * https://github.com/jOOQ/jOOQ/issues/12934
-     */
     private fun Record.toCategoryDto(): CategoryDto {
         return CategoryDto(
             id = get(CATEGORIES.ID)!!,

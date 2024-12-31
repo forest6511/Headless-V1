@@ -89,4 +89,35 @@ export const apiClient = {
       throw error
     }
   },
+
+  async uploadFile<T>(
+    endpoint: string,
+    file: File,
+    additionalData?: Record<string, any>
+  ): Promise<T> {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    // 追加のデータがある場合はFormDataに追加
+    if (additionalData) {
+      Object.entries(additionalData).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
+    }
+
+    logRequest(endpoint, 'POST', { fileName: file.name, size: file.size })
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      })
+
+      return await this.handleResponse<T>(endpoint, response)
+    } catch (error) {
+      logError(endpoint, error)
+      throw error
+    }
+  },
 }

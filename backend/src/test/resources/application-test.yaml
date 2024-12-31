@@ -20,11 +20,43 @@ spring:
       - classpath:db/test-data
   jackson:
     property-naming-strategy: LOWER_CAMEL_CASE
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 11MB
 
 jwt:
   secret: "IJnor7miOnPl/MxO9uDZQQXkt8BfFrgenVeyLK7SFEQ="
   expiration: 1800000 # 30 minutes
   refresh-expiration: 3600000 # 60 minutes
+
+storage:
+  cloudflare:
+    r2:
+      bucket-name: test-bucket
+      access-key: test-access-key
+      secret-key: test-secret-key
+      endpoint: https://test-account.r2.cloudflarestorage.com
+      public-endpoint: https://test-account.r2.cloudflarestorage.com
+  media:
+    max-file-size: 20MB
+    supported-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+      - image/heic
+    sizes:
+      thumbnail:
+        width: 100
+        height: 100
+      small:
+        width: 300
+        height: 300
+      medium:
+        width: 800
+        height: 800
 
 logging:
   level:

@@ -11,52 +11,100 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loader2 } from 'lucide-react'
+import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
+
+type FileSelectActionHandler = (file: MediaFile) => void
 
 interface MediaGridProps {
   view: 'grid' | 'list'
-  onFileSelect: (file: MediaFile) => void
+  onFileSelectAction: FileSelectActionHandler
 }
+
+const ITEMS_PER_PAGE = 20
+const SCROLL_THRESHOLD = 100
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
+export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
   const [page, setPage] = useState(1)
   const [files, setFiles] = useState<MediaFile[]>([])
-  const loadMoreRef = useRef(null)
+  const [hasMore, setHasMore] = useState(true)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const lastScrollPosition = useRef<number>(0)
+
+  // コンポーネントのマウント時にstateをリセット
+  useEffect(() => {
+    return () => {
+      setFiles([])
+      setPage(1)
+      setHasMore(true)
+      lastScrollPosition.current = 0
+    }
+  }, [])
 
   const { data, error, isLoading } = useSWR(
-    `/api/admin/medias?page=${page}&limit=20`,
-    fetcher
+    hasMore ? `${ADMIN_API_ENDPOINTS.MEDIA.SWR}?page=${page}&limit=${ITEMS_PER_PAGE}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 2000,
+      revalidateOnMount: true,
+      shouldRetryOnError: false,
+    }
   )
 
+  const formatFileSize = (size: number): string => {
+    if (!size || size === 0) return '0 B'
+
+    const units = ['B', 'KB', 'MB', 'GB', 'TB']
+    const base = 1024
+    const decimalPlaces = 2
+
+    const exponent = Math.floor(Math.log(size) / Math.log(base))
+    const value = size / Math.pow(base, exponent)
+    const unit = units[exponent]
+
+    return `${value.toFixed(decimalPlaces)} ${unit}`
+  }
+
   useEffect(() => {
-    if (data) {
-      setFiles((prevFiles) => [...prevFiles, ...data])
+    if (data && Array.isArray(data)) {
+      setFiles((prevFiles) => {
+        const uniqueFiles = new Map(prevFiles.map((file) => [file.id, file]))
+        data.forEach((newFile) => {
+          uniqueFiles.set(newFile.id, newFile)
+        })
+        return Array.from(uniqueFiles.values())
+      })
+
+      if (data.length < ITEMS_PER_PAGE) {
+        setHasMore(false)
+      }
     }
   }, [data])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !isLoading && data?.length > 0) {
-          setPage((prevPage) => prevPage + 1)
-        }
-      },
-      { threshold: 1.0 }
-    )
+    const container = containerRef.current
+    if (!container) return
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current)
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container
+      const currentPosition = scrollTop
+
+      if (currentPosition > lastScrollPosition.current) {
+        if (scrollHeight - scrollTop - clientHeight < SCROLL_THRESHOLD) {
+          if (!isLoading && hasMore) {
+            setPage((prev) => prev + 1)
+          }
+        }
+      }
+
+      lastScrollPosition.current = currentPosition
     }
 
-    return () => observer.disconnect()
-  }, [isLoading, data])
-
-  const formatFileSize = (size: number) => {
-    if (size < 1024) return `${size} B`
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`
-    return `${(size / (1024 * 1024)).toFixed(2)} MB`
-  }
+    container.addEventListener('scroll', handleScroll)
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [isLoading, hasMore])
 
   const GridView = () => (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -64,12 +112,13 @@ export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
         <div
           key={file.id}
           className="relative aspect-square group cursor-pointer hover:opacity-90 transition-opacity"
-          onClick={() => onFileSelect(file)}
+          onClick={() => onFileSelectAction(file)}
         >
           <img
             src={file.thumbnailUrl}
             alt={file.title || ''}
             className="absolute inset-0 w-full h-full object-cover rounded-lg"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
             <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate">
@@ -86,10 +135,8 @@ export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
       <TableHeader>
         <TableRow>
           <TableHead>サムネイル</TableHead>
-          <TableHead>ファイル名</TableHead>
           <TableHead>タイトル</TableHead>
           <TableHead>アップロード日</TableHead>
-          <TableHead>オリジナルサイズ</TableHead>
           <TableHead>サムネイルサイズ</TableHead>
           <TableHead>小サイズ</TableHead>
           <TableHead>中サイズ</TableHead>
@@ -100,7 +147,7 @@ export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
           <TableRow
             key={file.id}
             className="cursor-pointer hover:bg-muted"
-            onClick={() => onFileSelect(file)}
+            onClick={() => onFileSelectAction(file)}
           >
             <TableCell>
               <img
@@ -109,14 +156,13 @@ export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
                 width={50}
                 height={50}
                 className="object-cover rounded"
+                loading="lazy"
               />
             </TableCell>
-            <TableCell>{file.filePath}</TableCell>
             <TableCell>{file.title}</TableCell>
             <TableCell>
-              {new Date(file.uploadedAt).toLocaleDateString('ja-JP')}
+              {new Date(file.createdAt).toLocaleDateString('ja-JP')}
             </TableCell>
-            <TableCell>{formatFileSize(file.originalSize)}</TableCell>
             <TableCell>{formatFileSize(file.thumbnailSize)}</TableCell>
             <TableCell>{formatFileSize(file.smallSize)}</TableCell>
             <TableCell>{formatFileSize(file.mediumSize)}</TableCell>
@@ -129,11 +175,13 @@ export function MediaGrid({ view, onFileSelect }: MediaGridProps) {
   if (error) return <div>エラーが発生しました</div>
 
   return (
-    <div className="space-y-4">
+    <div ref={containerRef} className="space-y-4 h-[80vh] overflow-auto">
       {view === 'grid' ? <GridView /> : <ListView />}
-      <div ref={loadMoreRef} className="flex justify-center items-center py-4">
-        {isLoading && <Loader2 className="w-6 h-6 animate-spin" />}
-      </div>
+      {isLoading && (
+        <div className="flex justify-center items-center py-4">
+          <Loader2 className="w-6 h-6 animate-spin" />
+        </div>
+      )}
     </div>
   )
 }

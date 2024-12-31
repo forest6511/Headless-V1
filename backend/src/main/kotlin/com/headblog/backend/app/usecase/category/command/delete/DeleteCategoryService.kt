@@ -83,7 +83,16 @@ class DeleteCategoryService(
         )
 
         // 現在の親IDを持つ全ての子カテゴリーを取得
-        val children = categoryRepository.findAllByParentId(currentParentId)
+        val children = categoryRepository.findAllByParentId(currentParentId).map {
+            Category.fromDto(
+                id = it.id,
+                name= it.name,
+                slug= it.slug,
+                description= it.description,
+                parentId = it.parentId,
+               createdAt=  it.createdAt
+            )
+        }
 
         children.forEach { child ->
             // 子カテゴリーの親をデフォルトカテゴリーに変更

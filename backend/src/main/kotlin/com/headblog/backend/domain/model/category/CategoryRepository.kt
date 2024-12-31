@@ -14,5 +14,5 @@ interface CategoryRepository {
     fun findBySlug(slug: String): CategoryDto?
     fun existsByParentId(parentId: UUID): Boolean
     fun findTypeWithPostIds(): List<CategoryWithPostIdsDto>
-    fun findAllByParentId(parentId: UUID): List<Category>
+    fun findAllByParentId(parentId: UUID): List<CategoryDto>
 }

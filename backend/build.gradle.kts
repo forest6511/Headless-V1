@@ -125,7 +125,10 @@ jooq {
 				isDeprecated = false
 				isRecords = true
 				isImmutablePojos = true
-				isFluentSetters = true
+				// https://www.jooq.org/doc/latest/manual/code-generation/codegen-advanced/codegen-config-generate/codegen-implicit-join-paths/
+				// Allowing to turn off the feature for to-many join paths (including many-to-many).
+				// The default is true.
+				isImplicitJoinPathsToMany = false
 			}
 			target {
 				packageName = "com.headblog.infra.jooq"

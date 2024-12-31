@@ -54,6 +54,10 @@ dependencies {
 	implementation("com.github.f4b6a3:uuid-creator:6.0.0")
 	// https://github.com/auth0/java-jwt
 	implementation("com.auth0:java-jwt:4.4.0")
+
+	// R2 storage
+	implementation("software.amazon.awssdk:s3:2.29.43")
+	implementation("org.im4java:im4java:1.4.0")
 }
 
 kotlin {

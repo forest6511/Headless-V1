@@ -1,8 +1,5 @@
 export interface MediaFile {
   id: string
-  filePath: string
-  fileType: string
-  originalSize: number
   title?: string
   altText?: string
   uploadedBy: string
@@ -12,5 +9,5 @@ export interface MediaFile {
   smallSize: number
   mediumUrl: string
   mediumSize: number
-  uploadedAt: string
+  createdAt: string
 }

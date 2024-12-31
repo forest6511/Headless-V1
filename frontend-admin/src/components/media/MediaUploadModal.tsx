@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -12,10 +12,11 @@ import { Upload, Loader2 } from 'lucide-react'
 import { apiClient } from '@/lib/api/core/client'
 // npx shadcn@latest add sonner
 import { toast } from 'sonner'
+import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 
 interface MediaUploadModalProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   onUploadComplete?: () => void
 }
 
@@ -24,12 +25,12 @@ interface UploadState {
   progress: number
 }
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic']
 
 export function MediaUploadModal({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   onUploadComplete,
 }: MediaUploadModalProps) {
   const [isDragging, setIsDragging] = useState(false)
@@ -40,7 +41,7 @@ export function MediaUploadModal({
 
   const validateFile = (file: File): boolean => {
     if (file.size > MAX_FILE_SIZE) {
-      toast.error('ファイルサイズが2MBを超えています')
+      toast.error('ファイルサイズが10MBを超えています')
       return false
     }
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -58,13 +59,13 @@ export function MediaUploadModal({
 
     try {
       for (const file of validFiles) {
-        await apiClient.uploadFile('/api/admin/medias', file)
+        await apiClient.uploadFile(ADMIN_API_ENDPOINTS.MEDIA.POST, file)
       }
 
       setUploadState({ status: 'success', progress: 100 })
       toast.success('アップロードが完了しました')
       onUploadComplete?.()
-      onOpenChange(false)
+      onOpenChangeAction(false)
     } catch (error) {
       setUploadState({ status: 'error', progress: 0 })
       toast.error('アップロードに失敗しました')
@@ -88,7 +89,7 @@ export function MediaUploadModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>新しいメディアファイルを追加</DialogTitle>
@@ -141,7 +142,7 @@ export function MediaUploadModal({
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  最大アップロードサイズ: 2 MB
+                  最大アップロードサイズ: 10 MB
                 </p>
                 <p className="text-xs text-muted-foreground">
                   対応形式: JPG, PNG, GIF, WebP

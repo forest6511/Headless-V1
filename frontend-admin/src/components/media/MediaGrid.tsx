@@ -134,10 +134,8 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
       <TableHeader>
         <TableRow>
           <TableHead>サムネイル</TableHead>
-          <TableHead>ファイル名</TableHead>
           <TableHead>タイトル</TableHead>
           <TableHead>アップロード日</TableHead>
-          <TableHead>オリジナルサイズ</TableHead>
           <TableHead>サムネイルサイズ</TableHead>
           <TableHead>小サイズ</TableHead>
           <TableHead>中サイズ</TableHead>
@@ -160,12 +158,10 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
                 loading="lazy"
               />
             </TableCell>
-            <TableCell>{file.filePath}</TableCell>
             <TableCell>{file.title}</TableCell>
             <TableCell>
-              {new Date(file.uploadedAt).toLocaleDateString('ja-JP')}
+              {new Date(file.createdAt).toLocaleDateString('ja-JP')}
             </TableCell>
-            <TableCell>{formatFileSize(file.originalSize)}</TableCell>
             <TableCell>{formatFileSize(file.thumbnailSize)}</TableCell>
             <TableCell>{formatFileSize(file.smallSize)}</TableCell>
             <TableCell>{formatFileSize(file.mediumSize)}</TableCell>

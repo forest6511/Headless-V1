@@ -85,7 +85,7 @@ export default function Home() {
 
       <MediaUploadModal
         open={isUploadModalOpen}
-        onOpenChange={setIsUploadModalOpen}
+        onOpenChangeAction={setIsUploadModalOpen}
       />
 
       <MediaDetailModal

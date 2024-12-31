@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 /**
  * Next.js (Server) 経由でリクエストを Spring Boot に転送します。
@@ -41,11 +40,19 @@ async function handleRequest(
       method,
       headers,
     }
-
-    // リクエストボディの処理
-    const body = await request.json().catch(() => null)
-    if (body && Object.keys(body).length > 0) {
-      options.body = JSON.stringify(body)
+    const contentType = request.headers.get('content-type')
+    if (contentType?.includes('multipart/form-data')) {
+      // マルチパートリクエストの処理
+      // @ts-ignore
+      delete headers['Content-Type'] // multipart/form-dataの場合、Content-Typeを削除
+      options.body = await request.formData()
+    } else {
+      // 通常のJSONリクエスト
+      headers['Content-Type'] = 'application/json'
+      const body = await request.json().catch(() => null)
+      if (body && Object.keys(body).length > 0) {
+        options.body = JSON.stringify(body)
+      }
     }
 
     const response = await fetch(requestUrl, options)

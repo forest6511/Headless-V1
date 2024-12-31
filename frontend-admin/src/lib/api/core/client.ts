@@ -110,7 +110,6 @@ export const apiClient = {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {},
         body: formData,
         credentials: 'include',
       })

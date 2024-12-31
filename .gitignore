@@ -5,3 +5,4 @@
 **/.gradle/
 **/.idea/
 .DS_Store
+set-r2-env.sh

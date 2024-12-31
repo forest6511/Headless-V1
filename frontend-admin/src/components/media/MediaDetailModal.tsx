@@ -34,13 +34,6 @@ export function MediaDetailModal({
       <DialogContent className="max-w-6xl">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <div className="relative aspect-video">
-              <img
-                src={file.filePath}
-                alt={file.title || ''}
-                className="absolute inset-0 w-full h-full object-contain"
-              />
-            </div>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <p className="text-sm font-medium">サムネイル</p>
@@ -77,19 +70,10 @@ export function MediaDetailModal({
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-1">
-                更新日: {new Date(file.uploadedAt).toLocaleDateString('ja-JP')}
+                作成日: {new Date(file.createdAt).toLocaleDateString('ja-JP')}
               </p>
               <p className="text-sm text-muted-foreground">
                 アップロード: {file.uploadedBy}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                ファイル名: {file.filePath.split('/').pop()}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                ファイルタイプ: {file.fileType}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                オリジナルサイズ: {formatFileSize(file.originalSize)}
               </p>
               <p className="text-sm text-muted-foreground">
                 サムネイルサイズ: {formatFileSize(file.thumbnailSize)}
@@ -110,11 +94,6 @@ export function MediaDetailModal({
             <div className="space-y-2">
               <label className="text-sm font-medium">代替テキスト</label>
               <Textarea defaultValue={file.altText} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">オリジナルURL</label>
-              <Input value={file.filePath} readOnly />
             </div>
 
             <div className="space-y-2">

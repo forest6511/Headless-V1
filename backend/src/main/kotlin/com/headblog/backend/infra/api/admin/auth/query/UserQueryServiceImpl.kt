@@ -11,6 +11,7 @@ import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Service
 
+// TODO Refactor. Service -> Repository.
 @Service
 class UserQueryServiceImpl(
     private val dsl: DSLContext

@@ -9,18 +9,18 @@ import { Copy } from 'lucide-react'
 interface MediaDetailModalProps {
   file: MediaFile | null
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
 }
 
 export function MediaDetailModal({
   file,
   open,
-  onOpenChange,
+  onOpenChangeAction,
 }: MediaDetailModalProps) {
   if (!file) return null
 
-  const handleCopyUrl = (url: string) => {
-    navigator.clipboard.writeText(url)
+  const handleCopyUrl = async (url: string) => {
+    await navigator.clipboard.writeText(url)
   }
 
   const formatFileSize = (size: number) => {
@@ -30,7 +30,7 @@ export function MediaDetailModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="max-w-6xl">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">

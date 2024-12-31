@@ -43,7 +43,9 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
   }, [])
 
   const { data, error, isLoading } = useSWR(
-    hasMore ? `${ADMIN_API_ENDPOINTS.MEDIA.SWR}?page=${page}&limit=${ITEMS_PER_PAGE}` : null,
+    hasMore
+      ? `${ADMIN_API_ENDPOINTS.MEDIA.SWR}?page=${page}&limit=${ITEMS_PER_PAGE}`
+      : null,
     fetcher,
     {
       revalidateOnFocus: false,

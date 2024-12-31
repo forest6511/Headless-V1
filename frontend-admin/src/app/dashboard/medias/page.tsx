@@ -91,7 +91,7 @@ export default function Home() {
       <MediaDetailModal
         file={selectedFile}
         open={!!selectedFile}
-        onOpenChange={(open) => !open && setSelectedFile(null)}
+        onOpenChangeAction={(open) => !open && setSelectedFile(null)}
       />
     </div>
   )

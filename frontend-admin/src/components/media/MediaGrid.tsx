@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Loader2 } from 'lucide-react'
+import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 
 type FileSelectActionHandler = (file: MediaFile) => void
 
@@ -42,7 +43,7 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
   }, [])
 
   const { data, error, isLoading } = useSWR(
-    hasMore ? `/api/admin/medias?page=${page}&limit=${ITEMS_PER_PAGE}` : null,
+    hasMore ? `${ADMIN_API_ENDPOINTS.MEDIA.SWR}?page=${page}&limit=${ITEMS_PER_PAGE}` : null,
     fetcher,
     {
       revalidateOnFocus: false,

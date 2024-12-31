@@ -12,5 +12,6 @@ export const ADMIN_API_ENDPOINTS = {
   },
   MEDIA: {
     POST: '/api/admin/medias',
+    SWR: '/api/admin/medias'
   },
 } as const

@@ -5,7 +5,6 @@ import {
   useRef,
   useCallback,
   useMemo,
-  type ReactElement,
 } from 'react'
 import { MediaFile } from '@/types/api/media/types'
 import {
@@ -19,6 +18,7 @@ import {
 import { Loader2 } from 'lucide-react'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 import { MEDIA_GRID_CONFIG } from '@/config/constants'
+import { formatFileSize } from '@/lib/utils/media'
 
 // ファイル選択のアクションハンドラの型定義
 type FileSelectActionHandler = (file: MediaFile) => void
@@ -135,16 +135,6 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
       setHasMore(true)
       setIsFetching(false)
     }
-  }, [])
-
-  // ファイルサイズのフォーマット関数
-  const formatFileSize = useCallback((size: number): string => {
-    if (!size || size === 0) return '0 B'
-    const units = ['B', 'KB', 'MB', 'GB', 'TB']
-    const base = 1024
-    const exponent = Math.floor(Math.log(size) / Math.log(base))
-    const value = size / Math.pow(base, exponent)
-    return `${value.toFixed(2)} ${units[exponent]}`
   }, [])
 
   // グリッドビューのレンダリング

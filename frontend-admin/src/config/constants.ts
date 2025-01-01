@@ -32,5 +32,5 @@ export const POST_COLUMNS = [
 export const MEDIA_GRID_CONFIG = {
   ITEMS_PER_PAGE: 20, // ページごとに読み込むアイテム数
   SCROLL_THRESHOLD: 2200, // スクロール時の追加読み込みの閾値 (値を大きくするとよりスムーズになる)
-  DEBOUNCE_DELAY: 25 // スクロールイベントのデバウンス遅延 (値を小さくすると遅延なし)
+  DEBOUNCE_DELAY: 25, // スクロールイベントのデバウンス遅延 (値を小さくすると遅延なし)
 }

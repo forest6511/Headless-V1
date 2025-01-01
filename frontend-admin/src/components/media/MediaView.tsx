@@ -16,12 +16,12 @@ import { MEDIA_GRID_CONFIG } from '@/config/constants'
 type FileSelectActionHandler = (file: MediaFile) => void
 
 // コンポーネントのプロパティ型定義
-interface MediaGridProps {
+interface MediaViewProps {
   view: 'grid' | 'list'
   onFileSelectAction: FileSelectActionHandler
 }
 
-export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
+export function MediaView({ view, onFileSelectAction }: MediaViewProps) {
   // メディアファイルの状態管理用のステート
   const [files, setFiles] = useState<MediaFile[]>([])
   const [currentCursor, setCurrentCursor] = useState<string | null>(null)

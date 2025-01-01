@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select'
 import { Grid2X2, List, Upload } from 'lucide-react'
 import { MediaFile } from '@/types/api/media/types'
-import { MediaGrid } from '@/components/media/MediaGrid'
+import { MediaView } from '@/components/media/MediaView'
 import { MediaUploadModal } from '@/components/media/MediaUploadModal'
 import { MediaDetailModal } from '@/components/media/MediaDetailModal'
 
@@ -81,7 +81,7 @@ export default function Home() {
         />
       </div>
 
-      <MediaGrid view={view} onFileSelectAction={setSelectedFile} />
+      <MediaView view={view} onFileSelectAction={setSelectedFile} />
 
       <MediaUploadModal
         open={isUploadModalOpen}

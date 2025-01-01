@@ -86,7 +86,10 @@ export function useMediaView() {
     // デバウンス処理を適用したスクロールイベント
     const debouncedScroll = () => {
       window.clearTimeout(timeoutId)
-      timeoutId = window.setTimeout(handleScroll, MEDIA_GRID_CONFIG.DEBOUNCE_DELAY)
+      timeoutId = window.setTimeout(
+        handleScroll,
+        MEDIA_GRID_CONFIG.DEBOUNCE_DELAY
+      )
     }
 
     container.addEventListener('scroll', debouncedScroll, { passive: true })
@@ -116,6 +119,6 @@ export function useMediaView() {
     files,
     containerRef,
     isFetching,
-    fetchData
+    fetchData,
   }
 }

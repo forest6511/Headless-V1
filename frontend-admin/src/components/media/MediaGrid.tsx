@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/table'
 import { Loader2 } from 'lucide-react'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
+import { MEDIA_GRID_CONFIG } from '@/config/constants'
 
 // ファイル選択のアクションハンドラの型定義
 type FileSelectActionHandler = (file: MediaFile) => void
@@ -27,12 +28,6 @@ interface MediaGridProps {
   view: 'grid' | 'list'
   onFileSelectAction: FileSelectActionHandler
 }
-
-// 定数の定義
-const ITEMS_PER_PAGE = 20 // ページごとに読み込むアイテム数
-const SCROLL_THRESHOLD = 2200 // スクロール時の追加読み込みのしきい値
-const DEBOUNCE_DELAY = 25 // スクロールイベントのデバウンス遅延
-
 export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
   // メディアファイルの状態管理用のステート
   const [files, setFiles] = useState<MediaFile[]>([])
@@ -51,7 +46,7 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
       // APIエンドポイントへのクエリパラメータ準備
       const params = new URLSearchParams({
         ...(currentCursor && { cursorMediaId: currentCursor }),
-        pageSize: String(ITEMS_PER_PAGE),
+        pageSize: String(MEDIA_GRID_CONFIG.ITEMS_PER_PAGE),
       })
 
       // メディアデータのフェッチ
@@ -79,7 +74,7 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
       })
 
       // ページネーション制御
-      if (data.media.length < ITEMS_PER_PAGE) {
+      if (data.media.length < MEDIA_GRID_CONFIG.ITEMS_PER_PAGE) {
         setHasMore(false)
       } else {
         setCurrentCursor(data.media[data.media.length - 1].id)
@@ -101,7 +96,7 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
     const { scrollTop, scrollHeight, clientHeight } = container
     const threshold = scrollHeight - scrollTop - clientHeight
 
-    if (threshold < SCROLL_THRESHOLD) {
+    if (threshold < MEDIA_GRID_CONFIG.SCROLL_THRESHOLD) {
       void fetchData()
     }
   }, [fetchData, hasMore, isFetching])
@@ -116,7 +111,7 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
     // デバウンス処理を適用したスクロールイベント
     const debouncedScroll = () => {
       window.clearTimeout(timeoutId)
-      timeoutId = window.setTimeout(handleScroll, DEBOUNCE_DELAY)
+      timeoutId = window.setTimeout(handleScroll, MEDIA_GRID_CONFIG.DEBOUNCE_DELAY)
     }
 
     container.addEventListener('scroll', debouncedScroll, { passive: true })

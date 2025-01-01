@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatFileSize } from '@/lib/utils/media'
+import { MEDIA_LIST_COLUMNS } from '@/config/constants'
 
 // ListViewコンポーネントのプロパティの型定義
 interface ListViewProps {
@@ -22,12 +23,9 @@ export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>サムネイル</TableHead>
-            <TableHead>タイトル</TableHead>
-            <TableHead>アップロード日</TableHead>
-            <TableHead>サムネイルサイズ</TableHead>
-            <TableHead>小サイズ</TableHead>
-            <TableHead>中サイズ</TableHead>
+            {MEDIA_LIST_COLUMNS.map((column) => (
+              <TableHead key={column.uid}>{column.name}</TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>

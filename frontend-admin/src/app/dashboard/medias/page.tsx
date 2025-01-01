@@ -68,8 +68,8 @@ export default function Home() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="date">アップロード日</SelectItem>
-            <SelectItem value="name">ファイル名</SelectItem>
-            <SelectItem value="size">ファイルサイズ</SelectItem>
+            {/* <SelectItem value="name">ファイル名</SelectItem> */}
+            {/* <SelectItem value="size">ファイルサイズ</SelectItem> */}
           </SelectContent>
         </Select>
 

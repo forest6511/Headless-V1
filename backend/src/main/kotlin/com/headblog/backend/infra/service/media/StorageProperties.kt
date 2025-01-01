@@ -15,6 +15,7 @@ data class StorageProperties(
             val accessKey: String,
             val secretKey: String,
             val endpoint: String,
+            val publicEndpoint: String,
         )
     }
 

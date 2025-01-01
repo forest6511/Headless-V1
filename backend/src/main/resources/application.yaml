@@ -52,6 +52,7 @@ storage:
       access-key: ${R2_ACCESS_KEY}
       secret-key: ${R2_SECRET_KEY}
       endpoint: ${R2_ENDPOINT}
+      public-endpoint: ${R2_PUBLIC_ENDPOINT}
   media:
     max-file-size: 20MB
     supported-types:

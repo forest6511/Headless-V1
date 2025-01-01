@@ -38,6 +38,7 @@ storage:
       access-key: test-access-key
       secret-key: test-secret-key
       endpoint: https://test-account.r2.cloudflarestorage.com
+      public-endpoint: https://test-account.r2.cloudflarestorage.com
   media:
     max-file-size: 20MB
     supported-types:

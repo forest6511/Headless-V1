@@ -1,4 +1,4 @@
-package com.headblog.backend.infra.service.media
+package com.headblog.backend.infra.config
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -16,10 +16,10 @@ class StoragePropertiesTest {
     @DisplayName("R2ストレージの設定が正しく読み込まれること")
     fun `should load R2 storage configuration correctly`() {
         val r2Props = storageProperties.cloudflare.r2
-        assertEquals(r2Props.bucketName,"test-bucket")
-        assertEquals(r2Props.accessKey,"test-access-key")
-        assertEquals(r2Props.secretKey,"test-secret-key")
-        assertEquals(r2Props.endpoint,"https://test-account.r2.cloudflarestorage.com")
+        assertEquals(r2Props.bucketName, "test-bucket")
+        assertEquals(r2Props.accessKey, "test-access-key")
+        assertEquals(r2Props.secretKey, "test-secret-key")
+        assertEquals(r2Props.endpoint, "https://test-account.r2.cloudflarestorage.com")
     }
 
     @Test
@@ -28,7 +28,7 @@ class StoragePropertiesTest {
         val mediaProps = storageProperties.media
         val expectedTypes = listOf("image/jpeg", "image/png", "image/gif", "image/webp", "image/heic").sorted()
 
-        assertEquals(mediaProps.maxFileSize,"20MB")
+        assertEquals(mediaProps.maxFileSize, "20MB")
         assertEquals(mediaProps.supportedTypes.sorted(), expectedTypes)
     }
 
@@ -38,16 +38,16 @@ class StoragePropertiesTest {
         val sizes = storageProperties.media.sizes
 
         with(sizes.thumbnail) {
-            assertEquals(width,100)
-            assertEquals(height,100)
+            assertEquals(width, 100)
+            assertEquals(height, 100)
         }
         with(sizes.small) {
-            assertEquals(width,300)
-            assertEquals(height,300)
+            assertEquals(width, 300)
+            assertEquals(height, 300)
         }
         with(sizes.medium) {
-            assertEquals(width,800)
-            assertEquals(height,800)
+            assertEquals(width, 800)
+            assertEquals(height, 800)
         }
     }
 }

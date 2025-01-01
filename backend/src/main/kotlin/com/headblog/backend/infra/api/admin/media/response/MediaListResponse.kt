@@ -7,8 +7,8 @@ data class MediaListResponse(
 fun MediaResponse.withFullUrls(mediaBaseUrl: String): MediaResponse {
     return copy(
         thumbnailUrl = thumbnailUrl.prependBaseUrl(mediaBaseUrl),
-        smallUrl     = smallUrl.prependBaseUrl(mediaBaseUrl),
-        mediumUrl    = mediumUrl.prependBaseUrl(mediaBaseUrl)
+        smallUrl = smallUrl.prependBaseUrl(mediaBaseUrl),
+        mediumUrl = mediumUrl.prependBaseUrl(mediaBaseUrl)
     )
 }
 

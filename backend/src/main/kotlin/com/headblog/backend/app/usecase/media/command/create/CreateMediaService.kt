@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
 import com.headblog.backend.domain.model.media.StorageService
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
-import com.headblog.backend.infra.service.media.StorageProperties
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator

@@ -1,6 +1,7 @@
-package com.headblog.backend.infra.security
+package com.headblog.backend.infra.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.headblog.backend.infra.security.JwtAuthenticationFilter
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

@@ -1,4 +1,4 @@
-package com.headblog.backend.infra.service.media
+package com.headblog.backend.infra.config
 
 import io.mockk.mockk
 import org.springframework.boot.test.context.TestConfiguration

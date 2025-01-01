@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile
 class MediaController(
     private val createMediaUseCase: CreateMediaUseCase,
     private val getMediaService: GetMediaService,
-    ) {
+) {
 
     private val logger = LoggerFactory.getLogger(MediaController::class.java)
 

@@ -86,11 +86,11 @@ class DeleteCategoryService(
         val children = categoryRepository.findAllByParentId(currentParentId).map {
             Category.fromDto(
                 id = it.id,
-                name= it.name,
-                slug= it.slug,
-                description= it.description,
+                name = it.name,
+                slug = it.slug,
+                description = it.description,
                 parentId = it.parentId,
-               createdAt=  it.createdAt
+                createdAt = it.createdAt
             )
         }
 

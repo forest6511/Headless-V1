@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.infra.api.admin.media.response.MediaListResponse
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
 import com.headblog.backend.infra.api.admin.media.response.withFullUrls
-import com.headblog.backend.infra.service.media.StorageProperties
+import com.headblog.backend.infra.config.StorageProperties
 import java.util.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class GetMediaServiceImpl(
     private val mediaRepository: MediaRepository,
     private val storageProperties: StorageProperties,
-    ): GetMediaService {
+) : GetMediaService {
 
     override fun findMediaList(
         mediaId: UUID?,

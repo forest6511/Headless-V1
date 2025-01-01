@@ -1,4 +1,4 @@
-package com.headblog.backend.infra.service.media
+package com.headblog.backend.infra.config
 
 import java.net.URI
 import org.springframework.boot.context.properties.EnableConfigurationProperties

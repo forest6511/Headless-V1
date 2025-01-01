@@ -1,6 +1,7 @@
 package com.headblog.backend.infra.service.media
 
 import com.headblog.backend.domain.model.media.StorageService
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exception.AppConflictException
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.core.sync.RequestBody

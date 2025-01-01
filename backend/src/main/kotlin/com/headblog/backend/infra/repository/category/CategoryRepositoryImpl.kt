@@ -81,47 +81,36 @@ class CategoryRepositoryImpl(
             .map { (_, records) -> records.toCategoryWithPostIdsDto() }
     }
 
-    // TODO Categoryではなく、CategoryDtoを返却する
-    override fun findAllByParentId(parentId: UUID): List<Category> {
+    override fun findAllByParentId(parentId: UUID): List<CategoryDto> {
         return dsl.select()
             .from(CATEGORIES)
             .where(CATEGORIES.PARENT_ID.eq(parentId))
-            .fetch()
-            .map { record ->
-                Category.fromDto(
-                    id = record[CATEGORIES.ID]!!,
-                    name = record[CATEGORIES.NAME]!!,
-                    slug = record[CATEGORIES.SLUG]!!,
-                    description = record[CATEGORIES.DESCRIPTION],
-                    parentId = record[CATEGORIES.PARENT_ID],
-                    createdAt = record[CATEGORIES.CREATED_AT]!!
-                )
-            }
+            .fetchInto(CategoryDto::class.java)
     }
+}
 
-    private fun Record.toCategoryDto(): CategoryDto {
-        return CategoryDto(
-            id = get(CATEGORIES.ID)!!,
-            name = get(CATEGORIES.NAME)!!,
-            slug = get(CATEGORIES.SLUG)!!,
-            description = get(CATEGORIES.DESCRIPTION),
-            parentId = get(CATEGORIES.PARENT_ID),
-            createdAt = get(CATEGORIES.CREATED_AT)!!
-        )
-    }
+private fun Record.toCategoryDto(): CategoryDto {
+    return CategoryDto(
+        id = get(CATEGORIES.ID)!!,
+        name = get(CATEGORIES.NAME)!!,
+        slug = get(CATEGORIES.SLUG)!!,
+        description = get(CATEGORIES.DESCRIPTION),
+        parentId = get(CATEGORIES.PARENT_ID),
+        createdAt = get(CATEGORIES.CREATED_AT)!!
+    )
+}
 
-    private fun List<Record>.toCategoryWithPostIdsDto(): CategoryWithPostIdsDto {
-        val firstRecord = first()
-        return CategoryWithPostIdsDto(
-            id = firstRecord[CATEGORIES.ID]!!,
-            name = firstRecord[CATEGORIES.NAME]!!,
-            slug = firstRecord[CATEGORIES.SLUG]!!,
-            description = firstRecord[CATEGORIES.DESCRIPTION],
-            parentId = firstRecord[CATEGORIES.PARENT_ID],
-            createdAt = firstRecord[CATEGORIES.CREATED_AT]!!,
-            postIds = mapNotNull { it[POST_CATEGORIES.POST_ID] }
-                .distinct()
-                .ifEmpty { emptyList() }
-        )
-    }
+private fun List<Record>.toCategoryWithPostIdsDto(): CategoryWithPostIdsDto {
+    val firstRecord = first()
+    return CategoryWithPostIdsDto(
+        id = firstRecord[CATEGORIES.ID]!!,
+        name = firstRecord[CATEGORIES.NAME]!!,
+        slug = firstRecord[CATEGORIES.SLUG]!!,
+        description = firstRecord[CATEGORIES.DESCRIPTION],
+        parentId = firstRecord[CATEGORIES.PARENT_ID],
+        createdAt = firstRecord[CATEGORIES.CREATED_AT]!!,
+        postIds = mapNotNull { it[POST_CATEGORIES.POST_ID] }
+            .distinct()
+            .ifEmpty { emptyList() }
+    )
 }

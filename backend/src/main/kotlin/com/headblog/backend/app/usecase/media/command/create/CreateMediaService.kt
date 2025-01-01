@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
 import com.headblog.backend.domain.model.media.StorageService
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
-import com.headblog.backend.infra.service.media.StorageProperties
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exception.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -62,9 +62,8 @@ class CreateMediaService(
             )
         )
 
-        val endpoint = storageProperties.cloudflare.r2.publicEndpoint
         val mediaSizes = sizes.map { sizeConfig ->
-            processAndUploadImage(endpoint, fileBytes, mediaId, sizeConfig, fileName)
+            processAndUploadImage(fileBytes, mediaId, sizeConfig, fileName)
         }
 
         val media = Media.createWithId(
@@ -104,7 +103,6 @@ class CreateMediaService(
     }
 
     private fun processAndUploadImage(
-        endpoint: String,
         fileBytes: ByteArray,
         mediaId: MediaId,
         sizeConfig: ImageSizeConfig,
@@ -127,9 +125,7 @@ class CreateMediaService(
         val yearMonth = getCurrentYearMonth()
         val key = "media/$yearMonth/${mediaId.value}-${sizeConfig.prefix}-$fileName"
         storageService.uploadFile(key, processedImage, uploadFormat)
-
-        val url = "$endpoint/$key"
-        return MediaSize(url, processedImage.size.toLong())
+        return MediaSize(key, processedImage.size.toLong())
     }
 
     private fun toBytes(size: String): Long {

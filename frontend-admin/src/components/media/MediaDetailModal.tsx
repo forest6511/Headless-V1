@@ -2,10 +2,12 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Button } from '@/components/ui/button'
+import { Button as NextUiButton } from '@nextui-org/react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { MediaFile } from '@/types/api/media/types'
 import { Copy } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 // メディア詳細モーダルのプロパティ型定義
 interface MediaDetailModalProps {
@@ -25,6 +27,10 @@ export function MediaDetailModal({
   // URLをクリップボードにコピーするハンドラ
   const handleCopyUrl = async (url: string) => {
     await navigator.clipboard.writeText(url)
+    toast.success('URLをコピーしました', {
+      duration: 3000,
+      position: 'bottom-right',
+    })
   }
 
   // ファイルサイズを読みやすい形式にフォーマットする関数
@@ -121,7 +127,11 @@ export function MediaDetailModal({
             <div className="space-y-2">
               <label className="text-sm font-medium">サムネイルURL</label>
               <div className="flex gap-2">
-                <Input value={file.thumbnailUrl} readOnly />
+                <Input
+                  value={file.thumbnailUrl}
+                  readOnly
+                  className="bg-gray-100"
+                />
                 <Button
                   variant="outline"
                   size="icon"
@@ -136,7 +146,7 @@ export function MediaDetailModal({
             <div className="space-y-2">
               <label className="text-sm font-medium">小サイズURL</label>
               <div className="flex gap-2">
-                <Input value={file.smallUrl} readOnly />
+                <Input value={file.smallUrl} readOnly className="bg-gray-100" />
                 <Button
                   variant="outline"
                   size="icon"
@@ -151,7 +161,11 @@ export function MediaDetailModal({
             <div className="space-y-2">
               <label className="text-sm font-medium">中サイズURL</label>
               <div className="flex gap-2">
-                <Input value={file.mediumUrl} readOnly />
+                <Input
+                  value={file.mediumUrl}
+                  readOnly
+                  className="bg-gray-100"
+                />
                 <Button
                   variant="outline"
                   size="icon"
@@ -162,9 +176,9 @@ export function MediaDetailModal({
               </div>
             </div>
 
-            {/* 削除ボタン */}
+            {/* 更新ボタン */}
             <div className="flex gap-2">
-              <Button variant="destructive">完全に削除する</Button>
+              <NextUiButton color="primary">更新する</NextUiButton>
             </div>
           </div>
         </div>

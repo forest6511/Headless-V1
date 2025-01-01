@@ -4,21 +4,13 @@ import {
   useEffect,
   useRef,
   useCallback,
-  useMemo,
 } from 'react'
 import { MediaFile } from '@/types/api/media/types'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { MediaGridView } from './MediaGridView'
+import { MediaListView } from './MediaListView'
 import { Loader2 } from 'lucide-react'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 import { MEDIA_GRID_CONFIG } from '@/config/constants'
-import { formatFileSize } from '@/lib/utils/media'
 
 // ファイル選択のアクションハンドラの型定義
 type FileSelectActionHandler = (file: MediaFile) => void
@@ -28,6 +20,7 @@ interface MediaGridProps {
   view: 'grid' | 'list'
   onFileSelectAction: FileSelectActionHandler
 }
+
 export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
   // メディアファイルの状態管理用のステート
   const [files, setFiles] = useState<MediaFile[]>([])
@@ -137,86 +130,6 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
     }
   }, [])
 
-  // グリッドビューのレンダリング
-  const renderGridView = useMemo(
-    () => (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-16">
-        {files.map((file) => (
-          <div
-            key={file.id}
-            className="relative aspect-square group cursor-pointer hover:opacity-90 transition-opacity"
-            onClick={() => onFileSelectAction(file)}
-          >
-            <img
-              src={file.thumbnailUrl}
-              alt={file.title || ''}
-              className="absolute inset-0 w-full h-full object-cover rounded-lg"
-              loading="lazy"
-              decoding="async"
-              fetchPriority="high"
-            />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
-              <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate">
-                {file.title}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    ),
-    [files, onFileSelectAction]
-  )
-
-  // リストビューのレンダリング
-  const renderListView = useMemo(
-    () => (
-      <div className="mb-16">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>サムネイル</TableHead>
-              <TableHead>タイトル</TableHead>
-              <TableHead>アップロード日</TableHead>
-              <TableHead>サムネイルサイズ</TableHead>
-              <TableHead>小サイズ</TableHead>
-              <TableHead>中サイズ</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {files.map((file) => (
-              <TableRow
-                key={file.id}
-                className="cursor-pointer hover:bg-muted"
-                onClick={() => onFileSelectAction(file)}
-              >
-                <TableCell>
-                  <img
-                    src={file.thumbnailUrl}
-                    alt={file.title || ''}
-                    width={50}
-                    height={50}
-                    className="object-cover rounded"
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                  />
-                </TableCell>
-                <TableCell>{file.title}</TableCell>
-                <TableCell>
-                  {new Date(file.createdAt).toLocaleDateString('ja-JP')}
-                </TableCell>
-                <TableCell>{formatFileSize(file.thumbnailSize)}</TableCell>
-                <TableCell>{formatFileSize(file.smallSize)}</TableCell>
-                <TableCell>{formatFileSize(file.mediumSize)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    ),
-    [files, onFileSelectAction, formatFileSize]
-  )
-
   // メインのレンダリング
   return (
     <div
@@ -230,7 +143,17 @@ export function MediaGrid({ view, onFileSelectAction }: MediaGridProps) {
     >
       <div className="px-4 pb-40">
         {/* ビューモードに応じたレンダリング */}
-        {view === 'grid' ? renderGridView : renderListView}
+        {view === 'grid' ? (
+          <MediaGridView
+            files={files}
+            onFileSelectAction={onFileSelectAction}
+          />
+        ) : (
+          <MediaListView
+            files={files}
+            onFileSelectAction={onFileSelectAction}
+          />
+        )}
 
         {/* データ取得中のローディング表示 */}
         {isFetching && (

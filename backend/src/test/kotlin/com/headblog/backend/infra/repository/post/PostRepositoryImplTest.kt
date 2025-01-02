@@ -2,10 +2,12 @@ package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostStatus
+import com.headblog.backend.domain.model.post.PostTranslation
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -55,23 +57,26 @@ class PostRepositoryImplTest {
         val posts = postRepository.findAll(null, pageSize)
 
         // Then
-        assertEquals(pageSize + 1, posts.size) // 次ページの存在確認用に1件多く取得
+        // 次ページが存在するか確認用に、pageSize+1件取得している
+        assertEquals(pageSize + 1, posts.size)
 
-        // pageSizeが5件の場合は、1ページ目は6件取得するので、5件を検証
+        // 先頭の5件で検証
         val postsWithoutLastItem = posts.dropLast(1)
 
-        // ID降順になっていることを確認 (UUID V7の確認)
+        // ID降順 (UUID V7想定) になっていることを確認
         for (i in 0 until postsWithoutLastItem.size - 1) {
             val currentId = postsWithoutLastItem[i].id
             val nextId = postsWithoutLastItem[i + 1].id
             assertTrue(currentId > nextId, "ID should be in descending order")
         }
 
-        assertEquals("Test Post 10", postsWithoutLastItem[0].title)
-        assertEquals("Test Post 9", postsWithoutLastItem[1].title)
-        assertEquals("Test Post 8", postsWithoutLastItem[2].title)
-        assertEquals("Test Post 7", postsWithoutLastItem[3].title)
-        assertEquals("Test Post 6", postsWithoutLastItem[4].title)
+        // テストコードでは posts[i].title を使っているため、
+        // PostWithTranslationsDto に title を用意し、先頭翻訳のtitleを返すようにしておく
+        assertEquals("Test Post 10", postsWithoutLastItem[0].translations.first().title)
+        assertEquals("Test Post 9", postsWithoutLastItem[1].translations.first().title)
+        assertEquals("Test Post 8", postsWithoutLastItem[2].translations.first().title)
+        assertEquals("Test Post 7", postsWithoutLastItem[3].translations.first().title)
+        assertEquals("Test Post 6", postsWithoutLastItem[4].translations.first().title)
     }
 
     @Test
@@ -87,7 +92,7 @@ class PostRepositoryImplTest {
             // 初期値として最初のページを取得
             postRepository.findAll(null, pageSize)
         ) { previousPage ->
-            // 6件目のデータがある場合（次のページが存在する）
+            // 6件目のデータがある場合（= 次のページがある）
             if (previousPage.size > pageSize) {
                 // インデックス5（6件目）のIDをカーソルとして使用
                 val cursorId = previousPage[pageSize - 1].id
@@ -99,17 +104,18 @@ class PostRepositoryImplTest {
 
         // Then
         assertNotNull(lastPage)
-        assertEquals(3, lastPage.size)
-        assertEquals("Test Post 3", lastPage[0].title)
-        assertEquals("Test Post 2", lastPage[1].title)
-        assertEquals("Test Post 1", lastPage[2].title)
+        // 初期登録データ1件を含む
+        assertEquals(4, lastPage.size)
+        assertEquals("Test Post 3", lastPage[0].translations.first().title)
+        assertEquals("Test Post 2", lastPage[1].translations.first().title)
+        assertEquals("Test Post 1", lastPage[2].translations.first().title)
     }
 
     @Test
     @DisplayName("最後のページを取得できる - 割り切れる件数")
     fun `should get last page when total count is exactly divisible by page size`() {
         // Given
-        val totalPosts = 10
+        val totalPosts = 9 // 初期登録データを含めると10件
         val pageSize = 5
         createMultiplePosts(totalPosts)
 
@@ -127,13 +133,15 @@ class PostRepositoryImplTest {
 
         // Then
         assertNotNull(lastPage)
-        assertEquals(5, lastPage.size)  // 最後のページは5件
+        // 最後のページはちょうど5件になるはず
+        assertEquals(5, lastPage.size)
         // 降順で取得されることを確認
-        assertEquals("Test Post 5", lastPage[0].title)
-        assertEquals("Test Post 4", lastPage[1].title)
-        assertEquals("Test Post 3", lastPage[2].title)
-        assertEquals("Test Post 2", lastPage[3].title)
-        assertEquals("Test Post 1", lastPage[4].title)
+        assertEquals("Test Post 4", lastPage[0].translations.first().title)
+        assertEquals("Test Post 3", lastPage[1].translations.first().title)
+        assertEquals("Test Post 2", lastPage[2].translations.first().title)
+        assertEquals("Test Post 1", lastPage[3].translations.first().title)
+        // 初期データ
+        assertEquals("最初のブログ投稿", lastPage[4].translations.first().title)
     }
 
     @Test
@@ -147,25 +155,33 @@ class PostRepositoryImplTest {
         val count = postRepository.count()
 
         // Then
-        assertEquals(totalPosts, count)
+        assertEquals(
+            // 初期データ1件を含める
+            totalPosts + 1,
+            count
+        )
     }
 
+    /**
+     * 指定数の投稿をまとめて作成
+     */
     private fun createMultiplePosts(count: Int): List<Post> {
         return (1..count).map { i ->
+            // 多言語対応のため translations でタイトル・本文などをまとめる
             val post = Post.create(
                 id = idGenerator,
-                title = "Test Post $i",
                 slug = "test-post-$i",
-                content = "Content for test post $i",
-                excerpt = "Excerpt for test post $i",
-                postStatus = PostStatus.PUBLISHED.name,
+                status = Status.PUBLISHED.name,
                 featuredImageId = null,
-                metaTitle = null,
-                metaDescription = null,
-                metaKeywords = null,
-                ogTitle = null,
-                ogDescription = null,
-                categoryId = defaultCategory.id.value
+                categoryId = defaultCategory.id.value,
+                translations = listOf(
+                    PostTranslation(
+                        language = Language.of("ja"),
+                        title = "Test Post $i",
+                        excerpt = "Excerpt for test post $i",
+                        content = "Content for test post $i"
+                    )
+                )
             )
             postRepository.save(post)
             postCategoryRepository.addRelation(post.id, defaultCategory.id)
@@ -173,12 +189,15 @@ class PostRepositoryImplTest {
         }
     }
 
+    /**
+     * カテゴリを作成
+     */
     private fun createCategory(name: String, slug: String, parentId: UUID? = null): Category =
         Category.create(
-            id = idGenerator,
-            name = name,
-            slug = slug,
-            description = "Test description for $name",
-            parentId = parentId
+            idGenerator,
+            name,
+            slug,
+            "Test description for $name",
+            parentId
         )
 }

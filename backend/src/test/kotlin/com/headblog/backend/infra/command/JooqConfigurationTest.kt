@@ -29,6 +29,7 @@ class JooqConfigurationTest {
             "refresh_tokens",
             "posts",
             "categories",
+            "post_translations",
             "post_categories",
             "medias"
         ).sorted().toSet()

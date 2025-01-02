@@ -7,7 +7,7 @@ import {
 } from '@/types/api/post/request'
 import {
   PostListResponse,
-  PostWithCategoryResponse,
+  PostResponse,
 } from '@/types/api/post/response'
 
 export const postApi = {
@@ -28,7 +28,7 @@ export const postApi = {
       method: 'DELETE',
     })
   },
-  getPost: (id: string): Promise<PostWithCategoryResponse> => {
+  getPost: (id: string): Promise<PostResponse> => {
     return apiClient.request(`${ADMIN_API_ENDPOINTS.POST.POST}/${id}`, {
       method: 'GET',
     })

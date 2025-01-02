@@ -1,10 +1,10 @@
 package com.headblog.backend.infra.service.translation
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.net.URI
 import org.slf4j.LoggerFactory
 
 class GeminiClient(

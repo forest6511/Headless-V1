@@ -1,13 +1,14 @@
 package com.headblog.backend.infra.repository.post
 
-import com.headblog.backend.app.usecase.post.query.PostDto
-import com.headblog.backend.app.usecase.post.query.PostWithCategoryIdDto
+import com.headblog.backend.app.usecase.post.query.PostWithTranslationsDto
+import com.headblog.backend.app.usecase.post.query.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import com.headblog.infra.jooq.tables.references.POST_TAGS
+import com.headblog.infra.jooq.tables.references.POST_TRANSLATIONS
 import com.headblog.infra.jooq.tables.references.TAGS
 import java.time.LocalDateTime
 import java.util.*
@@ -21,38 +22,55 @@ class PostRepositoryImpl(
 ) : PostRepository {
 
     override fun save(post: Post): Int {
-        return dsl.insertInto(POSTS)
+        // INSERT posts
+        val insertedRows = dsl.insertInto(POSTS)
             .set(POSTS.ID, post.id.value)
-            .set(POSTS.TITLE, post.title)
             .set(POSTS.SLUG, post.slug.value)
-            .set(POSTS.CONTENT, post.content)
-            .set(POSTS.EXCERPT, post.excerpt)
-            .set(POSTS.STATUS, post.postStatus.name)
+            .set(POSTS.STATUS, post.status.name)
             .set(POSTS.FEATURED_IMAGE_ID, post.featuredImageId)
-            .set(POSTS.META_TITLE, post.metaTitle)
-            .set(POSTS.META_DESCRIPTION, post.metaDescription)
-            .set(POSTS.META_KEYWORDS, post.metaKeywords)
-            .set(POSTS.OG_TITLE, post.ogTitle)
-            .set(POSTS.OG_DESCRIPTION, post.ogDescription)
             .execute()
+
+        // INSERT post_translations
+        post.translations.forEach { translation ->
+            dsl.insertInto(POST_TRANSLATIONS)
+                .set(POST_TRANSLATIONS.POST_ID, post.id.value)
+                .set(POST_TRANSLATIONS.LANGUAGE, translation.language.value)
+                .set(POST_TRANSLATIONS.TITLE, translation.title)
+                .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
+                .set(POST_TRANSLATIONS.CONTENT, translation.content)
+                .execute()
+        }
+
+        return insertedRows
     }
 
     override fun update(post: Post): Int {
-        return dsl.update(POSTS)
-            .set(POSTS.TITLE, post.title)
+        // UPDATE posts
+        val updatedRows = dsl.update(POSTS)
             .set(POSTS.SLUG, post.slug.value)
-            .set(POSTS.CONTENT, post.content)
-            .set(POSTS.EXCERPT, post.excerpt)
-            .set(POSTS.STATUS, post.postStatus.name)
+            .set(POSTS.STATUS, post.status.name)
             .set(POSTS.FEATURED_IMAGE_ID, post.featuredImageId)
-            .set(POSTS.META_TITLE, post.metaTitle)
-            .set(POSTS.META_DESCRIPTION, post.metaDescription)
-            .set(POSTS.META_KEYWORDS, post.metaKeywords)
-            .set(POSTS.OG_TITLE, post.ogTitle)
-            .set(POSTS.OG_DESCRIPTION, post.ogDescription)
             .set(POSTS.UPDATED_AT, LocalDateTime.now())
             .where(POSTS.ID.eq(post.id.value))
             .execute()
+
+        post.translations.forEach { translation ->
+            dsl.insertInto(POST_TRANSLATIONS)
+                .set(POST_TRANSLATIONS.POST_ID, post.id.value)
+                .set(POST_TRANSLATIONS.LANGUAGE, translation.language.value)
+                .set(POST_TRANSLATIONS.TITLE, translation.title)
+                .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
+                .set(POST_TRANSLATIONS.CONTENT, translation.content)
+                .onConflict(POST_TRANSLATIONS.POST_ID, POST_TRANSLATIONS.LANGUAGE)
+                .doUpdate()
+                .set(POST_TRANSLATIONS.TITLE, translation.title)
+                .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
+                .set(POST_TRANSLATIONS.CONTENT, translation.content)
+                .set(POST_TRANSLATIONS.UPDATED_AT, LocalDateTime.now())
+                .execute()
+        }
+
+        return updatedRows
     }
 
     override fun delete(post: Post): Int {
@@ -61,109 +79,154 @@ class PostRepositoryImpl(
             .execute()
     }
 
-    override fun findById(id: UUID): PostDto? =
-        dsl.select()
+    override fun findById(id: UUID): PostWithTranslationsDto? {
+        val records = dsl.select(
+            POSTS.asterisk(),
+            POST_CATEGORIES.CATEGORY_ID,
+            POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.TITLE,
+            POST_TRANSLATIONS.EXCERPT,
+            POST_TRANSLATIONS.CONTENT
+        )
             .from(POSTS)
-            .innerJoin(POST_CATEGORIES)
-            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
             .where(POSTS.ID.eq(id))
-            .fetchOne()
-            ?.toPostDto()
+            .fetch()
 
-    override fun findBySlug(slug: String): PostDto? =
-        dsl.select()
+        if (records.isEmpty()) return null
+
+        return records.groupBy(
+            keySelector = { it.get(POSTS.ID)!! },
+            valueTransform = { it }
+        ).values.firstOrNull()?.toPostWithTranslationsDto()
+    }
+
+    override fun findBySlug(slug: String): PostWithTranslationsDto? {
+        val records = dsl.select(
+            POSTS.asterisk(),
+            POST_CATEGORIES.CATEGORY_ID,
+            POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.TITLE,
+            POST_TRANSLATIONS.EXCERPT,
+            POST_TRANSLATIONS.CONTENT
+        )
             .from(POSTS)
-            .innerJoin(POST_CATEGORIES)
-            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
             .where(POSTS.SLUG.eq(slug))
-            .fetchOne()
-            ?.toPostDto()
+            .fetch()
+
+        if (records.isEmpty()) return null
+
+        return records.groupBy(
+            { it.get(POSTS.ID)!! },
+            { it }
+        ).values.firstOrNull()?.toPostWithTranslationsDto()
+    }
 
     override fun findAll(
         cursorPostId: UUID?,
-        pageSize: Int,
-    ): List<PostWithCategoryIdDto> {
-        val query = createBaseQuery()
+        pageSize: Int
+    ): List<PostWithTranslationsDto> {
+        // 1) ベースクエリ
+        val query = dsl.select(
+            POSTS.asterisk(),
+            POST_CATEGORIES.CATEGORY_ID,
+            POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.TITLE,
+            POST_TRANSLATIONS.EXCERPT,
+            POST_TRANSLATIONS.CONTENT
+        )
+            .from(POSTS)
+            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
 
         // カーソル条件がある場合 (2ページ目以降)
         cursorPostId?.let { id ->
-            // Postgres UUID V7
-            query.where(POSTS.ID.lessThan(id))
+            query.where(POSTS.ID.lessThan(id)) // UUID の大小比較
         }
 
-        return query
-            // Postgres UUID V7
+        val records = query
             .orderBy(POSTS.ID.desc())
             .limit(pageSize + 1)
             .fetch()
-            .map { it.toPostWithCategoryIdDto() }
+
+        // 2) 同じ post_id の行をまとめる
+        val grouped = records.groupBy(
+            // group by postId
+            keySelector = { requireNotNull(it.get(POSTS.ID)) },
+            valueTransform = { it }
+        )
+
+        // 3) group した結果を PostWithTranslationsDto に変換
+        return grouped.values.map { recordList ->
+            recordList.toPostWithTranslationsDto()
+        }
     }
 
     override fun count(): Int = dsl.fetchCount(POSTS)
 
-    private fun createBaseQuery() =
-        dsl.select(
-            POSTS.asterisk(),
-            POST_CATEGORIES.CATEGORY_ID
-        )
-            .from(POSTS)
-            .innerJoin(POST_CATEGORIES)
-            .on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
 
     private fun fetchTagsForPost(postId: UUID): List<TagDto> {
         return dsl.select(TAGS.ID, TAGS.NAME, TAGS.SLUG)
             .from(TAGS)
-            .join(POST_TAGS)
-            .on(TAGS.ID.eq(POST_TAGS.TAG_ID))
+            .join(POST_TAGS).on(TAGS.ID.eq(POST_TAGS.TAG_ID))
             .where(POST_TAGS.POST_ID.eq(postId))
             .fetch()
-            .map { record ->
-                TagDto(
-                    id = record.get(TAGS.ID)!!,
-                    name = record.get(TAGS.NAME)!!,
-                    slug = record.get(TAGS.SLUG)!!
-                )
-            }
+            .map { it.toTagDto() }
     }
 
-    // toDto
-    private fun Record.toPostDto(): PostDto {
-        return PostDto(
-            id = get(POSTS.ID)!!,
-            title = get(POSTS.TITLE)!!,
-            slug = get(POSTS.SLUG)!!,
-            content = get(POSTS.CONTENT)!!,
-            excerpt = get(POSTS.EXCERPT)!!,
-            postStatus = get(POSTS.STATUS)!!,
-            featuredImageId = get(POSTS.FEATURED_IMAGE_ID),
-            metaTitle = get(POSTS.META_TITLE),
-            metaDescription = get(POSTS.META_DESCRIPTION),
-            metaKeywords = get(POSTS.META_KEYWORDS),
-            ogTitle = get(POSTS.OG_TITLE),
-            ogDescription = get(POSTS.OG_DESCRIPTION),
-            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
-            tags = fetchTagsForPost(get(POSTS.ID)!!)
+    /**
+     * Record のリストをまとめて PostWithTranslationsDto に変換
+     *
+     * - 同じ postId の行をまとめた結果 (翻訳が複数行)
+     * - categoryId はレコードが同じなので最初の行から取得
+     * - tags は fetchTagsForPost() で別途取得
+     */
+    private fun List<Record>.toPostWithTranslationsDto(): PostWithTranslationsDto {
+        val first = this.first()
+        val postId = requireNotNull(first.get(POSTS.ID))
+
+        val slug = requireNotNull(first.get(POSTS.SLUG))
+        val status = requireNotNull(first.get(POSTS.STATUS))
+        val featuredImageId = first.get(POSTS.FEATURED_IMAGE_ID)
+        val categoryId = requireNotNull(first.get(POST_CATEGORIES.CATEGORY_ID))
+        val createdAt = requireNotNull(first.get(POSTS.CREATED_AT))
+        val updatedAt = requireNotNull(first.get(POSTS.UPDATED_AT))
+
+        // 全レコードを翻訳ごとにまとめる
+        val translationList = this.map { rec ->
+            val lang = requireNotNull(rec.get(POST_TRANSLATIONS.LANGUAGE))
+            TranslationDto(
+                language = lang,
+                title = requireNotNull(rec.get(POST_TRANSLATIONS.TITLE)),
+                excerpt = requireNotNull(rec.get(POST_TRANSLATIONS.EXCERPT)),
+                content = requireNotNull(rec.get(POST_TRANSLATIONS.CONTENT)),
+            )
+        }
+
+        // タグ取得
+        val tags = fetchTagsForPost(postId)
+
+        return PostWithTranslationsDto(
+            id = postId,
+            slug = slug,
+            status = status,
+            featuredImageId = featuredImageId,
+            categoryId = categoryId,
+            tags = tags,
+            translations = translationList,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
         )
     }
 
-    private fun Record.toPostWithCategoryIdDto(): PostWithCategoryIdDto {
-        return PostWithCategoryIdDto(
-            id = get(POSTS.ID)!!,
-            title = get(POSTS.TITLE)!!,
-            slug = get(POSTS.SLUG)!!,
-            content = get(POSTS.CONTENT)!!,
-            excerpt = get(POSTS.EXCERPT)!!,
-            postStatus = get(POSTS.STATUS)!!,
-            featuredImageId = get(POSTS.FEATURED_IMAGE_ID),
-            metaTitle = get(POSTS.META_TITLE),
-            metaDescription = get(POSTS.META_DESCRIPTION),
-            metaKeywords = get(POSTS.META_KEYWORDS),
-            ogTitle = get(POSTS.OG_TITLE),
-            ogDescription = get(POSTS.OG_DESCRIPTION),
-            createdAt = get(POSTS.CREATED_AT)!!,
-            updateAt = get(POSTS.UPDATED_AT)!!,
-            categoryId = get(POST_CATEGORIES.CATEGORY_ID)!!,
-            tags = fetchTagsForPost(get(POSTS.ID)!!)
+    private fun Record.toTagDto(): TagDto {
+        return TagDto(
+            id = requireNotNull(get(TAGS.ID)),
+            name = requireNotNull(get(TAGS.NAME)),
+            slug = requireNotNull(get(TAGS.SLUG)),
         )
     }
 }

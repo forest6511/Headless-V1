@@ -1,11 +1,13 @@
 package com.headblog.backend.app.usecase.post.command.update
 
 import com.headblog.backend.app.usecase.tag.query.TagDto
+import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
+import com.headblog.backend.domain.model.post.PostTranslation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
@@ -29,7 +31,8 @@ class UpdatePostService(
     private val logger = LoggerFactory.getLogger(UpdatePostService::class.java)
 
     override fun execute(command: UpdatePostCommand): PostId {
-        val originalPost = postRepository.findById(command.id)
+
+        val originalPostDto = postRepository.findById(command.id)
             ?: throw AppConflictException("Post with ID ${command.id} not found.")
 
         postRepository.findBySlug(command.slug)?.let { existingDto ->
@@ -42,35 +45,43 @@ class UpdatePostService(
 
         val post = Post.fromCommand(
             id = command.id,
-            title = command.title,
             slug = command.slug,
-            content = command.content,
-            excerpt = command.excerpt,
-            postStatus = command.postStatus,
+            status = command.status,
             featuredImageId = command.featuredImageId,
-            metaTitle = command.metaTitle,
-            metaDescription = command.metaDescription,
-            metaKeywords = command.metaKeywords,
-            ogTitle = command.ogTitle,
-            ogDescription = command.ogDescription,
             categoryId = command.categoryId,
+            translations = listOf(
+                PostTranslation(
+                    language = Language.of(command.language),
+                    title = command.title,
+                    excerpt = command.excerpt,
+                    content = command.content
+                )
+            )
         )
 
-        // post
+        // 投稿を更新
         postRepository.update(post)
-        // category
+        // カテゴリを更新
         postCategoryRepository.updateRelation(post.id, post.categoryId)
-        // tags
-        updateTags(originalPost.tags, command.tagNames, post.id)
+        // タグを更新
+        updateTags(originalPostDto.tags, command.tagNames, post.id)
 
         return post.id
     }
 
-    private fun updateTags(originalTags: List<TagDto>, newTagNames: Set<String>, postId: PostId) {
+    /**
+     * タグの更新
+     * - オリジナルにあったがリクエストにないタグは削除
+     * - リクエストにあってオリジナルにないタグは追加
+     */
+    private fun updateTags(
+        originalTags: List<TagDto>,
+        newTagNames: Set<String>,
+        postId: PostId
+    ) {
         val newTagNamesSet = newTagNames.map(String::trim).toSet()
         val originalTagNames = originalTags.map(TagDto::name).toSet()
 
-        // 削除するタグの処理: オリジナルにはあって新規リクエストにはないタグ
         originalTags.filterNot { it.name in newTagNamesSet }.forEach { tagDto ->
             val tagId = TagId(tagDto.id)
             postTagsRepository.removeTagFromPost(postId, tagId)
@@ -79,13 +90,15 @@ class UpdatePostService(
             }
         }
 
-        // 追加するタグの処理: 新規リクエストにはあってオリジナルにはないタグ
         newTagNamesSet.filterNot { it in originalTagNames }.forEach { tagName ->
             val tag = tagRepository.findByName(tagName) ?: createAndSaveTag(tagName)
             postTagsRepository.addTagToPost(postId, TagId(tag.id))
         }
     }
 
+    /**
+     * 新規タグを作成して保存 -> TagDto を返す
+     */
     private fun createAndSaveTag(tagName: String): TagDto {
         val newTag = Tag.create(idGenerator, tagName)
         tagRepository.save(newTag)

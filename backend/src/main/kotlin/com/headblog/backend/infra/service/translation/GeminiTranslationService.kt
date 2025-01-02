@@ -1,9 +1,9 @@
 package com.headblog.backend.infra.service.translation
 
 import com.headblog.backend.app.usecase.translation.TranslationService
-import org.springframework.stereotype.Service
 import com.headblog.backend.infra.service.translation.prompt.TranslationPrompts
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 
 @Service
 class GeminiTranslationService(

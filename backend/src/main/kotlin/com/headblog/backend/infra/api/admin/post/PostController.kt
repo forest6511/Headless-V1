@@ -75,17 +75,13 @@ class PostController(
     // toCommand メソッド
     private fun CreatePostRequest.toCommand(): CreatePostCommand {
         return CreatePostCommand(
+            language = this.language,
             title = this.title,
             slug = this.slug,
             content = this.content,
             excerpt = this.excerpt,
-            postStatus = this.postStatus,
+            status = this.status,
             featuredImageId = this.featuredImageId,
-            metaTitle = this.metaTitle,
-            metaDescription = this.metaDescription,
-            metaKeywords = this.metaKeywords,
-            ogTitle = this.ogTitle,
-            ogDescription = this.ogDescription,
             categoryId = this.categoryId,
             tagNames = this.tagNames,
         )
@@ -94,17 +90,13 @@ class PostController(
     private fun UpdatePostRequest.toCommand(): UpdatePostCommand {
         return UpdatePostCommand(
             id = this.id,
+            language = this.language,
             title = this.title,
             slug = this.slug,
             content = this.content,
             excerpt = this.excerpt,
-            postStatus = this.postStatus,
+            status = this.status,
             featuredImageId = this.featuredImageId,
-            metaTitle = this.metaTitle,
-            metaDescription = this.metaDescription,
-            metaKeywords = this.metaKeywords,
-            ogTitle = this.ogTitle,
-            ogDescription = this.ogDescription,
             categoryId = this.categoryId,
             tagNames = this.tagNames,
         )

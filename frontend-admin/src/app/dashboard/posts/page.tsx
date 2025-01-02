@@ -6,12 +6,16 @@ import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
 import { AddPostButton } from '@/components/post/AddPostButton'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { Language, Languages } from '@/types/api/post/types'
+import { Select, SelectItem } from '@nextui-org/react'
 
 const ROWS_PER_PAGE = 10
 
 export default function PostsPage() {
   const router = useRouter()
+  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
+
 
   // カテゴリー情報
   const {
@@ -39,8 +43,23 @@ export default function PostsPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between mb-4">
-        <AddPostButton />
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-4">
+          <AddPostButton />
+          <Select
+            label="言語"
+            value={currentLanguage}
+            onChange={(e) => setCurrentLanguage(e.target.value as Language)}
+            className="w-32"
+            defaultSelectedKeys={["ja"]}
+          >
+            {Languages.map((lang) => (
+              <SelectItem key={lang.value} value={lang.value}>
+                {lang.label}
+              </SelectItem>
+            ))}
+          </Select>
+        </div>
       </div>
       <PostTable
         posts={posts}
@@ -50,6 +69,7 @@ export default function PostsPage() {
         onPageChange={setPage}
         onEdit={handlePostEdit}
         onDelete={handlePostDeleted}
+        currentLanguage={currentLanguage}
       />
     </div>
   )

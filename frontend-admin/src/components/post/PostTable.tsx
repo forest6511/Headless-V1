@@ -8,8 +8,6 @@ import {
   TableCell,
   Chip,
   Pagination,
-  Select,
-  SelectItem,
 } from '@nextui-org/react'
 import { PostResponse } from '@/types/api/post/response'
 import { POST_COLUMNS } from '@/config/constants'

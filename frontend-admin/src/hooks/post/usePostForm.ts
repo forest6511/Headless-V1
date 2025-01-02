@@ -16,12 +16,14 @@ interface UsePostFormProps {
   redirectPath: string
   initialData?: PostFormData
   mode: 'create' | 'update'
+  currentLanguage?: string
 }
 
 export const usePostForm = ({
   redirectPath,
   initialData,
   mode,
+  currentLanguage = 'ja',
 }: UsePostFormProps) => {
   const router = useRouter()
   const [textLength, setTextLength] = useState(0) // contentの文字数を監視
@@ -42,6 +44,14 @@ export const usePostForm = ({
         tagNames: data.tagNames
           ? data.tagNames.split(',').map((tag) => tag.trim())
           : [],
+        translations: [
+          {
+            language: currentLanguage,
+            title: data.title,
+            excerpt: data.excerpt,
+            content: data.content,
+          },
+        ],
       }
 
       if (mode === 'create') {

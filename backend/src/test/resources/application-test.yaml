@@ -31,6 +31,10 @@ jwt:
   expiration: 1800000 # 30 minutes
   refresh-expiration: 3600000 # 60 minutes
 
+gemini:
+  api:
+    key: "hogehoge"
+
 storage:
   cloudflare:
     r2:

@@ -1,5 +1,6 @@
 package com.headblog.backend.app.usecase.post.command.create
 
+import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
@@ -22,7 +23,8 @@ class CreatePostService(
     private val postRepository: PostRepository,
     private val postCategoryRepository: PostCategoryRepository,
     private val tagRepository: TagRepository,
-    private val postTagsRepository: PostTagsRepository
+    private val postTagsRepository: PostTagsRepository,
+    private val translationService: TranslationService  // 追加
 ) : CreatePostUseCase {
 
     private val logger = LoggerFactory.getLogger(CreatePostService::class.java)
@@ -32,7 +34,18 @@ class CreatePostService(
             throw AppConflictException("The post with slug '${command.slug}' already exists.")
         }
 
-        val post = createPost(command)
+        // コンテンツを翻訳
+        val translatedContent = translationService.translateToEnglish(command.content)
+            .getOrElse {
+                logger.error("Translation failed, using original content", it)
+                command.content
+            }
+
+        logger.info("オリジナル　${command.content}")
+        logger.info("翻訳　$translatedContent")
+
+        // 翻訳したコンテンツでPostを作成
+        val post = createPost(command.copy(content = translatedContent))
         postRepository.save(post)
         postCategoryRepository.addRelation(post.id, post.categoryId)
 

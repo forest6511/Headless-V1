@@ -7,7 +7,9 @@ import {
   TableRow,
   TableCell,
   Chip,
-  Pagination, Select, SelectItem,
+  Pagination,
+  Select,
+  SelectItem,
 } from '@nextui-org/react'
 import { PostResponse } from '@/types/api/post/response'
 import { POST_COLUMNS } from '@/config/constants'
@@ -23,22 +25,22 @@ interface PostTableProps {
   categories: CategoryListResponse[]
   page: number
   totalPages: number
-  currentLanguage: Language  // 追加
+  currentLanguage: Language // 追加
   onPageChange: (page: number) => void
   onEdit: (id: string) => void
   onDelete: () => void
 }
 
 export const PostTable = ({
-                            posts,
-                            categories,
-                            page,
-                            totalPages,
-                            currentLanguage,  // 追加
-                            onPageChange,
-                            onEdit,
-                            onDelete,
-                          }: PostTableProps) => {
+  posts,
+  categories,
+  page,
+  totalPages,
+  currentLanguage, // 追加
+  onPageChange,
+  onEdit,
+  onDelete,
+}: PostTableProps) => {
   const getStatusColor = (status: string) => {
     return status === 'PUBLISHED' ? 'success' : 'warning'
   }
@@ -48,7 +50,7 @@ export const PostTable = ({
   }
 
   const getPostTitle = (post: PostResponse) => {
-    return post.translations.find(t => t.language === currentLanguage)?.title
+    return post.translations.find((t) => t.language === currentLanguage)?.title
   }
 
   return (
@@ -80,7 +82,7 @@ export const PostTable = ({
                 {getBreadcrumbForCategory(post.categoryId, categories)}
               </TableCell>
               <TableCell>
-                {post.tags.map(tag => tag.name).join(', ')}
+                {post.tags.map((tag) => tag.name).join(', ')}
               </TableCell>
               <TableCell>{formatDateTime(post.createdAt)}</TableCell>
               <TableCell>{formatDateTime(post.updatedAt)}</TableCell>

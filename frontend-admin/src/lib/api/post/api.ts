@@ -5,10 +5,7 @@ import {
   ListPostRequest,
   UpdatePostRequest,
 } from '@/types/api/post/request'
-import {
-  PostListResponse,
-  PostResponse,
-} from '@/types/api/post/response'
+import { PostListResponse, PostResponse } from '@/types/api/post/response'
 
 export const postApi = {
   createPost: (payload: CreatePostRequest) => {

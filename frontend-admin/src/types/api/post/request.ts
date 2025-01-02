@@ -1,30 +1,24 @@
-interface Post {
-  id: string
+interface BasePost {
+  language: string
   title: string
   slug: string
   content: string
   excerpt: string
-  postStatus: string
+  status: string
   featuredImageId: string | null
-  createdAt: Date
-  updatedAt: Date
-  metaTitle: string | null
-  metaDescription: string | null
-  metaKeywords: string | null
-  ogTitle: string | null
-  ogDescription: string | null
   categoryId: string
   tagNames: string[]
 }
 
 // 記事作成時用のインターフェース
-export interface CreatePostRequest
-  extends Omit<Post, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface CreatePostRequest extends BasePost {
+  language: string // デフォルト "ja" はバックエンドで設定
+}
 
 // 記事更新時用のインターフェース
-export interface UpdatePostRequest
-  extends Partial<Omit<Post, 'createdAt' | 'updatedAt'>> {
+export interface UpdatePostRequest extends BasePost {
   id: string
+  language: string // デフォルト "ja" はバックエンドで設定
 }
 
 // 記事一覧用のインターフェース

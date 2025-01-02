@@ -1,7 +1,11 @@
 import { z } from 'zod'
 
-export const PostSchema = z.object({
-  id: z.string().uuid(),
+export const BasePostSchema = z.object({
+  language: z
+    .string()
+    .min(1, '言語は必須です')
+    .max(5, '言語は5文字以内で入力してください')
+    .default('ja'),
   title: z
     .string()
     .min(1, 'タイトルは必須です')
@@ -11,45 +15,22 @@ export const PostSchema = z.object({
     .min(1, 'スラッグは必須です')
     .max(255, 'スラッグは255文字以内で入力してください')
     .regex(
-      /^[a-zA-Z0-9-_]+$/,
-      'スラッグには英数字、ハイフン（-）、またはアンダースコア（_）のみ使用できます'
+      /^[a-z0-9-_]+$/,
+      'スラッグには英小文字、数字、ハイフン（-）、またはアンダースコア（_）のみ使用できます'
     ),
   content: z.string().min(1, '本文は必須です'),
   excerpt: z
     .string()
     .min(1, '抜粋は必須です')
-    .max(150, '抜粋は150文字以内で入力してください'),
-  postStatus: z
+    .max(100, '抜粋は100文字以内で入力してください'),
+  status: z
     .string()
     .min(1, 'ステータスは必須です')
     .max(50, 'ステータスは50文字以内で入力してください'),
   featuredImageId: z
     .string()
-    .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullish(),
-  metaTitle: z
-    .string()
-    .max(255, 'メタタイトルは255文字以内で入力してください')
-    .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullish(),
-  metaDescription: z
-    .string()
-    .max(150, 'メタディスクリプションは150文字以内で入力してください')
-    .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullish(),
-  metaKeywords: z
-    .string()
-    .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullish(),
-  ogTitle: z
-    .string()
-    .max(255, 'OGタイトルは255文字以内で入力してください')
-    .transform((val) => (val === '' ? null : val)) // empty to null
-    .nullish(),
-  ogDescription: z
-    .string()
-    .max(150, 'OGディスクリプションは150文字以内で入力してください')
-    .transform((val) => (val === '' ? null : val)) // empty to null
+    .uuid('画像IDが正しくありません')
+    .transform((val) => (val === '' ? null : val))
     .nullish(),
   categoryId: z
     .string()
@@ -77,13 +58,13 @@ export const PostSchema = z.object({
     ),
 })
 
-// 登録時(idを除外）
-export const createPostSchema = PostSchema.omit({
-  id: true,
-})
+// 登録時のスキーマ
+export const createPostSchema = BasePostSchema
 
-// 更新用（全フィールド必須）
-export const updatePostSchema = PostSchema
+// 更新時のスキーマ（IDを追加）
+export const updatePostSchema = BasePostSchema.extend({
+  id: z.string().uuid('IDが正しくありません'),
+})
 
 export type CreatePostFormData = z.infer<typeof createPostSchema>
 export type UpdatePostFormData = z.infer<typeof updatePostSchema>

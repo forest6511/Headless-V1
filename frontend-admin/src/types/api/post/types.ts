@@ -8,4 +8,4 @@ export const Languages = [
   { value: 'en', label: '英語' },
 ] as const
 
-export type Language = typeof Languages[number]['value']
+export type Language = (typeof Languages)[number]['value']

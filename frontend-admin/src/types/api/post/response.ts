@@ -1,27 +1,32 @@
+export interface Translation {
+  language: string
+  title: string
+  excerpt: string
+  content: string
+}
+
+export interface Tag {
+  id: string
+  name: string
+}
+
 // /api/posts/list
 export interface PostListResponse {
   totalCount: number
-  posts: PostWithCategoryResponse[]
+  posts: PostResponse[]
   totalPages: number
   pageSize: number
 }
 
 // /api/posts/{id}
-export interface PostWithCategoryResponse {
+export interface PostResponse {
   id: string
-  title: string
   slug: string
-  content: string
-  excerpt: string
-  postStatus: string
+  status: string
   featuredImageId: string | null
-  metaTitle: string | null
-  metaDescription: string | null
-  metaKeywords: string | null
-  ogTitle: string | null
-  ogDescription: string | null
-  createdAt: string
-  updateAt: string
   categoryId: string
-  tagNames: string
+  tags: Tag[]
+  translations: Translation[]
+  createdAt: string
+  updatedAt: string
 }

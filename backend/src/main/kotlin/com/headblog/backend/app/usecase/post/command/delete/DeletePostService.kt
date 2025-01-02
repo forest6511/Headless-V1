@@ -26,22 +26,15 @@ class DeletePostService(
 
     override fun execute(deleteId: UUID): PostId {
         val postDto = postRepository.findById(deleteId)
-            ?: throw AppConflictException("Post with ID ${deleteId} not found")
+            ?: throw AppConflictException("Post with ID $deleteId not found")
 
         val post = Post.fromCommand(
             id = postDto.id,
-            title = postDto.title,
             slug = postDto.slug,
-            content = postDto.content,
-            excerpt = postDto.excerpt,
-            postStatus = postDto.postStatus,
+            status = postDto.status,
             featuredImageId = postDto.featuredImageId,
-            metaTitle = postDto.metaTitle,
-            metaDescription = postDto.metaDescription,
-            metaKeywords = postDto.metaKeywords,
-            ogTitle = postDto.ogTitle,
-            ogDescription = postDto.ogDescription,
             categoryId = postDto.categoryId,
+            translations = emptyList()
         )
 
         // category

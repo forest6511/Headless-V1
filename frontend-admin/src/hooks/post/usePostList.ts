@@ -1,12 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import {
-  PostWithCategoryResponse,
-  PostListResponse,
-} from '@/types/api/post/response'
+import { PostResponse, PostListResponse } from '@/types/api/post/response'
 import { postApi } from '@/lib/api'
 
 export const usePostList = (rowsPerPage: number = 10) => {
-  const [posts, setPosts] = useState<PostWithCategoryResponse[]>([])
+  const [posts, setPosts] = useState<PostResponse[]>([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [nextCursor, setNextCursor] = useState<string | undefined>(undefined)
@@ -22,15 +19,12 @@ export const usePostList = (rowsPerPage: number = 10) => {
         pageSize: rowsPerPage,
       })
 
-      // 表示用のデータを設定
-      const displayPosts = result.posts.slice(0, rowsPerPage)
-      setPosts(displayPosts)
+      setPosts(result.posts)
       setTotalPages(result.totalPages)
       setHasNextPage(page < result.totalPages)
 
-      // カーソルを設定 - 現在のページの最後の要素のIDをカーソルとして使用
-      if (displayPosts.length > 0) {
-        const nextPageStartId = displayPosts[displayPosts.length - 1].id
+      if (result.posts.length > 0) {
+        const nextPageStartId = result.posts[result.posts.length - 1].id
         setNextCursor(nextPageStartId)
       }
     } catch (error) {

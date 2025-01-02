@@ -47,6 +47,6 @@ class PostCategoryRepositoryImpl(
             .from(POST_CATEGORIES)
             .where(POST_CATEGORIES.CATEGORY_ID.eq(categoryId.value))
             .fetch()
-            .map { PostId(it[POST_CATEGORIES.POST_ID]!!) }
+            .map { PostId(requireNotNull(it[POST_CATEGORIES.POST_ID])) }
     }
 }

@@ -1,4 +1,3 @@
-import React, { Key } from 'react'
 import Link from 'next/link'
 import {
   Table,
@@ -10,19 +9,21 @@ import {
   Chip,
   Pagination,
 } from '@nextui-org/react'
-import { PostWithCategoryResponse } from '@/types/api/post/response'
+import { PostResponse } from '@/types/api/post/response'
 import { POST_COLUMNS } from '@/config/constants'
-import { PostStatuses } from '@/types/api/post/types'
+import { Language, Languages, PostStatuses } from '@/types/api/post/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
+import { formatDateTime } from '@/lib/utils/post'
 
 interface PostTableProps {
-  posts: PostWithCategoryResponse[]
+  posts: PostResponse[]
   categories: CategoryListResponse[]
   page: number
   totalPages: number
+  currentLanguage: Language // 追加
   onPageChange: (page: number) => void
   onEdit: (id: string) => void
   onDelete: () => void
@@ -33,6 +34,7 @@ export const PostTable = ({
   categories,
   page,
   totalPages,
+  currentLanguage, // 追加
   onPageChange,
   onEdit,
   onDelete,
@@ -45,16 +47,8 @@ export const PostTable = ({
     return PostStatuses.find((s) => s.value === status)?.label || status
   }
 
-  // TODO 共通化
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
+  const getPostTitle = (post: PostResponse) => {
+    return post.translations.find((t) => t.language === currentLanguage)?.title
   }
 
   return (
@@ -72,25 +66,27 @@ export const PostTable = ({
         </TableHeader>
         <TableBody>
           {posts.map((post) => (
-            <TableRow key={post.id as Key}>
+            <TableRow key={post.id}>
               <TableCell>
                 <Link
                   href={ROUTES.DASHBOARD.POSTS.EDIT(post.id)}
                   className="text-blue-500 hover:text-blue-700"
                 >
-                  {post.title}
+                  {getPostTitle(post) || '(未翻訳)'}
                 </Link>
               </TableCell>
               <TableCell>{post.slug}</TableCell>
               <TableCell>
                 {getBreadcrumbForCategory(post.categoryId, categories)}
               </TableCell>
-              <TableCell>{post.tagNames}</TableCell>
-              <TableCell>{formatDateTime(post.createdAt)}</TableCell>
-              <TableCell>{formatDateTime(post.updateAt)}</TableCell>
               <TableCell>
-                <Chip color={getStatusColor(post.postStatus)} variant="flat">
-                  {getStatusLabel(post.postStatus)}
+                {post.tags.map((tag) => tag.name).join(', ')}
+              </TableCell>
+              <TableCell>{formatDateTime(post.createdAt)}</TableCell>
+              <TableCell>{formatDateTime(post.updatedAt)}</TableCell>
+              <TableCell>
+                <Chip color={getStatusColor(post.status)} variant="flat">
+                  {getStatusLabel(post.status)}
                 </Chip>
               </TableCell>
               <TableCell>

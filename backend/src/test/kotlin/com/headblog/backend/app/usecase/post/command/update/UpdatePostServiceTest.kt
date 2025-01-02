@@ -2,10 +2,12 @@ package com.headblog.backend.app.usecase.post.command.update
 
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostStatus
+import com.headblog.backend.domain.model.post.PostTranslation
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.util.*
@@ -14,14 +16,12 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @Transactional
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UpdatePostServiceTest {
 
     @Autowired
@@ -47,30 +47,29 @@ class UpdatePostServiceTest {
         categoryRepository.save(category)
 
         val originalPost = createAndSavePost("Original Title", "original-slug", category)
+
         val command = UpdatePostCommand(
             id = originalPost.id.value,
             title = "Updated Title",
             slug = "updated-slug",
             content = "Updated content",
             excerpt = "Updated excerpt",
-            postStatus = "PUBLISHED",
+            status = "PUBLISHED",
             featuredImageId = null,
-            metaTitle = "Updated Meta Title",
-            metaDescription = "Updated Meta Description",
-            metaKeywords = "Updated Meta Keywords",
-            ogTitle = "Updated OG Title",
-            ogDescription = "Updated OG Description",
-            categoryId = category.id.value
+            categoryId = category.id.value,
+            tagNames = emptySet(),
+            language = "ja"
         )
 
         // WHEN
         val postId = updatePostService.execute(command).value
 
-        // Then
+        // THEN
         val updatedPost = postRepository.findById(postId)
         assertNotNull(updatedPost)
-        assertEquals("Updated Title", updatedPost!!.title)
-        assertEquals("updated-slug", updatedPost.slug)
+        assertEquals("updated-slug", checkNotNull(updatedPost).slug)
+        val updatedTranslation = updatedPost.translations.first()
+        assertEquals("Updated Title", updatedTranslation.title)
     }
 
     @Test
@@ -90,15 +89,11 @@ class UpdatePostServiceTest {
             slug = "tags-slug",
             content = "Updated content with tags",
             excerpt = "Tags excerpt",
-            postStatus = "PUBLISHED",
+            status = "PUBLISHED",
             featuredImageId = null,
-            metaTitle = "Meta Title",
-            metaDescription = "Meta Description",
-            metaKeywords = "Meta Keywords",
-            ogTitle = "OG Title",
-            ogDescription = "OG Description",
             categoryId = category.id.value,
-            tagNames = newTagNames
+            tagNames = newTagNames,
+            language = "ja"
         )
 
         // WHEN
@@ -108,6 +103,7 @@ class UpdatePostServiceTest {
         val updatedPost = postRepository.findById(postId)
         assertNotNull(updatedPost)
 
+        // タグの検証
         val updatedTags = updatedPost!!.tags
         assertEquals(newTagNames.size, updatedTags.size)
 
@@ -117,22 +113,24 @@ class UpdatePostServiceTest {
         }
     }
 
+    /**
+     * 新規投稿を DB に保存し、カテゴリとのリレーションを作る
+     */
     private fun createAndSavePost(title: String, slug: String, category: Category): Post {
-
         val post = Post.create(
             id = idGenerator,
-            title = title,
             slug = slug,
-            content = "Sample content",
-            excerpt = "Sample excerpt",
-            postStatus = PostStatus.PUBLISHED.name,
+            status = Status.PUBLISHED.name,
             featuredImageId = null,
-            metaTitle = null,
-            metaDescription = null,
-            metaKeywords = null,
-            ogTitle = null,
-            ogDescription = null,
-            categoryId = category.id.value
+            categoryId = category.id.value,
+            translations = listOf(
+                PostTranslation(
+                    language = Language.of("ja"),
+                    title = title,
+                    excerpt = "Sample excerpt",
+                    content = "Sample content"
+                )
+            )
         )
         postRepository.save(post)
         postCategoryRepository.addRelation(post.id, category.id)
@@ -140,5 +138,11 @@ class UpdatePostServiceTest {
     }
 
     private fun createCategory(name: String, slug: String, parentId: UUID? = null): Category =
-        Category.create(idGenerator, name, slug, "Test description for $name", parentId)
+        Category.create(
+            idGenerator,
+            name,
+            slug,
+            "Test description for $name",
+            parentId
+        )
 }

@@ -87,30 +87,30 @@ class CategoryRepositoryImpl(
             .where(CATEGORIES.PARENT_ID.eq(parentId))
             .fetchInto(CategoryDto::class.java)
     }
-}
 
-private fun Record.toCategoryDto(): CategoryDto {
-    return CategoryDto(
-        id = get(CATEGORIES.ID)!!,
-        name = get(CATEGORIES.NAME)!!,
-        slug = get(CATEGORIES.SLUG)!!,
-        description = get(CATEGORIES.DESCRIPTION),
-        parentId = get(CATEGORIES.PARENT_ID),
-        createdAt = get(CATEGORIES.CREATED_AT)!!
-    )
-}
+    private fun Record.toCategoryDto(): CategoryDto {
+        return CategoryDto(
+            id = requireNotNull(get(CATEGORIES.ID)),
+            name = requireNotNull(get(CATEGORIES.NAME)),
+            slug = requireNotNull(get(CATEGORIES.SLUG)),
+            description = get(CATEGORIES.DESCRIPTION),
+            parentId = get(CATEGORIES.PARENT_ID),
+            createdAt = requireNotNull(get(CATEGORIES.CREATED_AT)),
+        )
+    }
 
-private fun List<Record>.toCategoryWithPostIdsDto(): CategoryWithPostIdsDto {
-    val firstRecord = first()
-    return CategoryWithPostIdsDto(
-        id = firstRecord[CATEGORIES.ID]!!,
-        name = firstRecord[CATEGORIES.NAME]!!,
-        slug = firstRecord[CATEGORIES.SLUG]!!,
-        description = firstRecord[CATEGORIES.DESCRIPTION],
-        parentId = firstRecord[CATEGORIES.PARENT_ID],
-        createdAt = firstRecord[CATEGORIES.CREATED_AT]!!,
-        postIds = mapNotNull { it[POST_CATEGORIES.POST_ID] }
-            .distinct()
-            .ifEmpty { emptyList() }
-    )
+    private fun List<Record>.toCategoryWithPostIdsDto(): CategoryWithPostIdsDto {
+        val firstRecord = first()
+        return CategoryWithPostIdsDto(
+            id = requireNotNull(firstRecord[CATEGORIES.ID]),
+            name = requireNotNull(firstRecord[CATEGORIES.NAME]),
+            slug = requireNotNull(firstRecord[CATEGORIES.SLUG]),
+            description = firstRecord[CATEGORIES.DESCRIPTION],
+            parentId = firstRecord[CATEGORIES.PARENT_ID],
+            createdAt = requireNotNull(firstRecord[CATEGORIES.CREATED_AT]),
+            postIds = mapNotNull { it[POST_CATEGORIES.POST_ID] }
+                .distinct()
+                .ifEmpty { emptyList() }
+        )
+    }
 }

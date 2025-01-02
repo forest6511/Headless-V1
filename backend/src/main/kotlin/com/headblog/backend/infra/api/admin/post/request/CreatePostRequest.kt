@@ -8,6 +8,10 @@ import java.util.*
 
 data class CreatePostRequest(
 
+    @field:NotBlank(message = "Language is required")
+    @field:Size(max = 5, message = "Language must be less than 5 characters")
+    val language: String = "ja",
+
     @field:NotBlank(message = "Title is required")
     @field:Size(max = 255, message = "Title must be less than 255 characters")
     val title: String,
@@ -29,16 +33,9 @@ data class CreatePostRequest(
 
     @field:NotBlank(message = "Status is required")
     @field:Size(max = 50, message = "Status must be less than 50 characters")
-    val postStatus: String,
+    val status: String,
 
     val featuredImageId: UUID?,
-
-    val metaTitle: String?,
-    val metaDescription: String?,
-    val metaKeywords: String?,
-    val robotsMetaTag: String?,
-    val ogTitle: String?,
-    val ogDescription: String?,
 
     @field:NotNull(message = "Category id is required")
     val categoryId: UUID,

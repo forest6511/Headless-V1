@@ -7,81 +7,47 @@ import java.util.*
 
 class Post private constructor(
     val id: PostId,
-    val title: String,
     val slug: Slug,
-    val content: String,
-    val excerpt: String,
-    val postStatus: PostStatus,
+    val status: Status,
     val featuredImageId: UUID?,
-    val metaTitle: String?,
-    val metaDescription: String?,
-    val metaKeywords: String?,
-    val ogTitle: String?,
-    val ogDescription: String?,
     val categoryId: CategoryId,
+    val translations: List<PostTranslation>,
 ) {
     companion object {
+
         fun create(
             id: IdGenerator<EntityId>,
-            title: String,
             slug: String,
-            content: String,
-            excerpt: String,
-            postStatus: String,
+            status: String,
             featuredImageId: UUID?,
-            metaTitle: String?,
-            metaDescription: String?,
-            metaKeywords: String?,
-            ogTitle: String?,
-            ogDescription: String?,
             categoryId: UUID,
+            translations: List<PostTranslation>,
         ): Post {
             return Post(
                 id = PostId(id.generate().value),
-                title = title,
                 slug = Slug.of(slug),
-                content = content,
-                excerpt = excerpt,
-                postStatus = PostStatus.of(postStatus),
+                status = Status.of(status),
                 featuredImageId = featuredImageId,
-                metaTitle = metaTitle,
-                metaDescription = metaDescription,
-                metaKeywords = metaKeywords,
-                ogTitle = ogTitle,
-                ogDescription = ogDescription,
                 categoryId = CategoryId(categoryId),
+                translations = translations
             )
         }
 
         fun fromCommand(
             id: UUID,
-            title: String,
             slug: String,
-            content: String,
-            excerpt: String,
-            postStatus: String,
+            status: String,
             featuredImageId: UUID?,
-            metaTitle: String?,
-            metaDescription: String?,
-            metaKeywords: String?,
-            ogTitle: String?,
-            ogDescription: String?,
             categoryId: UUID,
+            translations: List<PostTranslation>,
         ): Post {
             return Post(
                 id = PostId(id),
-                title = title,
                 slug = Slug.of(slug),
-                content = content,
-                excerpt = excerpt,
-                postStatus = PostStatus.of(postStatus),
+                status = Status.of(status),
                 featuredImageId = featuredImageId,
-                metaTitle = metaTitle,
-                metaDescription = metaDescription,
-                metaKeywords = metaKeywords,
-                ogTitle = ogTitle,
-                ogDescription = ogDescription,
                 categoryId = CategoryId(categoryId),
+                translations = translations
             )
         }
     }

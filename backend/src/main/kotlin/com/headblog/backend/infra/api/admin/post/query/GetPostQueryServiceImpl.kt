@@ -4,7 +4,7 @@ import com.headblog.backend.app.usecase.post.query.GetPostQueryService
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
-import com.headblog.backend.infra.api.admin.post.response.PostWithCategoryIdResponse
+import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
 import com.headblog.backend.shared.exception.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
@@ -22,28 +22,19 @@ class GetPostQueryServiceImpl(
         val totalPages = if (totalCount == 0) 0 else (totalCount + pageSize - 1) / pageSize
 
         // 投稿リストを取得
-        val posts = postRepository.findAll(cursorPostId, pageSize)
-            .map {
-                val postWithCategoryIdResponse = PostWithCategoryIdResponse(
-                    id = it.id,
-                    title = it.title,
-                    slug = it.slug,
-                    content = it.content,
-                    excerpt = it.excerpt,
-                    postStatus = it.postStatus,
-                    featuredImageId = it.featuredImageId,
-                    metaTitle = it.metaTitle,
-                    metaDescription = it.metaDescription,
-                    metaKeywords = it.metaKeywords,
-                    ogTitle = it.ogTitle,
-                    ogDescription = it.ogDescription,
-                    createdAt = it.createdAt,
-                    updateAt = it.updateAt,
-                    categoryId = it.categoryId,
-                    tagNames = it.tags.joinToString { tag -> tag.name }
-                )
-                postWithCategoryIdResponse
-            }
+        val posts = postRepository.findAll(cursorPostId, pageSize).map { dto ->
+            PostResponse(
+                id = dto.id,
+                slug = dto.slug,
+                status = dto.status,
+                featuredImageId = dto.featuredImageId,
+                categoryId = dto.categoryId,
+                tags = dto.tags,
+                translations = dto.translations.map { toTranslationResponse(it) },
+                createdAt = dto.createdAt,
+                updatedAt = dto.updatedAt
+            )
+        }
 
         return PostListResponse(
             totalCount = totalCount,
@@ -54,23 +45,27 @@ class GetPostQueryServiceImpl(
     }
 
     override fun findPostById(postId: UUID): PostResponse {
-        return postRepository.findById(postId)?.let {
+        return postRepository.findById(postId)?.let { dto ->
             PostResponse(
-                id = it.id,
-                title = it.title,
-                slug = it.slug,
-                content = it.content,
-                excerpt = it.excerpt,
-                postStatus = it.postStatus,
-                featuredImageId = it.featuredImageId,
-                metaTitle = it.metaTitle,
-                metaDescription = it.metaDescription,
-                metaKeywords = it.metaKeywords,
-                ogTitle = it.ogTitle,
-                ogDescription = it.ogDescription,
-                categoryId = it.categoryId,
-                tagNames = it.tags.joinToString { it.name }
+                id = dto.id,
+                slug = dto.slug,
+                status = dto.status,
+                featuredImageId = dto.featuredImageId,
+                categoryId = dto.categoryId,
+                tags = dto.tags,
+                translations = dto.translations.map { toTranslationResponse(it) },
+                createdAt = dto.createdAt,
+                updatedAt = dto.updatedAt
             )
         } ?: throw AppConflictException("Post not found. id: $postId")
+    }
+
+    private fun toTranslationResponse(t: com.headblog.backend.app.usecase.post.query.TranslationDto): TranslationResponse {
+        return TranslationResponse(
+            language = t.language,
+            title = t.title,
+            excerpt = t.excerpt,
+            content = t.content
+        )
     }
 }

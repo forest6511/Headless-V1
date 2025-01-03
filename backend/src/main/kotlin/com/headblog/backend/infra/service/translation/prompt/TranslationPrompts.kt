@@ -29,16 +29,13 @@ object TranslationPrompts {
         append(content)
     }
 
+    // 要約翻訳用プロンプト
     fun createSummaryTranslationPrompt(summary: String): String = buildString {
-        appendLine("Translate the following Japanese summary to English:")
-        appendLine("- Keep the translation concise, up to 255 characters")
-        appendLine("- Preserve the original meaning and key points")
-        appendLine()
-        appendLine("Original Summary:")
-        append(summary)
+        appendLine("Translate the following Japanese summary to English in 255 characters or less, preserving the original meaning and key points:")
+        appendLine(summary)
     }
 
-    // タイトル用の新しいプロンプト
+    // タイトル用プロンプト
     fun createTitleTranslationPrompt(content: String): String = buildString {
         appendLine("Translate the following Japanese blog title to English:")
         appendLine("- Keep it concise and impactful")

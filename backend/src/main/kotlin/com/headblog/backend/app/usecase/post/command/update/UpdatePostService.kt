@@ -35,28 +35,34 @@ class UpdatePostService(
         val originalPostDto = postRepository.findById(command.id)
             ?: throw AppConflictException("Post with ID ${command.id} not found.")
 
-        postRepository.findBySlug(command.slug)?.let { existingDto ->
-            if (existingDto.id != command.id) {
-                throw AppConflictException(
-                    "The post with slug '${command.slug}' already exists and belongs to a different post."
+
+        val updatedTranslations = originalPostDto.translations.map { translation ->
+            if (translation.language == command.language) {
+                // コマンドで指定された言語の翻訳のみを更新
+                PostTranslation(
+                    language = Language.of(command.language),
+                    title = command.title,
+                    excerpt = translation.excerpt, // 既存の要約を維持
+                    content = command.content
+                )
+            } else {
+                // その他の言語の翻訳はそのまま維持
+                PostTranslation(
+                    language = Language.of(translation.language),
+                    title = translation.title,
+                    excerpt = translation.excerpt,
+                    content = translation.content
                 )
             }
         }
 
         val post = Post.fromCommand(
             id = command.id,
-            slug = command.slug,
+            slug = originalPostDto.slug,
             status = command.status,
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
-            translations = listOf(
-                PostTranslation(
-                    language = Language.of(command.language),
-                    title = command.title,
-                    excerpt = command.excerpt,
-                    content = command.content
-                )
-            )
+            translations = updatedTranslations
         )
 
         // 投稿を更新

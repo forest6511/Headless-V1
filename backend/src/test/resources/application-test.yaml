@@ -34,6 +34,7 @@ jwt:
 gemini:
   api:
     key: "hogehoge"
+    url: https://test-account.com
 
 storage:
   cloudflare:
@@ -41,8 +42,8 @@ storage:
       bucket-name: test-bucket
       access-key: test-access-key
       secret-key: test-secret-key
-      endpoint: https://test-account.r2.cloudflarestorage.com
-      public-endpoint: https://test-account.r2.cloudflarestorage.com
+      endpoint: https://test-account.com
+      public-endpoint: https://test-account.com
   media:
     max-file-size: 20MB
     supported-types:

@@ -39,9 +39,7 @@ export default function NewPostPage() {
           initialData={{
             language: currentLanguage,
             title: '',
-            slug: '',
             content: '',
-            excerpt: '',
             status: 'DRAFT',
             categoryId: '01939280-7ccb-72a8-9257-7ba44de715b6',
           }}

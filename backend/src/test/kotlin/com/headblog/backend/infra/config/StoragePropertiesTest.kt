@@ -19,7 +19,7 @@ class StoragePropertiesTest {
         assertEquals(r2Props.bucketName, "test-bucket")
         assertEquals(r2Props.accessKey, "test-access-key")
         assertEquals(r2Props.secretKey, "test-secret-key")
-        assertEquals(r2Props.endpoint, "https://test-account.r2.cloudflarestorage.com")
+        assertEquals(r2Props.endpoint, "https://test-account.com")
     }
 
     @Test
@@ -36,7 +36,6 @@ class StoragePropertiesTest {
     @DisplayName("画像サイズの設定が正しく読み込まれること")
     fun `should load image size configuration correctly`() {
         val sizes = storageProperties.media.sizes
-
         with(sizes.thumbnail) {
             assertEquals(width, 100)
             assertEquals(height, 100)

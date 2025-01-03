@@ -10,19 +10,7 @@ export const BasePostSchema = z.object({
     .string()
     .min(1, 'タイトルは必須です')
     .max(255, 'タイトルは255文字以内で入力してください'),
-  slug: z
-    .string()
-    .min(1, 'スラッグは必須です')
-    .max(255, 'スラッグは255文字以内で入力してください')
-    .regex(
-      /^[a-z0-9-_]+$/,
-      'スラッグには英小文字、数字、ハイフン（-）、またはアンダースコア（_）のみ使用できます'
-    ),
   content: z.string().min(1, '本文は必須です'),
-  excerpt: z
-    .string()
-    .min(1, '抜粋は必須です')
-    .max(100, '抜粋は100文字以内で入力してください'),
   status: z
     .string()
     .min(1, 'ステータスは必須です')

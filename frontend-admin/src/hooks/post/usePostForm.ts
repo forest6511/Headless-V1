@@ -48,7 +48,6 @@ export const usePostForm = ({
           {
             language: currentLanguage,
             title: data.title,
-            excerpt: data.excerpt,
             content: data.content,
           },
         ],

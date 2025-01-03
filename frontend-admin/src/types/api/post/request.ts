@@ -1,9 +1,7 @@
 interface BasePost {
   language: string
   title: string
-  slug: string
   content: string
-  excerpt: string
   status: string
   featuredImageId: string | null
   categoryId: string

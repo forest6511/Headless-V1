@@ -7,7 +7,6 @@ import {
   Input,
   Select,
   SelectItem,
-  Textarea,
 } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
@@ -58,13 +57,6 @@ export function PostForm({
               errorMessage={errors?.title?.message}
             />
             <Input
-              {...register('slug')}
-              label="スラッグ"
-              placeholder="記事のスラッグを入力"
-              isInvalid={!!errors.slug}
-              errorMessage={errors?.slug?.message}
-            />
-            <Input
               {...register('tagNames')}
               label="ハッシュタグ"
               placeholder="#をつけてカンマ形式で入力. ex #beauty, #diet"
@@ -96,21 +88,6 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader>
-            <h2 className="text-lg font-semibold">抜粋情報</h2>
-          </CardHeader>
-          <CardBody>
-            <Textarea
-              {...register('excerpt')}
-              label="抜粋"
-              placeholder="記事の抜粋を入力"
-              minRows={3}
-              isInvalid={!!errors.excerpt}
-              errorMessage={errors?.excerpt?.message}
-            />
           </CardBody>
         </Card>
       </div>

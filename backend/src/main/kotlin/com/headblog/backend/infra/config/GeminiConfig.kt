@@ -1,21 +1,41 @@
 package com.headblog.backend.infra.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.headblog.backend.domain.model.quota.QuotaManagementService
 import com.headblog.backend.infra.service.translation.GeminiClient
 import java.net.http.HttpClient
-import org.springframework.beans.factory.annotation.Value
+import java.util.concurrent.Executors
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
+@EnableConfigurationProperties(GeminiProperties::class)
 class GeminiConfig {
-    @Value("\${gemini.api.key}")
-    private lateinit var apiKey: String
 
     @Bean
-    fun httpClient(): HttpClient = HttpClient.newHttpClient()
+    fun httpClient(properties: GeminiProperties): HttpClient {
+        return HttpClient.newBuilder()
+            .connectTimeout(properties.timeout.connect)
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .version(HttpClient.Version.HTTP_2)
+            .executor(Executors.newFixedThreadPool(5))
+            .build()
+    }
 
     @Bean
-    fun geminiClient(httpClient: HttpClient): GeminiClient {
-        return GeminiClient(apiKey, httpClient)
+    fun geminiClient(
+        properties: GeminiProperties,
+        httpClient: HttpClient,
+        objectMapper: ObjectMapper,
+        quotaManagementService: QuotaManagementService
+    ): GeminiClient {
+        return GeminiClient(
+            apiKey = properties.api.key,
+            apiUrl = properties.api.url,
+            httpClient = httpClient,
+            requestTimeout = properties.timeout.request,
+            quotaManagementService = quotaManagementService
+        )
     }
 }

@@ -185,6 +185,25 @@ COMMENT ON TABLE post_tags IS 'Table for storing many-to-many relationships betw
 COMMENT ON COLUMN post_tags.post_id IS 'Reference to the post in the posts table';
 COMMENT ON COLUMN post_tags.tag_id IS 'Reference to the tag in the tags table';
 
+-- API Quotas table
+CREATE TABLE api_quota_logs (
+    id uuid PRIMARY KEY,
+    service varchar(50) NOT NULL,
+    quota_date date NOT NULL,
+    daily_quota integer NOT NULL DEFAULT 0,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_service_date UNIQUE (service, quota_date)
+);
+
+COMMENT ON TABLE api_quota_logs IS 'Table for tracking daily API usage quotas';
+COMMENT ON COLUMN api_quota_logs.id IS 'Unique identifier for each quota log';
+COMMENT ON COLUMN api_quota_logs.service IS 'Name of the API service (e.g., gemini)';
+COMMENT ON COLUMN api_quota_logs.quota_date IS 'The date of this quota record';
+COMMENT ON COLUMN api_quota_logs.daily_quota IS 'Count of API calls for the specific date';
+COMMENT ON COLUMN api_quota_logs.created_at IS 'Timestamp when the record was created';
+COMMENT ON COLUMN api_quota_logs.updated_at IS 'Timestamp when the record was last updated';
+
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
 CREATE INDEX idx_posts_status ON posts (status);
@@ -194,6 +213,10 @@ CREATE INDEX idx_post_categories_post ON post_categories (post_id);
 CREATE INDEX idx_post_tags_post ON post_tags (post_id);
 CREATE INDEX idx_post_tags_tag ON post_tags (tag_id);
 CREATE INDEX idx_post_translations_language ON post_translations (language);
+CREATE INDEX idx_api_quota_logs_service ON api_quota_logs (service);
+CREATE INDEX idx_api_quota_logs_date ON api_quota_logs (quota_date);
+CREATE INDEX idx_api_quota_logs_service_date ON api_quota_logs (service, quota_date);
+
 
 -- 外部キー (posts.id を参照)。投稿が削除されたら翻訳も削除
 ALTER TABLE post_translations

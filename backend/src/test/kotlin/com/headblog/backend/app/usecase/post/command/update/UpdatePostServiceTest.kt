@@ -51,9 +51,7 @@ class UpdatePostServiceTest {
         val command = UpdatePostCommand(
             id = originalPost.id.value,
             title = "Updated Title",
-            slug = "updated-slug",
             content = "Updated content",
-            excerpt = "Updated excerpt",
             status = "PUBLISHED",
             featuredImageId = null,
             categoryId = category.id.value,
@@ -67,7 +65,8 @@ class UpdatePostServiceTest {
         // THEN
         val updatedPost = postRepository.findById(postId)
         assertNotNull(updatedPost)
-        assertEquals("updated-slug", checkNotNull(updatedPost).slug)
+        // slugは更新しない
+        assertEquals(originalPost.slug.value, checkNotNull(updatedPost).slug)
         val updatedTranslation = updatedPost.translations.first()
         assertEquals("Updated Title", updatedTranslation.title)
     }
@@ -86,9 +85,7 @@ class UpdatePostServiceTest {
         val command = UpdatePostCommand(
             id = originalPost.id.value,
             title = "Title With Tags",
-            slug = "tags-slug",
             content = "Updated content with tags",
-            excerpt = "Tags excerpt",
             status = "PUBLISHED",
             featuredImageId = null,
             categoryId = category.id.value,

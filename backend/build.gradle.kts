@@ -58,6 +58,7 @@ dependencies {
 	// R2 storage
 	implementation("software.amazon.awssdk:s3:2.29.43")
 	implementation("org.im4java:im4java:1.4.0")
+
 }
 
 kotlin {

@@ -8,7 +8,6 @@ import {
   Code,
   Heading3,
   Heading2,
-  Heading1,
   Link,
   Quote,
   Highlighter,

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { MainNav } from '@/components/features/navigation'
@@ -7,11 +7,16 @@ import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'
 import { Footer } from '@/components/layouts/footer'
 import React from 'react'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'サイトタイトル',
   description: 'サイトタイトル 説明',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1
 }
 
 export default function RootLayout({

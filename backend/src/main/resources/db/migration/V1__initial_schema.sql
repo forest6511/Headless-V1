@@ -108,7 +108,7 @@ CREATE TABLE post_translations
     post_id          uuid         NOT NULL,
     language    varchar(5)   NOT NULL,
     title            varchar(255) NOT NULL,
-    excerpt          varchar(255) NOT NULL,
+    excerpt          varchar(510) NOT NULL,
     content          text         NOT NULL,
     created_at       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,

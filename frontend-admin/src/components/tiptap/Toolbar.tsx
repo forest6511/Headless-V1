@@ -8,7 +8,6 @@ import {
   Code,
   Heading3,
   Heading2,
-  Heading1,
   Link,
   Quote,
   Highlighter,
@@ -83,17 +82,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
-      {/* H1 */}
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`p-2 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
-        aria-label="見出し1"
-      >
-        <Heading1 size={20} />
-      </button>
-
+    <div className="flex flex-wrap gap-2 mb-4 sticky top-0 z-10 bg-white border border-gray-300 rounded-sm">
       {/* H2 */}
       <button
         type="button"

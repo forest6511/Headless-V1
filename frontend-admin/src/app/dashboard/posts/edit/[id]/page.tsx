@@ -22,6 +22,7 @@ interface Props {
 export default function EditPostPage(props: Props) {
   const params = use(props.params)
   const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { post, isLoading } = usePostDetail(params.id)
 
   if (isLoading) return <p>Loading...</p>
@@ -41,6 +42,8 @@ export default function EditPostPage(props: Props) {
               color="primary"
               size={'md'}
               startContent={<Save size={20} />}
+              isLoading={isSubmitting}
+              isDisabled={isSubmitting}
             >
               記事の保存
             </Button>
@@ -56,6 +59,7 @@ export default function EditPostPage(props: Props) {
           redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
           id="post-form"
           initialData={initialData}
+          onSubmittingChange={setIsSubmitting}
         />
       </CardBody>
     </Card>

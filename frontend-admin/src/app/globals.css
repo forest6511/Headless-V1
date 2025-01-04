@@ -3,22 +3,25 @@
 @tailwind utilities;
 
 p.cms {
-  /* TODO */
+  margin-bottom: 1rem;
 }
 
 h1.cms {
   font-size: 2rem;
   color: #11181c;
+  margin-bottom: 1rem;
 }
 
 h2.cms {
   font-size: 1.75rem;
   color: #11181c;
+  margin-bottom: 1rem;
 }
 
 h3.cms {
   font-size: 1.45rem;
   color: #11181c;
+  margin-bottom: 1rem;
 }
 
 strong.cms {

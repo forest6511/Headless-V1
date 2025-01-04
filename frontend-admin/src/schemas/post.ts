@@ -9,7 +9,7 @@ export const BasePostSchema = z.object({
   title: z
     .string()
     .min(1, 'タイトルは必須です')
-    .max(255, 'タイトルは255文字以内で入力してください'),
+    .max(100, 'タイトルは100文字以内で入力してください'),
   content: z.string().min(1, '本文は必須です'),
   status: z
     .string()

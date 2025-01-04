@@ -60,7 +60,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         },
       }),
       Heading.configure({
-        levels: [1, 2, 3],
+        levels: [2, 3],
         HTMLAttributes: {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },
@@ -150,9 +150,13 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   }
 
   return (
-    <div className="border border-gray-300 rounded-lg p-4">
-      {editor && <Toolbar editor={editor} />}
-      <div className="overflow-y-auto">
+    <div className="relative">
+      {editor && (
+        <div className="sticky top-0 z-10 bg-white">
+          <Toolbar editor={editor} />
+        </div>
+      )}
+      <div className="overflow-y-auto mt-2 p-2 border rounded-sm">
         <EditorContent editor={editor} className="prose max-w-none" />
       </div>
     </div>

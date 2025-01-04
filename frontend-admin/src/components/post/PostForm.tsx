@@ -10,15 +10,17 @@ import {
 } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
+import pretty from 'pretty'
 
 interface PostFormProps {
   redirectPath: string
   initialData?: PostFormData
   mode: 'create' | 'update'
   id: string
+  onSubmittingChange: (isSubmitting: boolean) => void
 }
 
 export function PostForm({
@@ -26,20 +28,32 @@ export function PostForm({
   initialData,
   mode,
   id = 'post-form',
+  onSubmittingChange,
 }: PostFormProps) {
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(categories)
-  const { form, textLength, contentHtml, onSubmit, handleEditorChange } =
-    usePostForm({
-      redirectPath,
-      initialData,
-      mode,
-    })
+  const {
+    form,
+    textLength,
+    contentHtml,
+    onSubmit,
+    handleEditorChange,
+    isSubmitting,
+  } = usePostForm({
+    redirectPath,
+    initialData,
+    mode,
+  })
   const {
     register,
     formState: { errors },
     watch,
   } = form
+
+  // isSubmittingの状態が変更されたら親コンポーネントに通知
+  useEffect(() => {
+    onSubmittingChange?.(isSubmitting)
+  }, [isSubmitting, onSubmittingChange])
 
   return (
     <form onSubmit={onSubmit} className="flex flex-row-reverse gap-6" id={id}>
@@ -97,7 +111,7 @@ export function PostForm({
             <h2 className="text-lg font-semibold">記事内容</h2>
           </CardHeader>
           <CardBody className="space-y-4">
-            <div>
+            <div className="h-[800px] overflow-y-auto">
               {/* zod validationが効かないので、hidden項目に設定 */}
               <input type="hidden" {...register('content')} />
               <TiptapEditor
@@ -116,7 +130,7 @@ export function PostForm({
                 プレビュー 文字数: {textLength}
               </h3>
               <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
-                {contentHtml || ''}
+                {pretty(contentHtml || '')}
               </pre>
             </div>
           </CardBody>

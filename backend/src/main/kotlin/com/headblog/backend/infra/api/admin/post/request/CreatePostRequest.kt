@@ -12,7 +12,7 @@ data class CreatePostRequest(
     val language: String = "ja",
 
     @field:NotBlank(message = "Title is required")
-    @field:Size(max = 255, message = "Title must be less than 255 characters")
+    @field:Size(max = 100, message = "Title must be less than 100 characters")
     val title: String,
 
     @field:NotBlank(message = "Content is required")

@@ -111,7 +111,7 @@ export function PostForm({
             <h2 className="text-lg font-semibold">記事内容</h2>
           </CardHeader>
           <CardBody className="space-y-4">
-            <div>
+            <div className="h-[800px] overflow-y-auto">
               {/* zod validationが効かないので、hidden項目に設定 */}
               <input type="hidden" {...register('content')} />
               <TiptapEditor

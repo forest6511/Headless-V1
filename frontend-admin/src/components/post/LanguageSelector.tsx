@@ -1,4 +1,10 @@
-import { Select, SelectItem } from '@nextui-org/react'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select'
 import { Language, Languages } from '@/types/api/post/types'
 
 interface LanguageSelectorProps {
@@ -12,17 +18,19 @@ export function LanguageSelector({
 }: LanguageSelectorProps) {
   return (
     <Select
-      label="言語"
-      value={currentLanguage}
-      onChange={(e) => onLanguageChange(e.target.value as Language)}
-      className="w-32"
-      defaultSelectedKeys={['ja']}
+      onValueChange={(value) => onLanguageChange(value as Language)}
+      defaultValue={currentLanguage}
     >
-      {Languages.map((lang) => (
-        <SelectItem key={lang.value} value={lang.value}>
-          {lang.label}
-        </SelectItem>
-      ))}
+      <SelectTrigger className="w-32">
+        <SelectValue placeholder="言語を選択" />
+      </SelectTrigger>
+      <SelectContent>
+        {Languages.map((lang) => (
+          <SelectItem key={lang.value} value={lang.value}>
+            {lang.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
     </Select>
   )
 }

@@ -53,6 +53,15 @@ class CreatePostService(
             translationService.translateSummarizeToEnglish(japaneseSummary)
         }
 
+        logger.debug("英語翻訳タイトル: $englishTitle")
+        logger.debug("英語タイトルの文字数: ${englishTitle.length}文字")
+        logger.debug("英語に翻訳されたコンテンツ: $englishContent")
+        logger.debug("英語コンテンツの文字数: ${englishContent.length}文字")
+        logger.debug("日本語の要約: $japaneseSummary")
+        logger.debug("日本語要約の文字数: ${japaneseSummary.length}文字")
+        logger.debug("英語の要約: $englishSummary")
+        logger.debug("英語要約の文字数: ${englishSummary.length}文字")
+
         // slugの生成
         val slug = generateSlug(englishTitle)
 

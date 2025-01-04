@@ -60,7 +60,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         },
       }),
       Heading.configure({
-        levels: [1, 2, 3],
+        levels: [2, 3],
         HTMLAttributes: {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },

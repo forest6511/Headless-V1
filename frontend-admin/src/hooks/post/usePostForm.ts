@@ -27,6 +27,7 @@ export const usePostForm = ({
 }: UsePostFormProps) => {
   const router = useRouter()
   const [textLength, setTextLength] = useState(0) // contentの文字数を監視
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<PostFormData>({
     resolver: zodResolver(
@@ -38,6 +39,7 @@ export const usePostForm = ({
   const contentHtml = form.watch('content') // contentの値を監視
 
   const onSubmit = async (data: PostFormData) => {
+    setIsSubmitting(true)
     try {
       const processedData = {
         ...data,
@@ -67,6 +69,8 @@ export const usePostForm = ({
         toast.error(`投稿の${action}に失敗しました。 ${error?.details}`)
       }
       console.error(`投稿の${action}に失敗しました:`, error)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -84,5 +88,6 @@ export const usePostForm = ({
     contentHtml,
     onSubmit: form.handleSubmit(onSubmit),
     handleEditorChange,
+    isSubmitting,
   }
 }

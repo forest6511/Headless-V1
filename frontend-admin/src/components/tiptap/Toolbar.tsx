@@ -84,16 +84,6 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      {/* H1 */}
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`p-2 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
-        aria-label="見出し1"
-      >
-        <Heading1 size={20} />
-      </button>
-
       {/* H2 */}
       <button
         type="button"

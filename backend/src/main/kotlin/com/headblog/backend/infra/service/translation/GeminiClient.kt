@@ -1,6 +1,5 @@
 package com.headblog.backend.infra.service.translation
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.headblog.backend.domain.model.quota.QuotaManagementService
 import com.headblog.backend.shared.exception.AppConflictException

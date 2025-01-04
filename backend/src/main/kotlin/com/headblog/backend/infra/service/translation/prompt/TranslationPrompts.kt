@@ -21,7 +21,7 @@ object TranslationPrompts {
 
     fun createSummaryPrompt(content: String): String = buildString {
         appendLine("以下の日本語テキストを要約してください:")
-        appendLine("- 255文字以内で簡潔に要約")
+        appendLine("- 100文字以内で簡潔に要約")
         appendLine("- 元の内容の重要なポイントを漏らさない")
         appendLine("- 自然な日本語で表現")
         appendLine()
@@ -31,19 +31,13 @@ object TranslationPrompts {
 
     // 要約翻訳用プロンプト
     fun createSummaryTranslationPrompt(summary: String): String = buildString {
-        appendLine("Translate the following Japanese summary to English in 255 characters or less, preserving the original meaning and key points:")
+        appendLine("Translate the following Japanese to English in 100 characters or less, preserving the original meaning and key points:")
         appendLine(summary)
     }
 
     // タイトル用プロンプト
     fun createTitleTranslationPrompt(content: String): String = buildString {
-        appendLine("Translate the following Japanese blog title to English:")
-        appendLine("- Keep it concise and impactful")
-        appendLine("- Maintain the original meaning and nuance")
-        appendLine("- Use title case appropriately")
-        appendLine("- Ensure it's SEO-friendly")
-        appendLine()
-        appendLine("Original title:")
+        appendLine("Translate this Japanese blog title to English. Provide only one concise translation:")
         append(content)
     }
 }

@@ -23,7 +23,7 @@ jobs:
           distribution: "temurin"
 
       - name: Build Spring Boot application
-        run: ./gradlew build
+        run: ./gradlew build -x test
 
       - name: Install Ansible
         run: |

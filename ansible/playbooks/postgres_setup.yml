@@ -1,0 +1,77 @@
+- name: Setup PostgreSQL
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Install Python PostgreSQL dependencies
+      apt:
+        name:
+          - python3-psycopg2
+          - python3-pip
+        state: present
+
+    - name: Add PostgreSQL repository
+      apt_repository:
+        repo: "deb https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: pgdg
+
+    - name: Install PostgreSQL repository key
+      apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+
+    - name: Install PostgreSQL
+      apt:
+        name:
+          - postgresql-17
+          - postgresql-contrib
+          - libpq-dev
+        update_cache: yes
+        state: present
+
+    - name: Ensure PostgreSQL is started and enabled
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Create PostgreSQL user
+      become: yes
+      become_user: postgres
+      community.postgresql.postgresql_user:
+        name: "{{ lookup('env', 'POSTGRES_USER') }}"
+        password: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
+        role_attr_flags: CREATEDB,LOGIN
+      vars:
+        ansible_ssh_pipelining: true
+
+    - name: Create PostgreSQL database
+      become: yes
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        name: "{{ lookup('env', 'POSTGRES_DB') }}"
+        owner: "{{ lookup('env', 'POSTGRES_USER') }}"
+        encoding: UTF8
+        template: template0
+      vars:
+        ansible_ssh_pipelining: true
+
+    - name: Configure PostgreSQL access
+      copy:
+        dest: /etc/postgresql/17/main/pg_hba.conf
+        content: |
+          local   all             postgres                                peer
+          local   all             {{ lookup('env', 'POSTGRES_USER') }}    md5
+          host    all             {{ lookup('env', 'POSTGRES_USER') }}    127.0.0.1/32            md5
+          host    all             {{ lookup('env', 'POSTGRES_USER') }}    ::1/128                 md5
+
+    - name: Configure PostgreSQL to listen on localhost
+      lineinfile:
+        path: /etc/postgresql/17/main/postgresql.conf
+        regexp: '^#?listen_addresses'
+        line: "listen_addresses = 'localhost'"
+
+    - name: Restart PostgreSQL
+      service:
+        name: postgresql
+        state: restarted

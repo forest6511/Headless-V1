@@ -1,0 +1,29 @@
+- name: Configure nginx for domain
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Create nginx site configuration
+      template:
+        src: "../templates/nginx/backend.conf.j2"
+        dest: /etc/nginx/sites-available/backend.conf
+        mode: '0644'
+      notify: Reload nginx
+
+    - name: Enable site configuration
+      file:
+        src: /etc/nginx/sites-available/backend.conf
+        dest: /etc/nginx/sites-enabled/backend.conf
+        state: link
+      notify: Reload nginx
+
+    - name: Remove default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Reload nginx
+
+  handlers:
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded

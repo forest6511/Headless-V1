@@ -1,0 +1,54 @@
+- name: Nginx setup
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Configure UFW rules
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop:
+        - 22   # SSH
+        - 80   # HTTP - Let's Encrypt
+        - 443  # HTTPS
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
+
+    - name: Create test page
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Welcome to nginx!</title>
+          </head>
+          <body>
+            <h1>Welcome to nginx on Ubuntu!</h1>
+            <p>If you see this page, the nginx web server is successfully installed.</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Check nginx status
+      command: systemctl status nginx
+      register: nginx_status
+      changed_when: false
+
+    - name: Display nginx status
+      debug:
+        var: nginx_status.stdout

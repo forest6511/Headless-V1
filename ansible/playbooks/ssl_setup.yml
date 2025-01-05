@@ -1,0 +1,23 @@
+- name: Setup SSL with Let's Encrypt
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Install certbot and nginx plugin
+      apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    - name: Obtain SSL certificate
+      command: "certbot --nginx -d {{ lookup('env', 'BACKEND_HOST_NAME') }} --non-interactive --agree-tos -m {{ lookup('env', 'CERTBOT_EMAIL') }}"
+      args:
+        creates: /etc/letsencrypt/live/{{ lookup('env', 'BACKEND_HOST_NAME') }}
+
+    - name: Add certbot renewal to crontab
+      cron:
+        name: "certbot renewal"
+        job: "/usr/bin/certbot renew --quiet"
+        minute: "0"
+        hour: "0"
+        day: "1"

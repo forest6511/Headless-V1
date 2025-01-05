@@ -6,3 +6,6 @@
 **/.idea/
 .DS_Store
 set-r2-env.sh
+ansible/REDADME.md
+ansible/inventory/hosts
+*.retry

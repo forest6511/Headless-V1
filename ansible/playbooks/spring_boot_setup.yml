@@ -1,0 +1,35 @@
+- name: Setup Spring Boot Service
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Create service file
+      copy:
+        dest: /etc/systemd/system/headblog.service
+        content: |
+          [Unit]
+          Description=HeadBlog Spring Boot Application
+          After=postgresql.service
+    
+          [Service]
+          User=ubuntu
+          Environment="SPRING_PROFILES_ACTIVE=prod"
+          Environment="COOKIE_SECURE=true"
+          Environment="COOKIE_DOMAIN={{ lookup('env', 'COOKIE_DOMAIN') }}"
+          Environment="COOKIE_SAME_SITE=Strict"
+          Environment="COOKIE_HTTP_ONLY=true"
+          Environment="CORS_ALLOWED_ORIGINS={{ lookup('env', 'CORS_ALLOWED_ORIGINS') }}"
+          Environment="R2_BUCKET_NAME={{ lookup('env', 'R2_BUCKET_NAME') }}"
+          Environment="R2_ACCESS_KEY={{ lookup('env', 'R2_ACCESS_KEY') }}"
+          Environment="R2_SECRET_KEY={{ lookup('env', 'R2_SECRET_KEY') }}"
+          Environment="R2_ENDPOINT={{ lookup('env', 'R2_ENDPOINT') }}"
+          Environment="R2_PUBLIC_ENDPOINT={{ lookup('env', 'R2_PUBLIC_ENDPOINT') }}"
+          Environment="GEMINI_API_KEY={{ lookup('env', 'GEMINI_API_KEY') }}"
+          Environment="GEMINI_API_URL={{ lookup('env', 'GEMINI_API_URL') }}"
+          Environment="POSTGRES_USER={{ lookup('env', 'POSTGRES_USER') }}"
+          Environment="POSTGRES_PASSWORD={{ lookup('env', 'POSTGRES_PASSWORD') }}"
+          Environment="POSTGRES_DB={{ lookup('env', 'POSTGRES_DB') }}"
+          ExecStart=/usr/bin/java -jar /opt/headblog/headblog.jar
+          SuccessExitStatus=143
+    
+          [Install]
+          WantedBy=multi-user.target

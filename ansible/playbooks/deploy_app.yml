@@ -1,0 +1,56 @@
+- name: Deploy Spring Boot Application
+  hosts: servers
+  become: yes
+  vars:
+    project_root: "{{ playbook_dir | dirname | dirname }}"
+    jar_file: "{{ project_root }}/backend/build/libs/backend-0.0.1-SNAPSHOT.jar"
+
+  pre_tasks:
+    - name: Debug paths
+      debug:
+        msg:
+          - "Playbook directory: {{ playbook_dir }}"
+          - "Project root: {{ project_root }}"
+          - "JAR file path: {{ jar_file }}"
+
+    - name: Check if JAR file exists locally
+      delegate_to: localhost
+      stat:
+        path: "{{ jar_file }}"
+      register: jar_stat
+
+    - name: Fail if JAR doesn't exist
+      fail:
+        msg: "JAR file not found at {{ jar_file }}"
+      when: not jar_stat.stat.exists
+
+    - name: Ensure application directory exists
+      file:
+        path: /opt/headblog
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+  tasks:
+    - name: Copy JAR file
+      copy:
+        src: "{{ jar_file }}"
+        dest: /opt/headblog/headblog.jar
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+      notify: Restart application
+
+    - name: Enable headblog service
+      systemd:
+        name: headblog
+        enabled: yes
+        daemon_reload: yes
+
+  handlers:
+    - name: Restart application
+      systemd:
+        name: headblog
+        state: restarted
+        daemon_reload: yes

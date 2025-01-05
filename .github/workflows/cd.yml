@@ -13,6 +13,22 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: headblog
+          POSTGRES_PASSWORD: headblog
+          POSTGRES_DB: headblog-test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U headblog -d headblog-test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - uses: actions/checkout@v3
 
@@ -22,8 +38,15 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Set environment variables
+        run: |
+          echo "DB_URL=jdbc:postgresql://localhost:5432/headblog-test" >> $GITHUB_ENV
+          echo "DB_USER=headblog" >> $GITHUB_ENV
+          echo "DB_PASSWORD=headblog" >> $GITHUB_ENV
+          echo "DB_SCHEMA=public" >> $GITHUB_ENV
+
       - name: Build Spring Boot application
-        run: ./gradlew build -x test -x flywayMigrate
+        run: ./gradlew build
 
       - name: Install Ansible
         run: |

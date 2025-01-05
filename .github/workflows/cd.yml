@@ -60,6 +60,12 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 
+      - name: Create Ansible inventory
+        run: |
+          mkdir -p ansible/inventory
+          echo "[servers]" > ansible/inventory/hosts
+          echo "${{ secrets.ANSIBLE_HOST }} ansible_user=ubuntu" >> ansible/inventory/hosts
+
       - name: Deploy to Production
         env:
           ANSIBLE_HOST: ${{ secrets.ANSIBLE_HOST }}

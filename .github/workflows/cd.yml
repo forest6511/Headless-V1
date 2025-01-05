@@ -23,7 +23,7 @@ jobs:
           distribution: "temurin"
 
       - name: Build Spring Boot application
-        run: ./gradlew build -x test
+        run: ./gradlew build -x test -x flywayMigrate
 
       - name: Install Ansible
         run: |

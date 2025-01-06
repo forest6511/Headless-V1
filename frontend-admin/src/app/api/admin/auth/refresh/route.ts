@@ -10,7 +10,7 @@ export async function POST(_request: Request) {
     const refreshToken = cookieStore.get('refresh_token')
 
     const refreshUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${ADMIN_API_ENDPOINTS.AUTH.REFRESH_TOKEN}`
-    console.log(refreshUrl)
+    console.info(refreshUrl)
     const response = await fetch(refreshUrl, {
       method: 'POST',
       headers: {

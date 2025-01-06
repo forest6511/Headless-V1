@@ -43,10 +43,10 @@ export const apiClient = {
     const responseData = await response.json()
     logResponse(url, response)
 
-    if (response.status === 401 || response.status === 403) {
-      console.error('認証エラーが発生しました', response.status)
-      window.location.href = ROUTES.HOME
-    }
+    // if (response.status === 401 || response.status === 403) {
+    //   console.error('認証エラーが発生しました', response.status)
+    //   window.location.href = ROUTES.HOME
+    // }
 
     if (!response.ok) {
       const errorResponse =

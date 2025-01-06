@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/admin/auth/signup",
-      "destination": "/api/admin/auth/signup/route"
+      "destination": "/api/admin/auth/signup"
     }
   ]
 }

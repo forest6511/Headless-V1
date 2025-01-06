@@ -30,6 +30,7 @@ async function handleRequest(
     const url = new URL(request.url)
     const { pathname, searchParams } = url
     const requestUrl = `${process.env.API_BASE_URL}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    console.log("--->" + requestUrl)
     console.info(requestUrl)
 
     const headers = {

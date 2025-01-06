@@ -9,6 +9,7 @@ export async function POST(request: Request) {
     const payload: SignupPayload = await request.json()
 
     const signinUrl = `${process.env.API_BASE_URL}${ADMIN_API_ENDPOINTS.AUTH.SIGNIN}`
+    console.log("--->" + signinUrl)
     console.info(signinUrl)
     const response = await fetch(signinUrl, {
       method: 'POST',

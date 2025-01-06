@@ -29,9 +29,9 @@ jwt:
 
 logging:
   level:
-    com.headblog.backend: INFO
+    com.headblog.backend: debug
     org.flywaydb: INFO
-    org.jooq: WARN
+    org.jooq: debug
 
 server:
   port: 8080

@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/admin/(.*)",
-      "destination": "/api/admin/[...path]/route"
+      "source": "/api/admin/auth/signup",
+      "destination": "/api/admin/auth/signup/route"
     }
   ]
 }

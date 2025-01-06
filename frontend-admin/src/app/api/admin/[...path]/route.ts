@@ -30,6 +30,7 @@ async function handleRequest(
     const url = new URL(request.url)
     const { pathname, searchParams } = url
     const requestUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    console.log(requestUrl)
 
     const headers = {
       'Content-Type': 'application/json',

@@ -1,12 +1,12 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { SigninFormData, signInSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api'
 import { ROUTES } from '@/config/routes'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 export default function SignInForm() {
@@ -19,22 +19,17 @@ export default function SignInForm() {
     resolver: zodResolver(signInSchema),
   })
 
-  const onSubmit = async (data: SigninFormData) => {
+
+  const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
     try {
-      await authApi.signin({
+      const response = await authApi.signin({
         email: data.email,
         password: data.password,
       })
-      // 少し遅延を入れてみる
-      setTimeout(() => {
-        router.refresh()
-        router.push(ROUTES.DASHBOARD.BASE)
-        setTimeout(() => {
-          window.location.href = ROUTES.DASHBOARD.BASE
-        }, 1000)
-      })
+
+      router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
-      console.error('Signup failed:', error)
+      console.error('Signin failed:', error)
     }
   }
 

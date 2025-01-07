@@ -24,7 +24,8 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      // router.pushの代わりにreplaceを使用
+      // 非同期処理が完了するのを待ってから遷移
+      await new Promise(resolve => setTimeout(resolve, 100))
       router.replace(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)

@@ -25,9 +25,14 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      router.refresh()
-      router.push(ROUTES.DASHBOARD.BASE)
-      window.location.href = ROUTES.DASHBOARD.BASE
+      // 少し遅延を入れてみる
+      setTimeout(() => {
+        router.refresh()
+        router.push(ROUTES.DASHBOARD.BASE)
+        setTimeout(() => {
+          window.location.href = ROUTES.DASHBOARD.BASE
+        }, 1000)
+      })
     } catch (error) {
       console.error('Signup failed:', error)
     }

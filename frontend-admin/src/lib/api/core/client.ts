@@ -1,5 +1,3 @@
-import { ROUTES } from '@/config/routes'
-
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
 interface RequestConfig {
@@ -19,7 +17,7 @@ const logResponse = (url: string, response: Response) => {
 }
 
 const logError = (url: string, error: any) => {
-  console.error(`Error - ${url}`, error.message || error)
+  console.error(`Error - ${url}`, error)
 }
 
 interface ErrorResponse {
@@ -43,10 +41,7 @@ export const apiClient = {
     const responseData = await response.json()
     logResponse(url, response)
 
-    if (response.status === 401 || response.status === 403) {
-      console.error('認証エラーが発生しました', response.status)
-      window.location.href = ROUTES.HOME
-    }
+    // 認証エラーはmiddleware.tsへ
 
     if (!response.ok) {
       const errorResponse =

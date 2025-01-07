@@ -32,6 +32,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // API認証エラー時のリダイレクト処理
+  if (request.nextUrl.pathname.startsWith('/api/admin')) {
+    const response = NextResponse.next()
+    if (response.status === 401 || response.status === 403) {
+      console.error(`認証エラー: status=${response.status}, status=${response.body}, 
+      path=${request.nextUrl.pathname}`)
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+    return response
+  }
+
   // 上記以外のルートでは特別な処理をせず、そのまま次の処理へ進む
   return NextResponse.next()
 }

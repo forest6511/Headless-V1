@@ -24,9 +24,8 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      alert("LOGIN success1")
-      router.push(ROUTES.DASHBOARD.BASE)
-      alert("LOGIN success2")
+      // router.pushの代わりにreplaceを使用
+      router.replace(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }

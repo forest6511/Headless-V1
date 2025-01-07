@@ -27,6 +27,7 @@ export default function SignInForm() {
       })
       router.refresh()
       router.push(ROUTES.DASHBOARD.BASE)
+      window.location.href = ROUTES.DASHBOARD.BASE
     } catch (error) {
       console.error('Signup failed:', error)
     }

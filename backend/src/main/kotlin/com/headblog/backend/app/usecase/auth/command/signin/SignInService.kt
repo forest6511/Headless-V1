@@ -3,8 +3,8 @@ package com.headblog.backend.app.usecase.auth.command.signin
 import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.backend.infra.service.auth.TokenService
+import com.headblog.backend.shared.exception.AuthException
 import org.slf4j.LoggerFactory
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -28,13 +28,13 @@ class SignInService(
         val user = userRepository.findByEmail(email)
             ?: run {
                 logger.error("invalid credentials, user not found for email: ${email.value}")
-                throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${email.value}")
+                throw AuthException("invalid credentials for email: ${email.value}")
             }
 
         // パスワードを検証
         if (!passwordEncoder.matches(command.password, user.passwordHash.value)) {
             logger.error("invalid credentials, incorrect password for email: ${email.value}")
-            throw AuthenticationCredentialsNotFoundException("invalid credentials for email: ${email.value}")
+            throw AuthException("invalid credentials for email: ${email.value}")
         }
 
         // JWTトークン生成

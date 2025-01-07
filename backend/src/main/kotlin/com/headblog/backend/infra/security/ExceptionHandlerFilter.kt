@@ -2,6 +2,7 @@ package com.headblog.backend.infra.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exception.AuthException
 import com.headblog.backend.shared.exception.DomainConflictException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -40,16 +41,17 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
         logOriginalErrorIfPresent(cause)
 
         val (status: HttpStatus, message) = when (cause) {
+            is AuthException -> {
+                HttpStatus.UNAUTHORIZED to (cause.message ?: "Unauthorized error")
+            }
             is AppConflictException, is DomainConflictException -> {
                 HttpStatus.CONFLICT to (cause.message ?: "Conflict error")
             }
-
             else -> {
                 appLog.error("Unhandled exception occurred: ${cause.message}", cause)
                 HttpStatus.INTERNAL_SERVER_ERROR to "Internal Server Error"
             }
         }
-
         writeErrorResponse(response, status, message)
     }
 

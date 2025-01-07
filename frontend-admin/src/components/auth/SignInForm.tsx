@@ -5,11 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@nextui-org/react'
 import { SigninFormData, signInSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api'
-import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/config/routes'
 
 export default function SignInForm() {
-  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -24,9 +22,7 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      // 非同期処理が完了するのを待ってから遷移
-      await new Promise(resolve => setTimeout(resolve, 100))
-      router.replace(ROUTES.DASHBOARD.BASE)
+      window.location.replace(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)
     }

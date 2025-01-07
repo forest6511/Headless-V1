@@ -29,7 +29,7 @@ async function handleRequest(
     // URLの取得とクエリパラメータの処理
     const url = new URL(request.url)
     const { pathname, searchParams } = url
-    const requestUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    const requestUrl = `${process.env.API_BASE_URL}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
     console.info(requestUrl)
 
     const headers = {

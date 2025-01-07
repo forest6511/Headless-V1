@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     const payload: SignupPayload = await request.json()
 
-    const signinUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${ADMIN_API_ENDPOINTS.AUTH.SIGNIN}`
+    const signinUrl = `${process.env.API_BASE_URL}${ADMIN_API_ENDPOINTS.AUTH.SIGNIN}`
     console.info(signinUrl)
     const response = await fetch(signinUrl, {
       method: 'POST',
@@ -22,7 +22,10 @@ export async function POST(request: Request) {
       console.error(
         `Signin request failed. Status: ${status}, Body: ${errorBody}`
       )
-      return NextResponse.json({ error: 'signin failed' }, { status })
+      return NextResponse.json(
+        { error: 'Failed to request.', details: errorBody },
+        { status }
+      )
     }
 
     const authResponse: AuthResponse = await response.json()

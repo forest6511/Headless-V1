@@ -80,7 +80,7 @@ jobs:
         run: |
           cd frontend-admin
           npm install -g vercel
-          vercel build --prod --yes
+          vercel deploy --prebuilt --prod --token $VERCEL_TOKEN
 
       - name: Install dependencies of frontend-user
         run: |

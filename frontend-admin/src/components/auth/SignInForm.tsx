@@ -32,7 +32,9 @@ export default function SignInForm() {
         password: data.password,
       })
 
-      window.location.href = ROUTES.DASHBOARD.BASE
+      // プロトコルとドメインを含むフルURL
+      const baseUrl = window.location.origin
+      window.location.href = `${baseUrl}${ROUTES.DASHBOARD.BASE}`
     } catch (error) {
       console.error('Signup failed:', error)
     }

@@ -25,6 +25,7 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
+      alert(ROUTES.DASHBOARD.BASE)
       router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       console.error('Signup failed:', error)

@@ -32,10 +32,7 @@ export default function SignInForm() {
         password: data.password,
       })
 
-      // URLエンコードされたデータでページ遷移
-      const queryData = new URLSearchParams()
-      queryData.append('email', data.email)
-      router.push(`${ROUTES.DASHBOARD.BASE}?${queryData.toString()}`)
+      window.location.href = ROUTES.DASHBOARD.BASE
     } catch (error) {
       console.error('Signup failed:', error)
     }

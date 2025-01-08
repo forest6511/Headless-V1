@@ -31,7 +31,9 @@ export async function POST(request: Request) {
     const authResponse: AuthResponse = await response.json()
     await handleAuthCookies(authResponse)
 
-    return NextResponse.json(authResponse)
+    NextResponse.json(authResponse)
+    response.headers.set('Location', '/dashboard')
+    return
   } catch (error) {
     console.error('Unexpected error during signin:', error)
     return NextResponse.json(

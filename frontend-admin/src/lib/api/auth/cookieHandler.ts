@@ -11,23 +11,24 @@ export const handleAuthCookies = async (authResponse: AuthResponse) => {
 
   const isProduction = process.env.NODE_ENV === 'production'
 
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    expires: new Date(authResponse.authTokens.expiresAt),
+    sameSite: 'strict' as const,
+    // TODO
+    ...(isProduction && { domain: '.miwara.com' }), // 本番環境のみドメイン設定を追加
+  }
+
   cookieStore.set(
     'access_token',
     authResponse.authTokens.accessToken.toString(),
-    {
-      httpOnly: true,
-      secure: isProduction,
-      expires: new Date(authResponse.authTokens.expiresAt),
-    }
+    cookieOptions
   )
 
   cookieStore.set(
     'refresh_token',
     authResponse.authTokens.refreshToken.toString(),
-    {
-      httpOnly: true,
-      secure: isProduction,
-      expires: new Date(authResponse.authTokens.expiresAt),
-    }
+    cookieOptions
   )
 }

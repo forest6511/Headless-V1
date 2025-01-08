@@ -16,7 +16,8 @@ export const handleAuthCookies = async (authResponse: AuthResponse) => {
     secure: isProduction,
     expires: new Date(authResponse.authTokens.expiresAt),
     sameSite: 'strict' as const,
-    ...(isProduction && { domain: '.miwara.com' }) // 本番環境のみドメイン設定を追加
+    // TODO
+    ...(isProduction && { domain: '.miwara.com' }), // 本番環境のみドメイン設定を追加
   }
 
   cookieStore.set(

@@ -25,7 +25,7 @@ export default function SignInForm() {
         email: data.email,
         password: data.password,
       })
-      alert(ROUTES.DASHBOARD.BASE)
+      alert(ROUTES.DASHBOARD.BASE　+ "v1")
       window.location.href = ROUTES.DASHBOARD.BASE
     } catch (error) {
       console.error('Signup failed:', error)

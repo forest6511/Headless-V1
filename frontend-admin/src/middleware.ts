@@ -8,6 +8,10 @@ import { jwtVerify } from 'jose'
  * サーバーサイドで動作し、クライアントから送信されるリクエストの前処理を行います。
  */
 export async function middleware(request: NextRequest) {
+  // すべての認証チェックを一時的に無効化
+  return NextResponse.next()
+
+  /*
   // クッキーからアクセストークンを取得（サーバーサイドの責任として、ブラウザから送信されたクッキーを解析）
   const accessToken = request.cookies.get('access_token')?.value
 
@@ -45,14 +49,5 @@ export async function middleware(request: NextRequest) {
 
   // 上記以外のルートでは特別な処理をせず、そのまま次の処理へ進む
   return NextResponse.next()
-}
-
-/**
- * ミドルウェアの設定オブジェクト
- * 適用するルートを定義します。
- * サーバーサイドで特定のルートに対してのみミドルウェアを適用する仕組みを提供。
- */
-export const config = {
-  // /dashboard 以下のすべてのパスに対してミドルウェアを適用
-  matcher: '/dashboard/:path*',
+   */
 }

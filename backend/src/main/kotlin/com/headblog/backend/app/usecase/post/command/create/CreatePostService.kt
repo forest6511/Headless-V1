@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
-import com.headblog.backend.domain.model.post.PostTranslation
+import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
@@ -73,13 +73,13 @@ class CreatePostService(
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
             translations = listOf(
-                PostTranslation(
+                Translation(
                     language = Language.of("ja"),
                     title = command.title,
                     content = command.content,
                     excerpt = japaneseSummary
                 ),
-                PostTranslation(
+                Translation(
                     language = Language.of("en"),
                     title = englishTitle,
                     content = englishContent,

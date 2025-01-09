@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.post
 
-import com.headblog.backend.app.usecase.post.query.PostWithTranslationsDto
+import com.headblog.backend.app.usecase.post.query.PostDto
 import java.util.*
 
 interface PostRepository {
@@ -9,13 +9,13 @@ interface PostRepository {
     fun update(post: Post): Int
     fun delete(post: Post): Int
 
-    fun findBySlug(slug: String): PostWithTranslationsDto?
-    fun findById(id: UUID): PostWithTranslationsDto?
+    fun findBySlug(slug: String): PostDto?
+    fun findById(id: UUID): PostDto?
 
     fun findAll(
         cursorPostId: UUID?,
         pageSize: Int,
-    ): List<PostWithTranslationsDto>
+    ): List<PostDto>
 
     fun count(): Int
 }

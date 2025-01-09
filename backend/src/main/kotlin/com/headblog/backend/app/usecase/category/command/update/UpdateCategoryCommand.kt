@@ -4,8 +4,8 @@ import java.util.*
 
 data class UpdateCategoryCommand(
     val id: UUID,
+    val language: String,
     val name: String,
-    val slug: String,
     val description: String?,
     val parentId: UUID?
 )

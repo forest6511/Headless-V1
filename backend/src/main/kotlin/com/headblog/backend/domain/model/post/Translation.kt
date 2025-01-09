@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.post
 
-data class PostTranslation(
+data class Translation(
     val language: Language,
     val title: String,
     val excerpt: String,

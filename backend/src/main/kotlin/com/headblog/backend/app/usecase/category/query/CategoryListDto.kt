@@ -5,10 +5,9 @@ import java.util.*
 
 data class CategoryListDto(
     val id: UUID,
-    val name: String,
     val slug: String,
-    val description: String?,
     val parentId: UUID?,
+    val translations: List<TranslationDto>,
     val createdAt: LocalDateTime,
     val postIds: List<UUID>,
     val breadcrumbs: List<BreadcrumbDto>

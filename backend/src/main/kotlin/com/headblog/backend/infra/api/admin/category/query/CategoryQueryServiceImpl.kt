@@ -1,6 +1,7 @@
 package com.headblog.backend.infra.api.admin.category.query
 
 import com.headblog.backend.app.usecase.category.query.BreadcrumbDto
+import com.headblog.backend.app.usecase.category.query.BreadcrumbTranslationDto
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryListDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
@@ -14,24 +15,20 @@ import org.springframework.stereotype.Service
 class CategoryQueryServiceImpl(
     private val categoryRepository: CategoryRepository
 ) : GetCategoryQueryService {
-
     override fun findById(id: UUID): CategoryDto? = categoryRepository.findById(id)
-
     override fun findBySlug(slug: String): CategoryDto? = categoryRepository.findBySlug(slug)
-
     override fun existsByParentId(parentId: UUID) = categoryRepository.existsByParentId(parentId)
 
     override fun findCategoryList(): List<CategoryListDto> {
-        val categoryWithPostIdsDto: List<CategoryWithPostIdsDto> = categoryRepository.findTypeWithPostIds()
+        val categoryWithPostIdsDto = categoryRepository.findWithPostIds()
         val categoryMap = categoryWithPostIdsDto.associateBy { it.id }
 
         val categoryList = categoryWithPostIdsDto.map { category ->
             CategoryListDto(
                 id = category.id,
-                name = category.name,
                 slug = category.slug,
-                description = category.description,
                 parentId = category.parentId,
+                translations = category.translations,
                 createdAt = category.createdAt,
                 postIds = category.postIds,
                 breadcrumbs = generateBreadcrumbs(category, categoryMap)
@@ -49,12 +46,17 @@ class CategoryQueryServiceImpl(
         categoryMap: Map<UUID, CategoryWithPostIdsDto>
     ): List<BreadcrumbDto> {
         return generateSequence(category) { current ->
-            current.parentId?.let { categoryMap[it] } // 親カテゴリを取得
+            current.parentId?.let { categoryMap[it] }
         }.map { current ->
             BreadcrumbDto(
                 id = current.id,
-                name = current.name,
-                slug = current.slug
+                slug = current.slug,
+                translations = current.translations.map { translation ->
+                    BreadcrumbTranslationDto(
+                        language = translation.language,
+                        name = translation.name
+                    )
+                }
             )
         }.toList().reversed()
     }

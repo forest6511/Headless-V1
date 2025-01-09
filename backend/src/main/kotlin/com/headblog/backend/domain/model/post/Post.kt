@@ -11,7 +11,7 @@ class Post private constructor(
     val status: Status,
     val featuredImageId: UUID?,
     val categoryId: CategoryId,
-    val translations: List<PostTranslation>,
+    val translations: List<Translation>,
 ) {
     companion object {
 
@@ -21,7 +21,7 @@ class Post private constructor(
             status: String,
             featuredImageId: UUID?,
             categoryId: UUID,
-            translations: List<PostTranslation>,
+            translations: List<Translation>,
         ): Post {
             return Post(
                 id = PostId(id.generate().value),
@@ -39,7 +39,7 @@ class Post private constructor(
             status: String,
             featuredImageId: UUID?,
             categoryId: UUID,
-            translations: List<PostTranslation>,
+            translations: List<Translation>,
         ): Post {
             return Post(
                 id = PostId(id),

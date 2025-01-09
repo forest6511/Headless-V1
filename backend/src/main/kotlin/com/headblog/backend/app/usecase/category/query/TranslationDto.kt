@@ -1,13 +1,11 @@
 package com.headblog.backend.app.usecase.category.query
 
 import java.time.LocalDateTime
-import java.util.*
 
-data class CategoryDto(
-    val id: UUID,
-    val slug: String,
-    val parentId: UUID?,
-    val translations: List<TranslationDto>,
+data class TranslationDto(
+    val language: String,
+    val name: String,
+    val description: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )

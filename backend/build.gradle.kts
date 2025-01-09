@@ -76,6 +76,7 @@ buildscript {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	systemProperty("spring.profiles.active", "test")
+	systemProperty("spring.flyway.placeholder-replacement", "false")
 }
 
 tasks.test {

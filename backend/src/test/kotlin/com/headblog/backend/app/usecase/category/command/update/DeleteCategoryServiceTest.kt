@@ -1,8 +1,12 @@
 package com.headblog.backend.app.usecase.category.command.update
 
+import com.headblog.backend.app.usecase.category.command.delete.DeleteCategoryService
 import com.headblog.backend.app.usecase.category.query.CategoryDto
+import com.headblog.backend.app.usecase.category.query.TranslationDto
 import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.category.Slug
+import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.shared.exception.AppConflictException
 import io.mockk.every
 import io.mockk.mockk
@@ -15,42 +19,51 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class DeleteCategoryServiceTest {
-
     private val categoryRepository: CategoryRepository = mockk()
-    private val updateCategoryService = UpdateCategoryService(categoryRepository)
+    private val postCategoryRepository: PostCategoryRepository = mockk()
+    private val deleteCategoryService = DeleteCategoryService(categoryRepository, postCategoryRepository)
+
+    val now = LocalDateTime.now()
 
     @Test
-    @DisplayName("正常にカテゴリーが更新されること")
-    fun `should update category successfully`() {
-        // GIVEN: 既存のカテゴリーが存在し、スラッグがユニークである
+    @DisplayName("正常にカテゴリーが削除されること")
+    fun `should delete category successfully`() {
+        // GIVEN: カテゴリーとデフォルトカテゴリーが存在する
         val categoryId = UUID.randomUUID()
-        val existingDto = CategoryDto(
+        val defaultCategoryId = UUID.randomUUID()
+        val defaultTranslation = TranslationDto("ja", "デフォルト", null, now, now)
+        val translation = TranslationDto("ja", "テスト", "説明", now, now)
+
+        val targetDto = CategoryDto(
             id = categoryId,
-            name = "Existing Category",
-            slug = "existing-slug",
-            description = "Existing description",
-            parentId = UUID.randomUUID(),
-            createdAt = LocalDateTime.now()
+            slug = "test-slug",
+            parentId = null,
+            translations = listOf(translation),
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
         )
 
-        val command = UpdateCategoryCommand(
-            id = categoryId,
-            name = "Updated Category",
-            slug = "updated-slug",
-            description = "Updated description",
-            parentId = null
+        val defaultDto = CategoryDto(
+            id = defaultCategoryId,
+            slug = Slug.DEFAULT_SLUG,
+            parentId = null,
+            translations = listOf(defaultTranslation),
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
         )
 
-        every { categoryRepository.findById(categoryId) } returns existingDto
-        every { categoryRepository.findBySlug("updated-slug") } returns null
-        every { categoryRepository.update(any()) } returns 1
+        every { categoryRepository.findById(categoryId) } returns targetDto
+        every { categoryRepository.findBySlug(Slug.DEFAULT_SLUG) } returns defaultDto
+        every { categoryRepository.findAllByParentId(any()) } returns emptyList()
+        every { postCategoryRepository.findPostsByCategoryId(any()) } returns emptyList()
+        every { categoryRepository.delete(any()) } returns 1
 
-        // WHEN: カテゴリー更新を実行
-        val result = updateCategoryService.execute(command)
+        // WHEN: カテゴリー削除を実行
+        val result = deleteCategoryService.execute(categoryId)
 
-        // THEN: 更新処理が成功し、リポジトリが更新メソッドを呼び出す
+        // THEN: 削除処理が成功し、削除メソッドが呼び出される
         assertEquals(CategoryId(categoryId), result)
-        verify { categoryRepository.update(any()) }
+        verify { categoryRepository.delete(any()) }
     }
 
     @Test
@@ -58,71 +71,37 @@ class DeleteCategoryServiceTest {
     fun `should throw exception when category not found`() {
         // GIVEN: 指定されたIDのカテゴリーが存在しない
         val categoryId = UUID.randomUUID()
-
-        val command = UpdateCategoryCommand(
-            id = categoryId,
-            name = "Updated Category",
-            slug = "updated-slug",
-            description = "Updated description",
-            parentId = null
-        )
-
         every { categoryRepository.findById(categoryId) } returns null
 
-        // WHEN: カテゴリー更新を実行した場合
+        // WHEN & THEN: カテゴリー削除実行時に例外がスローされる
         val exception = assertThrows(AppConflictException::class.java) {
-            updateCategoryService.execute(command)
+            deleteCategoryService.execute(categoryId)
         }
-
-        // THEN: IDが見つからないことを示す例外がスローされる
         assertEquals("Category with ID $categoryId not found", exception.message)
     }
 
     @Test
-    @DisplayName("スラッグが別のカテゴリーに属している場合に例外をスローすること")
-    fun `should throw exception when slug belongs to a different category`() {
-        // GIVEN: 指定されたスラッグが別のカテゴリーに属している
-        val categoryId = UUID.randomUUID()
-        val conflictingCategoryId = UUID.randomUUID()
-
-        val existingDto = CategoryDto(
-            id = categoryId,
-            name = "Existing Category",
-            slug = "existing-slug",
-            description = "Existing description",
-            parentId = UUID.randomUUID(),
-            createdAt = LocalDateTime.now()
-        )
-
-        val conflictingDto = CategoryDto(
-            id = conflictingCategoryId,
-            name = "Conflicting Category",
-            slug = "updated-slug",
-            description = "Conflicting description",
+    @DisplayName("デフォルトカテゴリーを削除しようとした場合に例外をスローすること")
+    fun `should throw exception when trying to delete default category`() {
+        // GIVEN: デフォルトカテゴリーを削除しようとする
+        val defaultCategoryId = UUID.randomUUID()
+        val translation = TranslationDto("ja", "デフォルト", null, LocalDateTime.now(), LocalDateTime.now())
+        val defaultDto = CategoryDto(
+            id = defaultCategoryId,
+            slug = Slug.DEFAULT_SLUG,
             parentId = null,
-            createdAt = LocalDateTime.now()
+            translations = listOf(translation),
+            createdAt = now,
+            updatedAt = now
         )
 
-        val command = UpdateCategoryCommand(
-            id = categoryId,
-            name = "Updated Category",
-            slug = "updated-slug",
-            description = "Updated description",
-            parentId = null
-        )
+        every { categoryRepository.findById(defaultCategoryId) } returns defaultDto
+        every { categoryRepository.findBySlug(Slug.DEFAULT_SLUG) } returns defaultDto
 
-        every { categoryRepository.findById(categoryId) } returns existingDto
-        every { categoryRepository.findBySlug("updated-slug") } returns conflictingDto
-
-        // WHEN: カテゴリー更新を実行した場合
+        // WHEN & THEN: カテゴリー削除実行時に例外がスローされる
         val exception = assertThrows(AppConflictException::class.java) {
-            updateCategoryService.execute(command)
+            deleteCategoryService.execute(defaultCategoryId)
         }
-
-        // THEN: スラッグの重複を示す例外がスローされる
-        assertEquals(
-            "The category with slug 'updated-slug' already exists and belongs to a different category.",
-            exception.message
-        )
+        assertEquals("Cannot delete the default category", exception.message)
     }
 }

@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
-import com.headblog.backend.domain.model.post.PostTranslation
+import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
@@ -36,25 +36,12 @@ class UpdatePostService(
             ?: throw AppConflictException("Post with ID ${command.id} not found.")
 
 
-        val updatedTranslations = originalPostDto.translations.map { translation ->
-            if (translation.language == command.language) {
-                // コマンドで指定された言語の翻訳のみを更新
-                PostTranslation(
-                    language = Language.of(command.language),
-                    title = command.title,
-                    excerpt = translation.excerpt, // 既存の要約を維持
-                    content = command.content
-                )
-            } else {
-                // その他の言語の翻訳はそのまま維持
-                PostTranslation(
-                    language = Language.of(translation.language),
-                    title = translation.title,
-                    excerpt = translation.excerpt,
-                    content = translation.content
-                )
-            }
-        }
+        val translation = Translation(
+            language = Language.of(command.language),
+            title = command.title,
+            excerpt = originalPostDto.translations.first { it.language == command.language }.excerpt,
+            content = command.content
+        )
 
         val post = Post.fromCommand(
             id = command.id,
@@ -62,7 +49,7 @@ class UpdatePostService(
             status = command.status,
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
-            translations = updatedTranslations
+            translations = listOf(translation)
         )
 
         // 投稿を更新

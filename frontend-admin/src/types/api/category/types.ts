@@ -1,3 +1,4 @@
+import { Language } from '@/types/api/common/types'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { CreateCategoryData, UpdateCategoryData } from '@/schemas/category'
 
@@ -15,18 +16,22 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
   initialData: UpdateCategoryData
 }
 
-export const formatCategoryOptions = (categories: CategoryListResponse[]) =>
+export const formatCategoryOptions = (
+  categories: CategoryListResponse[],
+  language: Language
+) =>
   categories.map((category) => ({
     key: category.id,
-    label: category.name,
+    label: category.translations.find(t => t.language === language.toString())?.name ?? '',
   }))
 
 export const formatCategoryOptionsWithoutNoSetting = (
-  categories: CategoryListResponse[]
+  categories: CategoryListResponse[],
+  language: Language
 ) =>
   categories
     .filter((category) => category.slug !== NOSETTING_SLUG)
     .map((category) => ({
       key: category.id,
-      label: category.name,
+      label: category.translations.find(t => t.language === language.toString())?.name ?? '',
     }))

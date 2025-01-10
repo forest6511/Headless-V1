@@ -2,7 +2,7 @@
 // https://react.dev/reference/react/use
 import { use, useState } from 'react'
 
-import { Button, Card, CardBody, Select, SelectItem } from '@nextui-org/react'
+import { Button, Card, CardBody } from '@nextui-org/react'
 import { ROUTES } from '@/config/routes'
 import { PostForm } from '@/components/post/PostForm'
 import {
@@ -10,7 +10,7 @@ import {
   usePostDetail,
 } from '@/hooks/post/usePostDetail'
 import { Save } from 'lucide-react'
-import { Language, Languages } from '@/types/api/common/types'
+import { Language } from '@/types/api/common/types'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
 
 interface Props {

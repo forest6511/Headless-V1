@@ -1,6 +1,8 @@
+import { Language } from '@/types/api/common/types'
+
 interface BaseCategoryRequest {
+  language: Language
   name: string
-  slug: string
   description?: string
   parentId?: string
 }

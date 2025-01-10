@@ -14,6 +14,7 @@ import {
 } from '@/types/api/category/types'
 import { ApiError } from '@/lib/api/core/client'
 import toast from 'react-hot-toast'
+import { Language } from '@/types/api/common/types'
 
 export const UpdateCategoryForm = ({
   redirectPath,
@@ -32,14 +33,18 @@ export const UpdateCategoryForm = ({
     mode: 'onChange',
   })
 
-  const categoryOptions = formatCategoryOptions(categories)
-
+  const categoryOptions = formatCategoryOptions(
+    categories,
+    (initialData?.language as Language) || 'ja'
+  )
   const onSubmit = async (data: UpdateCategoryData) => {
     try {
       const requestData: UpdateCategoryRequest = {
         id: data.id,
+        language: (['ja', 'en'].includes(data.language)
+          ? data.language
+          : 'ja') as Language, // Type guard with fallback
         name: data.name,
-        slug: data.slug,
         description: data.description,
         parentId: data.parentId || undefined,
       }
@@ -61,14 +66,6 @@ export const UpdateCategoryForm = ({
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
       />
-
-      <Input
-        {...register('slug')}
-        label="スラッグ"
-        isInvalid={!!errors.slug}
-        errorMessage={errors.slug?.message}
-      />
-
       <Select
         {...register('parentId')}
         items={categoryOptions}

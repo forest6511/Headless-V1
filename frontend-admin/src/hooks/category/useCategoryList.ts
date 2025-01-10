@@ -3,7 +3,6 @@ import { categoryApi } from '@/lib/api'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { CategoryListResponse } from '@/types/api/category/response'
 
-
 export const useCategoryList = () => {
   const setCategories = useCategoryStore((state) => state.setCategories)
   const categories = useCategoryStore((state) => state.categories)

@@ -3,7 +3,7 @@
 import { AddCategoryButton } from '@/components/category/AddCategoryButton'
 import { CategoryTable } from '@/components/category/CategoryTable'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { ROUTES } from '@/config/routes'
 import { useRouter } from 'next/navigation'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
@@ -12,17 +12,17 @@ import { Language } from '@/types/api/common/types'
 export default function CategoryList() {
   const router = useRouter()
   const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
-
   const { categories, isLoading, error, refetch } = useCategoryList()
 
   // 言語変更時にデータを再フェッチ
-  const handleLanguageChange = useCallback(
-    (newLanguage: Language) => {
-      setCurrentLanguage(newLanguage)
-      refetch() // 言語変更時にカテゴリーを再取得
-    },
-    [refetch]
-  )
+  const handleLanguageChange = useCallback((newLanguage: Language) => {
+    setCurrentLanguage(newLanguage)
+  }, [])
+
+  // useEffect to trigger refetch when language changes
+  useEffect(() => {
+    refetch()
+  }, [currentLanguage, refetch])
 
   const handleCategoryEdit = (id: string) => {
     router.push(ROUTES.DASHBOARD.CATEGORIES.EDIT(id))

@@ -6,6 +6,8 @@ export const NOSETTING_SLUG = 'nosetting'
 
 export interface CategoryFormCommonProps {
   redirectPath: string
+  id?: string
+  onSubmittingChange?: (isSubmitting: boolean) => void
 }
 
 export interface CreateCategoryFormProps extends CategoryFormCommonProps {

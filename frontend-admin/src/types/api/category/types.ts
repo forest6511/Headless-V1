@@ -22,7 +22,9 @@ export const formatCategoryOptions = (
 ) =>
   categories.map((category) => ({
     key: category.id,
-    label: category.translations.find(t => t.language === language.toString())?.name ?? '',
+    label:
+      category.translations.find((t) => t.language === language.toString())
+        ?.name ?? '',
   }))
 
 export const formatCategoryOptionsWithoutNoSetting = (
@@ -33,5 +35,7 @@ export const formatCategoryOptionsWithoutNoSetting = (
     .filter((category) => category.slug !== NOSETTING_SLUG)
     .map((category) => ({
       key: category.id,
-      label: category.translations.find(t => t.language === language.toString())?.name ?? '',
+      label:
+        category.translations.find((t) => t.language === language.toString())
+          ?.name ?? '',
     }))

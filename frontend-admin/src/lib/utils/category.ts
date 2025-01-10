@@ -13,8 +13,11 @@ export function createCategoryOptions(
   return categories.map(({ id, breadcrumbs }) => ({
     value: id,
     label: breadcrumbs
-      .map((breadcrumb) =>
-        breadcrumb.translations.find(t => t.language === language)?.name ?? '')
+      .map(
+        (breadcrumb) =>
+          breadcrumb.translations.find((t) => t.language === language)?.name ??
+          ''
+      )
       .join(' / '),
   }))
 }
@@ -27,8 +30,11 @@ export function getBreadcrumbForCategory(
   const category = categories.find(({ id }) => id === categoryId)
   return category
     ? category.breadcrumbs
-      .map((breadcrumb) =>
-        breadcrumb.translations.find(t => t.language === language)?.name ?? '')
-      .join(' / ')
+        .map(
+          (breadcrumb) =>
+            breadcrumb.translations.find((t) => t.language === language)
+              ?.name ?? ''
+        )
+        .join(' / ')
     : null
 }

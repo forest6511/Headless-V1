@@ -78,7 +78,11 @@ export const PostTable = ({
               </TableCell>
               <TableCell>{post.slug}</TableCell>
               <TableCell>
-                {getBreadcrumbForCategory(post.categoryId, categories, currentLanguage)}
+                {getBreadcrumbForCategory(
+                  post.categoryId,
+                  categories,
+                  currentLanguage
+                )}
               </TableCell>
               <TableCell>
                 {post.tags.map((tag) => tag.name).join(', ')}

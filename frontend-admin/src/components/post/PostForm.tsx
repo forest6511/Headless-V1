@@ -31,7 +31,10 @@ export function PostForm({
   onSubmittingChange,
 }: PostFormProps) {
   const { categories } = useCategoryList()
-  const categoryOptions = createCategoryOptions(categories)
+  const categoryOptions = createCategoryOptions(
+    categories,
+    initialData?.language || 'ja'
+  )
   const {
     form,
     textLength,

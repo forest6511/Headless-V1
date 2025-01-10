@@ -8,7 +8,7 @@ export interface CategoryOption {
 
 export function createCategoryOptions(
   categories: CategoryListResponse[] = [],
-  language: Language
+  language: string
 ): CategoryOption[] {
   return categories.map(({ id, breadcrumbs }) => ({
     value: id,

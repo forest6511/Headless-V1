@@ -1,4 +1,3 @@
-import { Language } from '@/types/api/common/types'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { CreateCategoryData, UpdateCategoryData } from '@/schemas/category'
 
@@ -20,7 +19,7 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
 
 export const formatCategoryOptions = (
   categories: CategoryListResponse[],
-  language: Language
+  language: string
 ) =>
   categories.map((category) => ({
     key: category.id,
@@ -31,7 +30,7 @@ export const formatCategoryOptions = (
 
 export const formatCategoryOptionsWithoutNoSetting = (
   categories: CategoryListResponse[],
-  language: Language
+  language: string
 ) =>
   categories
     .filter((category) => category.slug !== NOSETTING_SLUG)

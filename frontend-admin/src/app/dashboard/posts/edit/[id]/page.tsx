@@ -10,8 +10,8 @@ import {
   usePostDetail,
 } from '@/hooks/post/usePostDetail'
 import { Save } from 'lucide-react'
-import { Language, Languages } from '@/types/api/post/types'
-import { LanguageSelector } from '@/components/post/LanguageSelector'
+import { Language, Languages } from '@/types/api/common/types'
+import { LanguageSelector } from '@/components/common/LanguageSelector'
 
 interface Props {
   params: Promise<{

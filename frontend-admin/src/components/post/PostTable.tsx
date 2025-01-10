@@ -11,19 +11,20 @@ import {
 } from '@nextui-org/react'
 import { PostResponse } from '@/types/api/post/response'
 import { POST_COLUMNS } from '@/config/constants'
-import { Language, Languages, PostStatuses } from '@/types/api/post/types'
+import { Language } from '@/types/api/common/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
 import { formatDateTime } from '@/lib/utils/post'
+import { PostStatuses } from '@/types/api/post/types'
 
 interface PostTableProps {
   posts: PostResponse[]
   categories: CategoryListResponse[]
   page: number
   totalPages: number
-  currentLanguage: Language // 追加
+  currentLanguage: Language
   onPageChange: (page: number) => void
   onEdit: (id: string) => void
   onDelete: () => void
@@ -34,7 +35,7 @@ export const PostTable = ({
   categories,
   page,
   totalPages,
-  currentLanguage, // 追加
+  currentLanguage,
   onPageChange,
   onEdit,
   onDelete,

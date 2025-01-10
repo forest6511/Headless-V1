@@ -5,7 +5,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select'
-import { Language, Languages } from '@/types/api/post/types'
+import { Language, Languages } from '@/types/api/common/types'
 
 interface LanguageSelectorProps {
   currentLanguage: Language

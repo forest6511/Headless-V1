@@ -1,0 +1,11 @@
+- name: Setup logging directory
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Create log directory
+      file:
+        path: "{{ lookup('env', 'BACKEND_LOG_DIR') }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'

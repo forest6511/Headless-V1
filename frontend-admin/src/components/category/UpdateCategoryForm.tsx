@@ -8,14 +8,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { categoryApi } from '@/lib/api'
 import { UpdateCategoryRequest } from '@/types/api/category/request'
-import { UpdateCategoryFormProps } from '@/types/api/category/types'
 import { ApiError } from '@/lib/api/core/client'
 import toast from 'react-hot-toast'
 import { createCategoryOptions } from '@/lib/utils/category'
 
+interface UpdateCategoryFormProps {
+  redirectPath: string
+  initialData: UpdateCategoryData
+  id?: string
+  onSubmittingChange?: (isSubmitting: boolean) => void
+}
+
 export const UpdateCategoryForm = ({
   redirectPath,
   initialData,
+  id = 'category-form',
+  onSubmittingChange,
 }: UpdateCategoryFormProps) => {
   const router = useRouter()
   const categories = useCategoryStore((state) => state.categories)
@@ -36,6 +44,7 @@ export const UpdateCategoryForm = ({
   )
   const onSubmit = async (data: UpdateCategoryData) => {
     try {
+      onSubmittingChange?.(true)
       const requestData: UpdateCategoryRequest = {
         id: data.id,
         language: data.language,
@@ -50,11 +59,13 @@ export const UpdateCategoryForm = ({
         toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
       }
       console.error('カテゴリーの更新に失敗しました:', error)
+    } finally {
+      onSubmittingChange?.(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form id={id} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Input
         {...register('name')}
         label="名前"
@@ -86,10 +97,6 @@ export const UpdateCategoryForm = ({
         isInvalid={!!errors.description}
         errorMessage={errors.description?.message}
       />
-
-      <Button type="submit" color="primary">
-        カテゴリーを更新
-      </Button>
     </form>
   )
 }

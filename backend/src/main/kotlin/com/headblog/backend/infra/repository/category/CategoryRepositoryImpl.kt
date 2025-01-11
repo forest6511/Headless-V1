@@ -43,8 +43,12 @@ class CategoryRepositoryImpl(
             .where(CATEGORIES.ID.eq(category.id.value))
             .execute()
 
+        // 既存の翻訳を削除（選択された言語のみ）
         dsl.deleteFrom(CATEGORY_TRANSLATIONS)
-            .where(CATEGORY_TRANSLATIONS.CATEGORY_ID.eq(category.id.value))
+            .where(
+                CATEGORY_TRANSLATIONS.CATEGORY_ID.eq(category.id.value)
+                    .and(CATEGORY_TRANSLATIONS.LANGUAGE.eq(category.translations.first().language.value))
+            )
             .execute()
 
         category.translations.forEach { translation ->

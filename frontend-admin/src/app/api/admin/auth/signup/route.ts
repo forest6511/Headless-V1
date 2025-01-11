@@ -3,6 +3,7 @@ import { handleAuthCookies } from '@/lib/api/auth/cookieHandler'
 import { SignupPayload } from '@/types/api/auth/request'
 import { AuthResponse } from '@/types/api/auth/response'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
+import { handleErrorResponse } from '@/lib/api/core/server'
 
 export async function POST(request: Request) {
   try {
@@ -18,14 +19,7 @@ export async function POST(request: Request) {
     })
 
     if (!response.ok) {
-      const errorBody = await response.text()
-      console.error(
-        `Signup request failed. Status: ${response.status}, Body: ${errorBody}`
-      )
-      return NextResponse.json(
-        { error: 'signup failed' },
-        { status: response.status }
-      )
+      return handleErrorResponse(response, 'Signup request failed.')
     }
 
     const authResponse: AuthResponse = await response.json()

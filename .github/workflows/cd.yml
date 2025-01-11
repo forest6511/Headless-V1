@@ -38,7 +38,7 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
-      - name: Set environment variables
+      - name: Set environment variables for testing only
         run: |
           echo "DB_URL=jdbc:postgresql://localhost:5432/headblog-test" >> $GITHUB_ENV
           echo "DB_USER=headblog" >> $GITHUB_ENV

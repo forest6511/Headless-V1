@@ -8,12 +8,14 @@ import { authApi } from '@/lib/api'
 import { ROUTES } from '@/config/routes'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { ApiError } from '@/lib/api/core/client'
 
 export default function SignInForm() {
   const router = useRouter()
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<SigninFormData>({
     resolver: zodResolver(signInSchema),
@@ -28,7 +30,13 @@ export default function SignInForm() {
 
       router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
-      console.error('Signup failed:', error)
+      if (error instanceof ApiError) {
+        setError('root', {
+          type: 'manual',
+          message: 'メールアドレスまたはパスワードが正しくありません。',
+        })
+      }
+      console.error('Signin failed:', error)
     }
   }
 
@@ -50,6 +58,9 @@ export default function SignInForm() {
         isInvalid={!!errors.password}
         errorMessage={errors.password?.message}
       />
+      {errors.root && (
+        <div className="text-sm text-danger px-1">{errors.root.message}</div>
+      )}
       <Button type="submit" color="primary" className="w-full">
         ログイン
       </Button>

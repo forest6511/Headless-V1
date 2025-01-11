@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
+import { handleErrorResponse } from '@/lib/api/core/server'
 
 /**
  * Next.js (Server) 経由でリクエストを Spring Boot に転送します。
@@ -59,15 +60,7 @@ async function handleRequest(
     const response = await fetch(requestUrl, options)
 
     if (!response.ok) {
-      const status = response.status
-      const errorBody = await response.text()
-      console.error(
-        `Failed to ${method} request. Status: ${status}, Body: ${errorBody}`
-      )
-      return NextResponse.json(
-        { error: 'Failed to request.', details: errorBody },
-        { status }
-      )
+      return handleErrorResponse(response, `Failed to ${method} request.`)
     }
 
     const data = await response.json()

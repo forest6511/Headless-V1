@@ -14,6 +14,7 @@
           User=ubuntu
           Environment="SPRING_PROFILES_ACTIVE=prod"
           Environment="BACKEND_LOG_DIR={{ lookup('env', 'BACKEND_LOG_DIR') }}"
+          Environment="SPRING_FLYWAY_PLACEHOLDER_REPLACEMENT=false"
           Environment="COOKIE_SECURE=true"
           Environment="COOKIE_DOMAIN={{ lookup('env', 'COOKIE_DOMAIN') }}"
           Environment="COOKIE_SAME_SITE=Strict"

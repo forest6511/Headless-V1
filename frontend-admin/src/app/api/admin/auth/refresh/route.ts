@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { handleAuthCookies } from '@/lib/api/auth/cookieHandler'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
 import { AuthResponse } from '@/types/api/auth/response'
+import { handleErrorResponse } from '@/lib/api/core/server'
 
 export async function POST(_request: Request) {
   try {
@@ -23,18 +24,7 @@ export async function POST(_request: Request) {
     })
 
     if (!response.ok) {
-      const status = response.status
-      const errorBody = await response.json()
-      console.error(
-        `Failed to refresh token. Status: ${status}, Body: ${errorBody.error}`
-      )
-      return NextResponse.json(
-        {
-          error: 'Failed to request.',
-          details: errorBody.error,
-        },
-        { status }
-      )
+      return handleErrorResponse(response, 'Failed to refresh token.')
     }
 
     const authResponse: AuthResponse = await response.json()

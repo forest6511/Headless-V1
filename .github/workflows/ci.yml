@@ -63,15 +63,22 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
         run: ./gradlew test
         continue-on-error: true
+        id: spring-test-step
 
       - name: Publish Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: |
             backend/build/reports/tests/test/
           retention-days: 1
+
+      - name: Check test results
+        if: steps.spring-test-step.outcome != 'success'  # テストが失敗した場合
+        run: |
+          echo "Tests failed. Stopping the workflow."
+          exit 1
 
       - name: Set up Node.js
         uses: actions/setup-node@v3

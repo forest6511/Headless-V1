@@ -60,12 +60,15 @@ async function handleRequest(
 
     if (!response.ok) {
       const status = response.status
-      const errorBody = await response.text()
+      const errorBody = await response.json()
       console.error(
-        `Failed to ${method} request. Status: ${status}, Body: ${errorBody}`
+        `Failed to ${method} request. Status: ${status}, Body: ${errorBody.error}`
       )
       return NextResponse.json(
-        { error: 'Failed to request.', details: errorBody },
+        {
+          error: 'Failed to request.',
+          details: errorBody.error,
+        },
         { status }
       )
     }

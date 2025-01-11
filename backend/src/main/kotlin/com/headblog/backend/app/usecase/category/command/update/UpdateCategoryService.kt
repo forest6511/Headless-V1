@@ -6,6 +6,7 @@ import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Language
 import com.headblog.backend.domain.model.category.Translation
 import com.headblog.backend.shared.exception.AppConflictException
+import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,13 +22,16 @@ class UpdateCategoryService(
         val categoryDto = categoryRepository.findById(command.id)
             ?: throw AppConflictException("Category with ID ${command.id} not found")
 
-        logger.error("command: ${command.language}")
-        logger.error("command: ${command.language}")
-        logger.error("command: ${command.language}")
-        logger.error("command: ${command.language}")
-        logger.error("command: ${command.language}")
+        // 親カテゴリーIDが指定されている場合は循環参照をチェック
+        command.parentId?.let { parentId ->
+            // 自分自身を親に設定することはできない
+            if (parentId == command.id) {
+                throw AppConflictException("Category cannot be its own parent")
+            }
+            // 親カテゴリーの階層を辿って循環参照をチェック
+            checkCircularReference(parentId, command.id)
+        }
 
-        // ドメインの集約メソッドを呼び出してカテゴリーを作成
         val updatedCategory = Category.fromDto(
             id = categoryDto.id,
             slug = categoryDto.slug,
@@ -44,5 +48,20 @@ class UpdateCategoryService(
 
         categoryRepository.update(updatedCategory)
         return updatedCategory.id
+    }
+
+    private fun checkCircularReference(parentId: UUID, originalId: UUID) {
+        val parentCategory = categoryRepository.findById(parentId)
+            ?: throw AppConflictException("Parent category with ID $parentId not found")
+
+        // 親カテゴリーのparentIdが存在する場合、さらに上の階層をチェック
+        parentCategory.parentId?.let { grandParentId ->
+            // 親の親が元のカテゴリーIDと同じ場合は循環参照
+            if (grandParentId == originalId) {
+                throw AppConflictException("Circular reference detected in category hierarchy")
+            }
+            // 再帰的に親の親をチェック
+            checkCircularReference(grandParentId, originalId)
+        }
     }
 }

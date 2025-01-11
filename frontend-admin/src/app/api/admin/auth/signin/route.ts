@@ -18,12 +18,15 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       const status = response.status
-      const errorBody = await response.text()
+      const errorBody = await response.json()
       console.error(
-        `Signin request failed. Status: ${status}, Body: ${errorBody}`
+        `Signin request failed. Status: ${status}, Body: ${errorBody.error}`
       )
       return NextResponse.json(
-        { error: 'Failed to request.', details: errorBody },
+        {
+          error: 'Failed to request.',
+          details: errorBody.error,
+        },
         { status }
       )
     }

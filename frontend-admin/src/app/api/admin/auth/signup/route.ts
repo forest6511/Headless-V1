@@ -18,13 +18,17 @@ export async function POST(request: Request) {
     })
 
     if (!response.ok) {
-      const errorBody = await response.text()
+      const status = response.status
+      const errorBody = await response.json()
       console.error(
-        `Signup request failed. Status: ${response.status}, Body: ${errorBody}`
+        `Signup request failed. Status: ${response.status}, Body: ${errorBody.error}`
       )
       return NextResponse.json(
-        { error: 'signup failed' },
-        { status: response.status }
+        {
+          error: 'Failed to request.',
+          details: errorBody.error,
+        },
+        { status }
       )
     }
 

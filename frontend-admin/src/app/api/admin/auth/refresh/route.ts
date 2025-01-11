@@ -24,12 +24,15 @@ export async function POST(_request: Request) {
 
     if (!response.ok) {
       const status = response.status
-      const errorBody = await response.text()
+      const errorBody = await response.json()
       console.error(
-        `Failed to refresh token. Status: ${status}, Body: ${errorBody}`
+        `Failed to refresh token. Status: ${status}, Body: ${errorBody.error}`
       )
       return NextResponse.json(
-        { error: 'token refresh failed', details: errorBody },
+        {
+          error: 'Failed to request.',
+          details: errorBody.error,
+        },
         { status }
       )
     }

@@ -28,10 +28,10 @@ interface ErrorResponse {
 export class ApiError extends Error {
   constructor(
     public status: number,
-    message: string,
-    public details?: string
+    public error: string,
+    public details: string
   ) {
-    super(message)
+    super(error)
     this.name = 'ApiError'
   }
 }
@@ -41,18 +41,12 @@ export const apiClient = {
     const responseData = await response.json()
     logResponse(url, response)
 
-    // 認証エラーはmiddleware.tsへ
-
     if (!response.ok) {
-      const errorResponse =
-        response.status === 409
-          ? (responseData as ErrorResponse)
-          : { error: 'An unknown error occurred', details: '' }
-
+      const errorResponse = responseData as ErrorResponse
       const apiError = new ApiError(
         response.status,
-        errorResponse.error,
-        errorResponse.details
+        errorResponse.error || 'Failed to request.',
+        errorResponse.details || ''
       )
 
       logError(url, apiError)

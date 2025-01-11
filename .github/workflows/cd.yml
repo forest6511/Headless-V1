@@ -38,6 +38,11 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Create log directory
+        run: |
+          sudo mkdir -p ${{ secrets.BACKEND_LOG_DIR }}
+          sudo chown $USER:$USER ${{ secrets.BACKEND_LOG_DIR }}
+
       - name: Set environment variables for testing only
         run: |
           echo "DB_URL=jdbc:postgresql://localhost:5432/headblog-test" >> $GITHUB_ENV

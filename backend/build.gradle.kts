@@ -25,6 +25,7 @@ extra["snippetsDir"] = file("build/generated-snippets")
 
 dependencies {
 	implementation(kotlin("stdlib"))
+	implementation("org.springframework.boot:spring-boot-starter-logging")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-jooq")
 	implementation("org.springframework.boot:spring-boot-starter-security")

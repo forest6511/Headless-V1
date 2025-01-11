@@ -21,6 +21,12 @@ class UpdateCategoryService(
         val categoryDto = categoryRepository.findById(command.id)
             ?: throw AppConflictException("Category with ID ${command.id} not found")
 
+        logger.error("command: ${command.language}")
+        logger.error("command: ${command.language}")
+        logger.error("command: ${command.language}")
+        logger.error("command: ${command.language}")
+        logger.error("command: ${command.language}")
+
         // ドメインの集約メソッドを呼び出してカテゴリーを作成
         val updatedCategory = Category.fromDto(
             id = categoryDto.id,

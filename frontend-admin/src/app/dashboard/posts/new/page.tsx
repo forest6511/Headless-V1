@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { PostForm } from '@/components/post/PostForm'
 import { ROUTES } from '@/config/routes'
 import { Save } from 'lucide-react'
-import { Language } from '@/types/api/post/types'
+import { Language } from '@/types/api/common/types'
 import { Loading } from '@/components/ui/loading'
 
 export default function NewPostPage() {

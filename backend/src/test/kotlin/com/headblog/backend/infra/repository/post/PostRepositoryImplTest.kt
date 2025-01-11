@@ -6,11 +6,10 @@ import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostTranslation
 import com.headblog.backend.domain.model.post.Status
+import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
-import java.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,11 +19,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
+import com.headblog.backend.domain.model.category.Language as CategoryLanguage
+import com.headblog.backend.domain.model.category.Translation as CategoryTranslation
 
 @SpringBootTest
 @Transactional
 class PostRepositoryImplTest {
-
     @Autowired
     lateinit var postRepository: PostRepository
 
@@ -41,8 +41,10 @@ class PostRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
-        // デフォルトのカテゴリーを作成
-        defaultCategory = createCategory("Default Category", "default-category")
+        defaultCategory = createCategory(
+            "default-category",
+            listOf(createCategoryTranslation("ja", "デフォルト"))
+        )
         categoryRepository.save(defaultCategory)
     }
 
@@ -59,24 +61,20 @@ class PostRepositoryImplTest {
         // Then
         // 次ページが存在するか確認用に、pageSize+1件取得している
         assertEquals(pageSize + 1, posts.size)
-
-        // 先頭の5件で検証
         val postsWithoutLastItem = posts.dropLast(1)
 
         // ID降順 (UUID V7想定) になっていることを確認
         for (i in 0 until postsWithoutLastItem.size - 1) {
             val currentId = postsWithoutLastItem[i].id
             val nextId = postsWithoutLastItem[i + 1].id
-            assertTrue(currentId > nextId, "ID should be in descending order")
+            assertTrue(currentId > nextId)
         }
 
-        // テストコードでは posts[i].title を使っているため、
-        // PostWithTranslationsDto に title を用意し、先頭翻訳のtitleを返すようにしておく
-        assertEquals("Test Post 10", postsWithoutLastItem[0].translations.first().title)
-        assertEquals("Test Post 9", postsWithoutLastItem[1].translations.first().title)
-        assertEquals("Test Post 8", postsWithoutLastItem[2].translations.first().title)
-        assertEquals("Test Post 7", postsWithoutLastItem[3].translations.first().title)
-        assertEquals("Test Post 6", postsWithoutLastItem[4].translations.first().title)
+        assertEquals("記事 10", postsWithoutLastItem[0].translations.first().title)
+        assertEquals("記事 9", postsWithoutLastItem[1].translations.first().title)
+        assertEquals("記事 8", postsWithoutLastItem[2].translations.first().title)
+        assertEquals("記事 7", postsWithoutLastItem[3].translations.first().title)
+        assertEquals("記事 6", postsWithoutLastItem[4].translations.first().title)
     }
 
     @Test
@@ -106,9 +104,9 @@ class PostRepositoryImplTest {
         assertNotNull(lastPage)
         // 初期登録データ1件を含む
         assertEquals(4, lastPage.size)
-        assertEquals("Test Post 3", lastPage[0].translations.first().title)
-        assertEquals("Test Post 2", lastPage[1].translations.first().title)
-        assertEquals("Test Post 1", lastPage[2].translations.first().title)
+        assertEquals("記事 3", lastPage[0].translations.first().title)
+        assertEquals("記事 2", lastPage[1].translations.first().title)
+        assertEquals("記事 1", lastPage[2].translations.first().title)
     }
 
     @Test
@@ -136,12 +134,10 @@ class PostRepositoryImplTest {
         // 最後のページはちょうど5件になるはず
         assertEquals(5, lastPage.size)
         // 降順で取得されることを確認
-        assertEquals("Test Post 4", lastPage[0].translations.first().title)
-        assertEquals("Test Post 3", lastPage[1].translations.first().title)
-        assertEquals("Test Post 2", lastPage[2].translations.first().title)
-        assertEquals("Test Post 1", lastPage[3].translations.first().title)
-        // 初期データ
-        assertEquals("最初のブログ投稿", lastPage[4].translations.first().title)
+        assertEquals("記事 4", lastPage[0].translations.first().title)
+        assertEquals("記事 3", lastPage[1].translations.first().title)
+        assertEquals("記事 2", lastPage[2].translations.first().title)
+        assertEquals("記事 1", lastPage[3].translations.first().title)
     }
 
     @Test
@@ -155,11 +151,7 @@ class PostRepositoryImplTest {
         val count = postRepository.count()
 
         // Then
-        assertEquals(
-            // 初期データ1件を含める
-            totalPosts + 1,
-            count
-        )
+        assertEquals(totalPosts + 1, count) // 初期データ1件を含む
     }
 
     /**
@@ -167,21 +159,13 @@ class PostRepositoryImplTest {
      */
     private fun createMultiplePosts(count: Int): List<Post> {
         return (1..count).map { i ->
-            // 多言語対応のため translations でタイトル・本文などをまとめる
             val post = Post.create(
                 id = idGenerator,
                 slug = "test-post-$i",
                 status = Status.PUBLISHED.name,
                 featuredImageId = null,
                 categoryId = defaultCategory.id.value,
-                translations = listOf(
-                    PostTranslation(
-                        language = Language.of("ja"),
-                        title = "Test Post $i",
-                        excerpt = "Excerpt for test post $i",
-                        content = "Content for test post $i"
-                    )
-                )
+                translations = listOf(createTranslation("ja", "記事 $i"))
             )
             postRepository.save(post)
             postCategoryRepository.addRelation(post.id, defaultCategory.id)
@@ -189,15 +173,21 @@ class PostRepositoryImplTest {
         }
     }
 
-    /**
-     * カテゴリを作成
-     */
-    private fun createCategory(name: String, slug: String, parentId: UUID? = null): Category =
-        Category.create(
-            idGenerator,
-            name,
-            slug,
-            "Test description for $name",
-            parentId
-        )
+    private fun createCategory(
+        slug: String,
+        translations: List<CategoryTranslation>
+    ): Category = Category.create(idGenerator, slug, null, translations)
+
+    private fun createCategoryTranslation(
+        language: String,
+        name: String,
+        description: String? = null
+    ): CategoryTranslation = CategoryTranslation(CategoryLanguage.of(language), name, description)
+
+    private fun createTranslation(
+        language: String,
+        title: String,
+        excerpt: String = "要約 $title",
+        content: String = "本文 $title"
+    ): Translation = Translation(Language.of(language), title, excerpt, content)
 }

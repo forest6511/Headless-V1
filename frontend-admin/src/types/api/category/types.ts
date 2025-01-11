@@ -5,6 +5,8 @@ export const NOSETTING_SLUG = 'nosetting'
 
 export interface CategoryFormCommonProps {
   redirectPath: string
+  id?: string
+  onSubmittingChange?: (isSubmitting: boolean) => void
 }
 
 export interface CreateCategoryFormProps extends CategoryFormCommonProps {
@@ -15,18 +17,26 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
   initialData: UpdateCategoryData
 }
 
-export const formatCategoryOptions = (categories: CategoryListResponse[]) =>
+export const formatCategoryOptions = (
+  categories: CategoryListResponse[],
+  language: string
+) =>
   categories.map((category) => ({
     key: category.id,
-    label: category.name,
+    label:
+      category.translations.find((t) => t.language === language.toString())
+        ?.name ?? '',
   }))
 
 export const formatCategoryOptionsWithoutNoSetting = (
-  categories: CategoryListResponse[]
+  categories: CategoryListResponse[],
+  language: string
 ) =>
   categories
     .filter((category) => category.slug !== NOSETTING_SLUG)
     .map((category) => ({
       key: category.id,
-      label: category.name,
+      label:
+        category.translations.find((t) => t.language === language.toString())
+          ?.name ?? '',
     }))

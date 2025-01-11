@@ -76,6 +76,7 @@ buildscript {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	systemProperty("spring.profiles.active", "test")
+	systemProperty("spring.flyway.placeholder-replacement", "false")
 }
 
 tasks.test {
@@ -99,6 +100,7 @@ flyway {
 	user = System.getProperty("spring.datasource.username", project.ext["db.user"] as String)
 	password = System.getProperty("spring.datasource.password", project.ext["db.password"] as String)
 	locations = arrayOf("filesystem:src/main/resources/db/migration")
+	placeholderReplacement = false
 }
 
 jooq {

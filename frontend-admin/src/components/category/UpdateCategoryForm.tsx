@@ -8,12 +8,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { categoryApi } from '@/lib/api'
 import { UpdateCategoryRequest } from '@/types/api/category/request'
-import {
-  formatCategoryOptions,
-  UpdateCategoryFormProps,
-} from '@/types/api/category/types'
+import { UpdateCategoryFormProps } from '@/types/api/category/types'
 import { ApiError } from '@/lib/api/core/client'
 import toast from 'react-hot-toast'
+import { createCategoryOptions } from '@/lib/utils/category'
 
 export const UpdateCategoryForm = ({
   redirectPath,
@@ -32,14 +30,16 @@ export const UpdateCategoryForm = ({
     mode: 'onChange',
   })
 
-  const categoryOptions = formatCategoryOptions(categories)
-
+  const categoryOptions = createCategoryOptions(
+    categories,
+    initialData?.language || 'ja'
+  )
   const onSubmit = async (data: UpdateCategoryData) => {
     try {
       const requestData: UpdateCategoryRequest = {
         id: data.id,
+        language: data.language,
         name: data.name,
-        slug: data.slug,
         description: data.description,
         parentId: data.parentId || undefined,
       }
@@ -61,14 +61,6 @@ export const UpdateCategoryForm = ({
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
       />
-
-      <Input
-        {...register('slug')}
-        label="スラッグ"
-        isInvalid={!!errors.slug}
-        errorMessage={errors.slug?.message}
-      />
-
       <Select
         {...register('parentId')}
         items={categoryOptions}
@@ -84,7 +76,7 @@ export const UpdateCategoryForm = ({
         errorMessage={errors.parentId?.message}
       >
         {(category) => (
-          <SelectItem key={category.key}>{category.label}</SelectItem>
+          <SelectItem key={category.value}>{category.label}</SelectItem>
         )}
       </Select>
 

@@ -13,12 +13,14 @@ import { CATEGORY_COLUMNS } from '@/config/constants'
 import React from 'react'
 import { ROUTES } from '@/config/routes'
 import Link from 'next/link'
+import { Language } from '@/types/api/common/types'
 
 interface CategoryTableProps {
   categories: CategoryListResponse[]
   onEdit: (id: string) => void
   onDelete: () => void
   isLoading?: boolean
+  currentLanguage: Language
 }
 
 export const CategoryTable: React.FC<CategoryTableProps> = ({
@@ -26,26 +28,49 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
   onEdit,
   onDelete,
   isLoading = false,
+  currentLanguage,
 }) => {
+  const getTranslatedName = (category: CategoryListResponse) => {
+    return (
+      category.translations.find(
+        (t) => t.language === currentLanguage.toString()
+      )?.name ?? ''
+    )
+  }
+
+  const getBreadcrumbPath = (
+    breadcrumbs: CategoryListResponse['breadcrumbs']
+  ) => {
+    return breadcrumbs
+      .map(
+        (breadcrumb) =>
+          breadcrumb.translations.find(
+            (t) => t.language === currentLanguage.toString()
+          )?.name ?? ''
+      )
+      .join(' / ')
+  }
+
   const renderCell = (
     category: CategoryListResponse,
     columnKey: React.Key
   ): React.ReactNode => {
     switch (columnKey) {
       case 'name':
-        return category.name ? (
+        const name = getTranslatedName(category)
+        return name ? (
           <Link
             href={ROUTES.DASHBOARD.CATEGORIES.EDIT(category.id)}
             className="text-blue-500 hover:text-blue-700"
           >
-            {category.name}
+            {name}
           </Link>
-        ) : null
+        ) : (
+          '(未翻訳)'
+        )
       case 'breadcrumb':
         if (Array.isArray(category.breadcrumbs)) {
-          return category.breadcrumbs
-            .map((breadcrumb) => breadcrumb.name)
-            .join(' / ')
+          return getBreadcrumbPath(category.breadcrumbs)
         }
         return null
       case 'count':
@@ -64,8 +89,8 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
         )
       default:
         const cellValue = category[columnKey as keyof CategoryListResponse]
-        return cellValue !== null && typeof cellValue !== 'object'
-          ? cellValue.toString()
+        return cellValue != null && typeof cellValue !== 'object'
+          ? String(cellValue)
           : null
     }
   }

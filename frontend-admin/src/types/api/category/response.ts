@@ -1,16 +1,27 @@
-export interface Breadcrumb {
-  id: string
+export interface BreadcrumbTranslation {
+  language: string
   name: string
-  slug: string
 }
 
-// /api/categories/categories
+export interface Breadcrumb {
+  id: string
+  slug: string
+  translations: BreadcrumbTranslation[]
+}
+
+export interface CategoryTranslation {
+  language: string
+  name: string
+  description: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 export interface CategoryListResponse {
   id: string
-  name: string
   slug: string
-  description: string | null
   parentId: string | null
+  translations: CategoryTranslation[]
   createdAt: string
   postIds: string[]
   breadcrumbs: Breadcrumb[]

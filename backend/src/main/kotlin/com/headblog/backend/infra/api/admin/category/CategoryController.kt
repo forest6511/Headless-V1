@@ -57,7 +57,7 @@ class CategoryController(
     private fun CreateCategoryRequest.toCommand(): CreateCategoryCommand {
         return CreateCategoryCommand(
             name = this.name,
-            slug = this.slug,
+            language = this.language,
             description = this.description,
             parentId = this.parentId
         )
@@ -66,8 +66,8 @@ class CategoryController(
     private fun UpdateCategoryRequest.toCommand(): UpdateCategoryCommand {
         return UpdateCategoryCommand(
             id = this.id,
+            language = this.language,
             name = this.name,
-            slug = this.slug,
             description = this.description,
             parentId = this.parentId
         )

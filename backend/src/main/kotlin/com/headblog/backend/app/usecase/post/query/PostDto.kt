@@ -4,7 +4,7 @@ import com.headblog.backend.app.usecase.tag.query.TagDto
 import java.time.LocalDateTime
 import java.util.*
 
-data class PostWithTranslationsDto(
+data class PostDto(
     val id: UUID,
     val slug: String,
     val status: String,

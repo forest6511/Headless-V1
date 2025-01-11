@@ -1,6 +1,6 @@
 interface BaseCategoryRequest {
+  language: string
   name: string
-  slug: string
   description?: string
   parentId?: string
 }

@@ -44,9 +44,11 @@ class ExceptionHandlerFilter : OncePerRequestFilter() {
             is AuthException -> {
                 HttpStatus.UNAUTHORIZED to (cause.message ?: "Unauthorized error")
             }
+
             is AppConflictException, is DomainConflictException -> {
                 HttpStatus.CONFLICT to (cause.message ?: "Conflict error")
             }
+
             else -> {
                 appLog.error("Unhandled exception occurred: ${cause.message}", cause)
                 HttpStatus.INTERNAL_SERVER_ERROR to "Internal Server Error"

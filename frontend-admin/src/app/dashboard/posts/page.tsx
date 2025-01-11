@@ -7,8 +7,8 @@ import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
 import { AddPostButton } from '@/components/post/AddPostButton'
 import { useCallback, useState } from 'react'
-import { Language } from '@/types/api/post/types'
-import { LanguageSelector } from '@/components/post/LanguageSelector'
+import { Language } from '@/types/api/common/types'
+import { LanguageSelector } from '@/components/common/LanguageSelector'
 
 const ROWS_PER_PAGE = 10
 

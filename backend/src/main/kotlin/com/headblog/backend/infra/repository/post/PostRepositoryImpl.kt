@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.repository.post
 
-import com.headblog.backend.app.usecase.post.query.PostWithTranslationsDto
+import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Post
@@ -79,7 +79,7 @@ class PostRepositoryImpl(
             .execute()
     }
 
-    override fun findById(id: UUID): PostWithTranslationsDto? {
+    override fun findById(id: UUID): PostDto? {
         val records = dsl.select(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
@@ -102,7 +102,7 @@ class PostRepositoryImpl(
         ).values.firstOrNull()?.toPostWithTranslationsDto()
     }
 
-    override fun findBySlug(slug: String): PostWithTranslationsDto? {
+    override fun findBySlug(slug: String): PostDto? {
         val records = dsl.select(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
@@ -128,7 +128,7 @@ class PostRepositoryImpl(
     override fun findAll(
         cursorPostId: UUID?,
         pageSize: Int
-    ): List<PostWithTranslationsDto> {
+    ): List<PostDto> {
         // 1) ベースクエリ
         val query = dsl.select(
             POSTS.asterisk(),
@@ -159,7 +159,7 @@ class PostRepositoryImpl(
             valueTransform = { it }
         )
 
-        // 3) group した結果を PostWithTranslationsDto に変換
+        // 3) group した結果を PostDto に変換
         return grouped.values.map { recordList ->
             recordList.toPostWithTranslationsDto()
         }
@@ -178,13 +178,13 @@ class PostRepositoryImpl(
     }
 
     /**
-     * Record のリストをまとめて PostWithTranslationsDto に変換
+     * Record のリストをまとめて PostDto に変換
      *
      * - 同じ postId の行をまとめた結果 (翻訳が複数行)
      * - categoryId はレコードが同じなので最初の行から取得
      * - tags は fetchTagsForPost() で別途取得
      */
-    private fun List<Record>.toPostWithTranslationsDto(): PostWithTranslationsDto {
+    private fun List<Record>.toPostWithTranslationsDto(): PostDto {
         val first = this.first()
         val postId = requireNotNull(first.get(POSTS.ID))
 
@@ -209,7 +209,7 @@ class PostRepositoryImpl(
         // タグ取得
         val tags = fetchTagsForPost(postId)
 
-        return PostWithTranslationsDto(
+        return PostDto(
             id = postId,
             slug = slug,
             status = status,

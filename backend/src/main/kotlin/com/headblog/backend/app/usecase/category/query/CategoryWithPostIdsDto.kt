@@ -5,10 +5,10 @@ import java.util.*
 
 data class CategoryWithPostIdsDto(
     val id: UUID,
-    val name: String,
     val slug: String,
-    val description: String?,
     val parentId: UUID?,
+    val translations: List<TranslationDto>,
     val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
     val postIds: List<UUID>
 )

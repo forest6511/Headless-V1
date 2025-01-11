@@ -1,3 +1,4 @@
+import { Language } from '@/types/api/common/types'
 import { CategoryListResponse } from '@/types/api/category/response'
 
 export interface CategoryOption {
@@ -6,20 +7,34 @@ export interface CategoryOption {
 }
 
 export function createCategoryOptions(
-  categories: CategoryListResponse[] = []
+  categories: CategoryListResponse[] = [],
+  language: string
 ): CategoryOption[] {
   return categories.map(({ id, breadcrumbs }) => ({
     value: id,
-    label: breadcrumbs.map((breadcrumb) => breadcrumb.name).join(' / '),
+    label: breadcrumbs
+      .map(
+        (breadcrumb) =>
+          breadcrumb.translations.find((t) => t.language === language)?.name ??
+          ''
+      )
+      .join(' / '),
   }))
 }
 
 export function getBreadcrumbForCategory(
   categoryId: string,
-  categories: CategoryListResponse[] = []
+  categories: CategoryListResponse[] = [],
+  language: Language
 ): string | null {
   const category = categories.find(({ id }) => id === categoryId)
   return category
-    ? category.breadcrumbs.map((breadcrumb) => breadcrumb.name).join(' / ')
+    ? category.breadcrumbs
+        .map(
+          (breadcrumb) =>
+            breadcrumb.translations.find((t) => t.language === language)
+              ?.name ?? ''
+        )
+        .join(' / ')
     : null
 }

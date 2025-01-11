@@ -8,11 +8,10 @@ import java.util.*
 
 class Category private constructor(
     val id: CategoryId,
-    val name: String,
     val slug: Slug,
-    val description: String?,
     val parentId: CategoryId?,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val translations: List<Translation>
 ) {
     companion object {
         private fun validateParentId(id: CategoryId, parentId: CategoryId?) {
@@ -23,48 +22,43 @@ class Category private constructor(
 
         private fun createInstance(
             id: CategoryId,
-            name: String,
             slug: Slug,
-            description: String?,
             parentId: CategoryId?,
-            createdAt: LocalDateTime
+            createdAt: LocalDateTime,
+            translations: List<Translation>
         ): Category {
             validateParentId(id, parentId)
-            return Category(id, name, slug, description, parentId, createdAt)
+            return Category(id, slug, parentId, createdAt, translations)
         }
 
         fun create(
             id: IdGenerator<EntityId>,
-            name: String,
             slug: String,
-            description: String? = null,
-            parentId: UUID? = null
+            parentId: UUID? = null,
+            translations: List<Translation>
         ): Category {
             return createInstance(
                 id = CategoryId(id.generate().value),
-                name = name,
                 slug = Slug.of(slug),
-                description = description,
                 parentId = parentId?.let { CategoryId(it) },
-                createdAt = LocalDateTime.now()
+                createdAt = LocalDateTime.now(),
+                translations = translations
             )
         }
 
         fun fromDto(
             id: UUID,
-            name: String,
             slug: String,
-            description: String? = null,
             parentId: UUID? = null,
-            createdAt: LocalDateTime
+            createdAt: LocalDateTime,
+            translations: List<Translation>
         ): Category {
             return createInstance(
                 id = CategoryId(id),
-                name = name,
                 slug = Slug.of(slug),
-                description = description,
                 parentId = parentId?.let { CategoryId(it) },
-                createdAt = createdAt
+                createdAt = createdAt,
+                translations = translations
             )
         }
     }
@@ -79,11 +73,10 @@ class Category private constructor(
 
         return createInstance(
             id = this.id,
-            name = this.name,
             slug = this.slug,
-            description = this.description,
             parentId = newParent.id,
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            translations = this.translations
         )
     }
 }

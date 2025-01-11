@@ -1,7 +1,6 @@
 'use client'
-
 import { CreateCategoryData, createCategorySchema } from '@/schemas/category'
-import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
+import { Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,6 +17,8 @@ import toast from 'react-hot-toast'
 export const CreateCategoryForm = ({
   redirectPath,
   initialData,
+  id = 'category-form',
+  onSubmittingChange,
 }: CreateCategoryFormProps) => {
   const router = useRouter()
   const categories = useCategoryStore((state) => state.categories)
@@ -34,42 +35,43 @@ export const CreateCategoryForm = ({
     mode: 'onChange',
   })
 
-  const categoryOptions = formatCategoryOptionsWithoutNoSetting(categories)
+  const categoryOptions = formatCategoryOptionsWithoutNoSetting(
+    categories,
+    'ja'
+  )
 
   const onSubmit = async (data: CreateCategoryData) => {
     try {
+      onSubmittingChange?.(true) // 送信開始時にtrueをセット
       const createData: CreateCategoryRequest = {
+        language: 'ja',
         name: data.name,
-        slug: data.slug,
-        description: data.description,
+        description: data.description || undefined,
         parentId: data.parentId || undefined,
       }
       await categoryApi.createCategory(createData)
+      toast.success('カテゴリーを作成しました')
       router.push(redirectPath)
     } catch (error) {
       if (error instanceof ApiError) {
-        toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
+        toast.error(`カテゴリーの作成に失敗しました。 ${error?.details}`)
+      } else {
+        toast.error('カテゴリーの作成に失敗しました')
       }
       console.error('カテゴリーの作成に失敗しました:', error)
+    } finally {
+      onSubmittingChange?.(false) // 完了時にfalseをセット
     }
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form id={id} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Input
         {...register('name')}
         label="名前"
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
       />
-
-      <Input
-        {...register('slug')}
-        label="スラッグ"
-        isInvalid={!!errors.slug}
-        errorMessage={errors.slug?.message}
-      />
-
       <Select
         {...register('parentId')}
         items={categoryOptions}
@@ -95,10 +97,6 @@ export const CreateCategoryForm = ({
         isInvalid={!!errors.description}
         errorMessage={errors.description?.message}
       />
-
-      <Button type="submit" color="primary">
-        新規カテゴリーを追加
-      </Button>
     </form>
   )
 }

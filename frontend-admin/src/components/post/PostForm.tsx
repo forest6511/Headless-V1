@@ -101,7 +101,7 @@ export function PostForm({
             >
               {PostStatuses.map((status) => (
                 <SelectItem key={status.value} value={status.value}>
-                  {status.label}
+                  {status.labels[initialData?.language || 'ja']}
                 </SelectItem>
               ))}
             </Select>

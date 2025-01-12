@@ -6,7 +6,7 @@ import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
 import { AddPostButton } from '@/components/post/AddPostButton'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 

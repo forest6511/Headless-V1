@@ -1,6 +1,7 @@
 package com.headblog.backend.app.usecase.auth.command.signup
 
 import com.headblog.backend.domain.model.media.StorageService
+import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.Language
 import com.headblog.backend.domain.model.user.ThumbnailGenerator
 import com.headblog.backend.domain.model.user.User
@@ -35,6 +36,18 @@ class SignUpService(
     override fun execute(command: SignUpCommand): SignUpResponse {
         logger.info("attempting to sign up user with email: ${command.email}")
 
+        // check if the email already exists
+        userRepository.findByEmail(Email.of(command.email))?.let {
+            logger.error("email already exists: ${command.email}}")
+            throw AuthenticationCredentialsNotFoundException("email already exists: ${command.email}}")
+        }
+
+        // check if the Nickname already exists
+        userRepository.findByNickname(command.nickname)?.let {
+            logger.error("nickname already exists: ${command.email}}")
+            throw AuthenticationCredentialsNotFoundException("nickname already exists: ${command.nickname}}")
+        }
+
         val userId = UserId(idGenerator.generate().value)
 
         val bateArray =
@@ -54,12 +67,6 @@ class SignUpService(
             thumbnailUrl = key,
             language = command.language,
         )
-
-        // check if the email already exists
-        userRepository.findByEmail(user.email)?.let {
-            logger.error("email already exists: ${user.email.value}")
-            throw AuthenticationCredentialsNotFoundException("email already exists: ${user.email.value}")
-        }
 
         // save the user to the repository
         val savedUser = userRepository.save(user)

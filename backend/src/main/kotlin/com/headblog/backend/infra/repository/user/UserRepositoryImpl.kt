@@ -37,6 +37,13 @@ class UserRepositoryImpl(
         return result?.into(User::class.java)
     }
 
+    override fun findByNickname(nickName: String): User? {
+        val result = dsl.selectFrom(USERS)
+            .where(USERS.NICKNAME.eq(nickName))
+            .fetchOne()
+        return result?.into(User::class.java)
+    }
+
     override fun findById(userId: UserId): User? {
         val result = dsl.selectFrom(USERS)
             .where(USERS.ID.eq(userId.value))

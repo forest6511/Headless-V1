@@ -4,10 +4,12 @@ import com.headblog.backend.domain.model.media.StorageService
 import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.Language
 import com.headblog.backend.domain.model.user.ThumbnailGenerator
+import com.headblog.backend.domain.model.user.ThumbnailKey
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.backend.domain.model.user.UserRole
+import com.headblog.backend.infra.api.admin.auth.response.SignUpResponse
 import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -52,8 +54,9 @@ class SignUpService(
 
         val bateArray =
             thumbnailGenerator.generateThumbnailUrl(command.nickname, Language(command.language), imgExtension)
-        val key = "profile/${userId.value}.$imgExtension"
-        storageService.uploadFile(key, bateArray, uploadFormat)
+
+        val key = ThumbnailKey.of("${userId.value}.$imgExtension")
+        storageService.uploadFile(key.value, bateArray, uploadFormat)
 
         // create the user
         val user = User.create(
@@ -64,7 +67,7 @@ class SignUpService(
             role = UserRole.USER,
             enable = false,
             nickname = command.nickname,
-            thumbnailUrl = key,
+            thumbnailUrl = key.value,
             language = command.language,
         )
 

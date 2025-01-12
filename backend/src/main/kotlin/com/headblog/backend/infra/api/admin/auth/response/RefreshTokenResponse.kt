@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.auth.command.refresh
+package com.headblog.backend.infra.api.admin.auth.response
 
 import com.headblog.backend.app.usecase.auth.response.AuthenticationResponse
 import com.headblog.backend.domain.model.auth.AuthTokens

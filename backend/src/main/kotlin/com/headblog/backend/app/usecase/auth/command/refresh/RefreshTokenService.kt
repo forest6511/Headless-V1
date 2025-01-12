@@ -2,6 +2,7 @@ package com.headblog.backend.app.usecase.auth.command.refresh
 
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
+import com.headblog.backend.infra.api.admin.auth.response.RefreshTokenResponse
 import com.headblog.backend.infra.service.auth.TokenService
 import java.util.*
 import org.slf4j.LoggerFactory

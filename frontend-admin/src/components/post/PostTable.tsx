@@ -10,14 +10,15 @@ import {
   Pagination,
 } from '@nextui-org/react'
 import { PostResponse } from '@/types/api/post/response'
-import { POST_COLUMNS } from '@/config/constants'
+import { createPostColumns } from '@/config/constants'
 import { Language } from '@/types/api/common/types'
 import { getBreadcrumbForCategory } from '@/lib/utils/category'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
 import { formatDateTime } from '@/lib/utils/post'
-import { PostStatuses } from '@/types/api/post/types'
+import { getStatusLabel } from '@/types/api/post/types'
+import { t } from '@/lib/translations'
 
 interface PostTableProps {
   posts: PostResponse[]
@@ -44,19 +45,15 @@ export const PostTable = ({
     return status === 'PUBLISHED' ? 'success' : 'warning'
   }
 
-  const getStatusLabel = (status: string) => {
-    return PostStatuses.find((s) => s.value === status)?.label || status
-  }
-
   const getPostTitle = (post: PostResponse) => {
     return post.translations.find((t) => t.language === currentLanguage)?.title
   }
 
   return (
     <>
-      <Table aria-label="記事一覧表">
+      <Table aria-label={t(currentLanguage, 'posts.tableLabel')}>
         <TableHeader>
-          {POST_COLUMNS.map((column) => (
+          {createPostColumns(currentLanguage).map((column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === 'actions' ? 'end' : 'start'}
@@ -73,7 +70,8 @@ export const PostTable = ({
                   href={ROUTES.DASHBOARD.POSTS.EDIT(post.id)}
                   className="text-blue-500 hover:text-blue-700"
                 >
-                  {getPostTitle(post) || '(未翻訳)'}
+                  {getPostTitle(post) ||
+                    t(currentLanguage, 'posts.notTranslated')}
                 </Link>
               </TableCell>
               <TableCell>{post.slug}</TableCell>
@@ -91,7 +89,7 @@ export const PostTable = ({
               <TableCell>{formatDateTime(post.updatedAt)}</TableCell>
               <TableCell>
                 <Chip color={getStatusColor(post.status)} variant="flat">
-                  {getStatusLabel(post.status)}
+                  {getStatusLabel(post.status, currentLanguage)}
                 </Chip>
               </TableCell>
               <TableCell>

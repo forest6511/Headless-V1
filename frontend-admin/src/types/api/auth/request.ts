@@ -2,6 +2,8 @@
 export interface SignupPayload {
   email: string
   password: string
+  nickname: string
+  language: string
 }
 
 // api/auth/signin

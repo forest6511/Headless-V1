@@ -8,35 +8,45 @@ import { postApi } from '@/lib/api'
 import {
   createPostSchema,
   PostFormData,
-  updatePostSchema,
+  createUpdatePostSchema,
 } from '@/schemas/post'
 import { CreatePostRequest, UpdatePostRequest } from '@/types/api/post/request'
+import { t } from '@/lib/translations'
+import { Language } from '@/types/api/common/types'
+import { ZodSchema } from 'zod'
 
 interface UsePostFormProps {
   redirectPath: string
   initialData?: PostFormData
   mode: 'create' | 'update'
-  currentLanguage?: string
+  currentLanguage: Language
+  schema?: ZodSchema // スキーマを任意のプロパティとして追加
 }
 
 export const usePostForm = ({
   redirectPath,
   initialData,
   mode,
-  currentLanguage = 'ja',
+  currentLanguage,
+  schema, // スキーマを受け取る
 }: UsePostFormProps) => {
   const router = useRouter()
-  const [textLength, setTextLength] = useState(0) // contentの文字数を監視
+  const [textLength, setTextLength] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // スキーマが指定されていない場合はデフォルトのスキーマを使用
+  const resolvedSchema =
+    schema ||
+    (mode === 'create'
+      ? createPostSchema(currentLanguage)
+      : createUpdatePostSchema(currentLanguage))
+
   const form = useForm<PostFormData>({
-    resolver: zodResolver(
-      mode === 'create' ? createPostSchema : updatePostSchema
-    ),
+    resolver: zodResolver(resolvedSchema),
     defaultValues: initialData,
   })
 
-  const contentHtml = form.watch('content') // contentの値を監視
+  const contentHtml = form.watch('content')
 
   const onSubmit = async (data: PostFormData) => {
     setIsSubmitting(true)
@@ -57,18 +67,26 @@ export const usePostForm = ({
 
       if (mode === 'create') {
         await postApi.createPost(processedData as CreatePostRequest)
-        toast.success('投稿の作成に成功しました')
+        toast.success(t(currentLanguage, 'post.toast.createSuccess'))
       } else {
         await postApi.updatePost(processedData as UpdatePostRequest)
-        toast.success('投稿の更新に成功しました')
+        toast.success(t(currentLanguage, 'post.toast.updateSuccess'))
       }
       router.push(redirectPath)
     } catch (error) {
-      const action = mode === 'create' ? '作成' : '更新'
       if (error instanceof ApiError) {
-        toast.error(`投稿の${action}に失敗しました。 ${error?.details}`)
+        const toastKey =
+          mode === 'create'
+            ? 'post.toast.createError'
+            : 'post.toast.updateError'
+        toast.error(`${t(currentLanguage, toastKey)} ${error?.details}`)
       }
-      console.error(`投稿の${action}に失敗しました:`, error)
+      console.error(
+        mode === 'create'
+          ? t(currentLanguage, 'post.toast.createError')
+          : t(currentLanguage, 'post.toast.updateError'),
+        error
+      )
     } finally {
       setIsSubmitting(false)
     }

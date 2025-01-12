@@ -1,0 +1,146 @@
+{
+  "common": {
+    "addNew": "新規追加",
+    "edit": "編集",
+    "cancel": "キャンセル",
+    "delete": "削除"
+  },
+  "auth": {
+    "label": {
+      "nickname": "ニックネーム",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "confirmPassword": "パスワード（確認）"
+    },
+    "placeholders": {
+      "nickname": "ニックネームを入力",
+      "email": "example@example.com",
+      "password": "パスワードを入力",
+      "confirmPassword": "パスワードを再入力"
+    },
+    "submit": "サインアップ",
+    "validation": {
+      "email": "有効なメールアドレスを入力してください",
+      "passwordLength": "パスワードは8文字以上で入力してください",
+      "passwordFormat": "英数字を含める必要があります",
+      "nicknameMin": "ニックネームは3文字以上で入力してください",
+      "nicknameMax": "ニックネームは50文字以下で入力してください",
+      "languageInvalid": "言語は「ja」または「en」を選択してください",
+      "passwordConfirm": "パスワードが一致しません",
+      "signinFailed": "メールアドレスまたはパスワードが正しくありません。"
+    },
+    "tabs": {
+      "signin": "ログイン",
+      "signup": "サインアップ"
+    }
+  },
+  "dashboard": {
+    "header": {
+      "title": "管理画面",
+      "logout": "ログアウト"
+    },
+    "sidebar": {
+      "content": "コンテンツ",
+      "menu": {
+        "posts": "記事投稿",
+        "categories": "カテゴリ",
+        "media": "メディア"
+      },
+      "permissions": "権限管理",
+      "users": "ユーザー"
+    }
+  },
+  "categories": {
+    "tableLabel": "カテゴリー覧",
+    "deleteSuccess": "カテゴリーを削除しました",
+    "deleteError": "カテゴリーの削除に失敗しました",
+    "deleteConfirm": {
+      "title": "カテゴリーの削除",
+      "message": "このカテゴリーを削除してもよろしいですか？\nこの操作は取り消せません。"
+    },
+    "columns": {
+      "name": "カテゴリ名",
+      "breadcrumb": "パンくず",
+      "description": "説明",
+      "slug": "スラッグ",
+      "count": "投稿数",
+      "actions": "アクション"
+    },
+    "notTranslated": "(未翻訳)"
+  },
+  "category": {
+    "form": {
+      "name": "名前",
+      "parentCategory": "親カテゴリー",
+      "parentCategoryPlaceholder": "カテゴリーを選択してください",
+      "description": "説明"
+    },
+    "validation": {
+      "nameRequired": "名前は必須です",
+      "nameTooLong": "名前は255文字以内で入力してください",
+      "descriptionTooLong": "説明は100文字以内で入力してください",
+      "invalidId": "有効なIDではありません"
+    },
+    "toast": {
+      "createSuccess": "カテゴリーを作成しました",
+      "createError": "カテゴリーの作成に失敗しました",
+      "updateError": "カテゴリーの更新に失敗しました"
+    }
+  },
+  "posts": {
+    "tableLabel": "記事一覧",
+    "notTranslated": "(未翻訳)",
+    "columns": {
+      "title": "タイトル",
+      "slug": "スラッグ",
+      "category": "カテゴリ",
+      "tag": "タグ",
+      "createdAt": "作成日時",
+      "updatedAt": "最終更新日時",
+      "status": "ステータス",
+      "actions": "アクション"
+    }
+  },
+  "post": {
+    "form": {
+      "title": "タイトル",
+      "hashtag": "ハッシュタグ",
+      "category": "カテゴリ",
+      "status": "ステータス",
+      "placeholders": {
+        "title": "記事のタイトルを入力",
+        "hashtag": "#をつけてカンマ形式で入力. ex #beauty, #diet"
+      }
+    },
+    "toast": {
+      "createSuccess": "投稿の作成に成功しました",
+      "updateSuccess": "投稿の更新に成功しました",
+      "createError": "投稿の作成に失敗しました。",
+      "updateError": "投稿の更新に失敗しました。"
+    },
+    "validation": {
+      "title": {
+        "required": "タイトルは必須です",
+        "tooLong": "タイトルは100文字以内で入力してください"
+      },
+      "content": {
+        "required": "本文は必須です"
+      },
+      "status": {
+        "required": "ステータスは必須です",
+        "tooLong": "ステータスは50文字以内で入力してください"
+      },
+      "image": {
+        "invalidId": "画像IDが正しくありません"
+      },
+      "category": {
+        "required": "カテゴリは必須です",
+        "invalidId": "カテゴリIDが正しくありません"
+      },
+      "tags": {
+        "format": "タグは#英数字の形式で、カンマ区切り、最大3個まで入力できます"
+      }
+    },
+    "preview": "プレビュー 文字数:"
+  }
+}

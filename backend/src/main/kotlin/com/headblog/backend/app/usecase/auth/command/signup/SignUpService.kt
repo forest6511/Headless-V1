@@ -1,7 +1,15 @@
 package com.headblog.backend.app.usecase.auth.command.signup
 
+import com.headblog.backend.domain.model.media.StorageService
+import com.headblog.backend.domain.model.user.Email
+import com.headblog.backend.domain.model.user.Language
+import com.headblog.backend.domain.model.user.ThumbnailGenerator
+import com.headblog.backend.domain.model.user.ThumbnailKey
 import com.headblog.backend.domain.model.user.User
+import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
+import com.headblog.backend.domain.model.user.UserRole
+import com.headblog.backend.infra.api.admin.auth.response.SignUpResponse
 import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -17,27 +25,51 @@ class SignUpService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val idGenerator: IdGenerator<EntityId>,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val thumbnailGenerator: ThumbnailGenerator,
+    private val storageService: StorageService
 ) : SignUpUseCase {
 
     private val logger = LoggerFactory.getLogger(SignUpService::class.java)
 
+    private val imgExtension = "png"
+    private val uploadFormat = "image/png"
+
     override fun execute(command: SignUpCommand): SignUpResponse {
         logger.info("attempting to sign up user with email: ${command.email}")
 
+        // check if the email already exists
+        userRepository.findByEmail(Email.of(command.email))?.let {
+            logger.error("email already exists: ${command.email}}")
+            throw AuthenticationCredentialsNotFoundException("email already exists: ${command.email}}")
+        }
+
+        // check if the Nickname already exists
+        userRepository.findByNickname(command.nickname)?.let {
+            logger.error("nickname already exists: ${command.email}}")
+            throw AuthenticationCredentialsNotFoundException("nickname already exists: ${command.nickname}}")
+        }
+
+        val userId = UserId(idGenerator.generate().value)
+
+        val bateArray =
+            thumbnailGenerator.generateThumbnailUrl(command.nickname, Language(command.language), imgExtension)
+
+        val key = ThumbnailKey.of("${userId.value}.$imgExtension")
+        storageService.uploadFile(key.value, bateArray, uploadFormat)
+
         // create the user
         val user = User.create(
-            idGenerator,
-            command.email,
-            command.password,
-            passwordEncoder
+            id = userId,
+            email = command.email,
+            rawPassword = command.password,
+            passwordEncoder = passwordEncoder,
+            role = UserRole.USER,
+            enable = false,
+            nickname = command.nickname,
+            thumbnailUrl = key.value,
+            language = command.language,
         )
-
-        // check if the email already exists
-        userRepository.findByEmail(user.email)?.let {
-            logger.error("email already exists: ${user.email.value}")
-            throw AuthenticationCredentialsNotFoundException("email already exists: ${user.email.value}")
-        }
 
         // save the user to the repository
         val savedUser = userRepository.save(user)

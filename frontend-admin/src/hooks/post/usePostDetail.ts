@@ -4,23 +4,27 @@ import { postApi } from '@/lib/api'
 import { PostResponse } from '@/types/api/post/response'
 import { ROUTES } from '@/config/routes'
 import { PostFormData } from '@/schemas/post'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { parseLanguage } from '@/types/api/common/types'
 
 // PostResponseからPostFormDataへ変換する関数を追加
 export const convertPostResponseToFormData = (
-  post: PostResponse,
-  language: string = 'ja'
+  post: PostResponse
 ): PostFormData => {
-  // デフォルト言語を設定（現在は'ja'）
+  // ストアから現在の言語を取得
+  const currentLanguage = useLanguageStore.getState().language
+
+  // 現在の言語に対応する翻訳を探す、なければ最初の翻訳を使用
   const translation =
-    post.translations.find((t) => t.language === language) ||
+    post.translations.find((t) => t.language === currentLanguage) ||
     post.translations[0]
 
   return {
     id: post.id,
-    language: translation.language,
+    language: parseLanguage(translation.language),
     title: translation.title,
     content: translation.content,
-    status: post.status,
+    status: post.status as 'DRAFT' | 'PUBLISHED',
     featuredImageId: post.featuredImageId,
     categoryId: post.categoryId,
     tagNames: post.tags.map((tag) => `${tag.name}`).join(','),

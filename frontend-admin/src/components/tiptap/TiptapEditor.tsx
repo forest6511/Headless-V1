@@ -139,6 +139,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
       const content = html === EMPTY_CONTENT ? '' : html
       onChange?.(content, textLength)
     },
+    immediatelyRender: false,
   })
 
   useEffect(() => {

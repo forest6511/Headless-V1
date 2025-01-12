@@ -1,61 +1,71 @@
 import { z } from 'zod'
+import { Language } from '@/types/api/common/types'
+import { t } from '@/lib/translations'
+import { PostStatuses } from '@/types/api/post/types'
 
-export const BasePostSchema = z.object({
-  language: z
-    .string()
-    .min(1, '言語は必須です')
-    .max(5, '言語は5文字以内で入力してください')
-    .default('ja'),
-  title: z
-    .string()
-    .min(1, 'タイトルは必須です')
-    .max(100, 'タイトルは100文字以内で入力してください'),
-  content: z.string().min(1, '本文は必須です'),
-  status: z
-    .string()
-    .min(1, 'ステータスは必須です')
-    .max(50, 'ステータスは50文字以内で入力してください'),
-  featuredImageId: z
-    .string()
-    .uuid('画像IDが正しくありません')
-    .transform((val) => (val === '' ? null : val))
-    .nullish(),
-  categoryId: z
-    .string()
-    .min(1, 'カテゴリは必須です')
-    .uuid('カテゴリIDが正しくありません'),
-  tagNames: z
-    .string()
-    .optional()
-    .refine(
-      (val) => {
-        // 空文字列の場合は許可
-        if (val === '' || val === null || val === undefined) return true
-        // 末尾のカンマを削除
-        const trimmedVal = val.replace(/,+$/, '')
-        // カンマ区切りでタグをチェック
-        const tags = trimmedVal.split(',').map((tag) => tag.trim())
-        // タグ数のチェック
-        if (tags.length > 3) return false
-        // 各タグが #英数字 の形式かチェック
-        return tags.every((tag) => /^#[a-zA-Z0-9]+$/.test(tag))
-      },
-      {
-        message: 'タグは#英数字の形式で、カンマ区切り、最大3個まで入力できます',
-      }
-    ),
-})
+export const createBasePostSchema = (language: Language) =>
+  z.object({
+    language: z.custom<Language>(),
+    title: z
+      .string()
+      .min(1, t(language, 'post.validation.title.required'))
+      .max(100, t(language, 'post.validation.title.tooLong')),
+    content: z.string().min(1, t(language, 'post.validation.content.required')),
+    status: z
+      .enum(['DRAFT', 'PUBLISHED'], {
+        errorMap: () => ({
+          message: t(language, 'post.validation.status.required'),
+        }),
+      })
+      .refine((val) => PostStatuses.some((status) => status.value === val), {
+        message: t(language, 'post.validation.status.required'),
+      })
+      .refine((val) => val.length <= 50, {
+        message: t(language, 'post.validation.status.tooLong'),
+      }),
+    featuredImageId: z
+      .string()
+      .uuid(t(language, 'post.validation.image.invalidId'))
+      .transform((val) => (val === '' ? null : val))
+      .nullish(),
+    categoryId: z
+      .string()
+      .min(1, t(language, 'post.validation.category.required'))
+      .uuid(t(language, 'post.validation.category.invalidId')),
+    tagNames: z
+      .string()
+      .optional()
+      .refine(
+        (val) => {
+          if (val === '' || val === null || val === undefined) return true
+          const trimmedVal = val.replace(/,+$/, '')
+          const tags = trimmedVal.split(',').map((tag) => tag.trim())
+          if (tags.length > 3) return false
+          return tags.every((tag) => /^#[a-zA-Z0-9]+$/.test(tag))
+        },
+        {
+          message: t(language, 'post.validation.tags.format'),
+        }
+      ),
+  })
 
-// 登録時のスキーマ
-export const createPostSchema = BasePostSchema
+// スキーマ生成関数を外部に公開
+export const createPostSchema = (language: Language = 'ja') =>
+  createBasePostSchema(language)
 
-// 更新時のスキーマ（IDを追加）
-export const updatePostSchema = BasePostSchema.extend({
-  id: z.string().uuid('IDが正しくありません'),
-})
+export const createUpdatePostSchema = (language: Language = 'ja') =>
+  createBasePostSchema(language).extend({
+    id: z.string().uuid(t(language, 'post.validation.category.invalidId')),
+  })
 
-export type CreatePostFormData = z.infer<typeof createPostSchema>
-export type UpdatePostFormData = z.infer<typeof updatePostSchema>
+// デフォルトスキーマ（日本語）
+export const postSchema = createPostSchema()
+export const updatePostSchema = createUpdatePostSchema()
+
+export type CreatePostFormData = z.infer<ReturnType<typeof createPostSchema>>
+export type UpdatePostFormData = z.infer<
+  ReturnType<typeof createUpdatePostSchema>
+>
 
 // フォーム共通の型定義
 export type PostFormData = CreatePostFormData & Partial<UpdatePostFormData>

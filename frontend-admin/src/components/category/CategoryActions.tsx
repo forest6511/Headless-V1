@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Button,
   Modal,
@@ -11,6 +13,8 @@ import { Edit, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { categoryApi } from '@/lib/api'
 import toast from 'react-hot-toast'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface CategoryActionsProps {
   categoryId: string
@@ -25,6 +29,7 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isDeleting, setIsDeleting] = useState(false)
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   const handleEdit = () => {
     onEdit(categoryId)
@@ -34,12 +39,12 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
     try {
       setIsDeleting(true)
       await categoryApi.deleteCategory(categoryId)
-      toast.success('カテゴリーを削除しました')
+      toast.success(t(currentLanguage, 'categories.deleteSuccess'))
       // カテゴリー再取得
       onDelete()
     } catch (error) {
-      console.error('カテゴリーの削除に失敗しました:', error)
-      toast.error('カテゴリーの削除に失敗しました')
+      console.error(t(currentLanguage, 'categories.deleteError'), error)
+      toast.error(t(currentLanguage, 'categories.deleteError'))
     } finally {
       setIsDeleting(false)
     }
@@ -51,12 +56,17 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
         <Button
           isIconOnly
           color="warning"
-          aria-label="編集"
+          aria-label={t(currentLanguage, 'common.edit')}
           onPress={handleEdit}
         >
           <Edit size={20} />
         </Button>
-        <Button isIconOnly color="danger" aria-label="削除" onPress={onOpen}>
+        <Button
+          isIconOnly
+          color="danger"
+          aria-label={t(currentLanguage, 'common.delete')}
+          onPress={onOpen}
+        >
           <Trash2 size={20} />
         </Button>
       </div>
@@ -65,14 +75,15 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>カテゴリーの削除</ModalHeader>
+              <ModalHeader>
+                {t(currentLanguage, 'categories.deleteConfirm.title')}
+              </ModalHeader>
               <ModalBody>
-                このカテゴリーを削除してもよろしいですか？
-                この操作は取り消せません。
+                {t(currentLanguage, 'categories.deleteConfirm.message')}
               </ModalBody>
               <ModalFooter>
                 <Button color="default" variant="light" onPress={onClose}>
-                  キャンセル
+                  {t(currentLanguage, 'common.cancel')}
                 </Button>
                 <Button
                   color="danger"
@@ -82,7 +93,7 @@ export const CategoryActions: React.FC<CategoryActionsProps> = ({
                     onClose()
                   }}
                 >
-                  削除
+                  {t(currentLanguage, 'common.delete')}
                 </Button>
               </ModalFooter>
             </>

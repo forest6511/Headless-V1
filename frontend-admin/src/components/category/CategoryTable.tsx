@@ -9,11 +9,12 @@ import {
 } from '@nextui-org/react'
 import { CategoryListResponse } from '@/types/api/category/response'
 import { CategoryActions } from './CategoryActions'
-import { CATEGORY_COLUMNS } from '@/config/constants'
+import { createCategoryColumns } from '@/config/constants'
 import React from 'react'
 import { ROUTES } from '@/config/routes'
 import Link from 'next/link'
 import { Language } from '@/types/api/common/types'
+import { t } from '@/lib/translations'
 
 interface CategoryTableProps {
   categories: CategoryListResponse[]
@@ -66,7 +67,7 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
             {name}
           </Link>
         ) : (
-          '(未翻訳)'
+          t(currentLanguage, 'categories.notTranslated')
         )
       case 'breadcrumb':
         if (Array.isArray(category.breadcrumbs)) {
@@ -104,9 +105,9 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
   }
 
   return (
-    <Table aria-label="カテゴリー一覧">
+    <Table aria-label={t(currentLanguage, 'categories.tableLabel')}>
       <TableHeader>
-        {CATEGORY_COLUMNS.map((column) => (
+        {createCategoryColumns(currentLanguage).map((column) => (
           <TableColumn
             key={column.uid}
             align={column.uid === 'actions' ? 'end' : 'start'}

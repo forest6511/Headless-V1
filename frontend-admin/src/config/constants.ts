@@ -1,32 +1,36 @@
+import { t } from '@/lib/translations'
+import { Language } from '@/types/api/common/types'
 /**
  * CATEGORY_COLUMNS: カテゴリ一覧画面のテーブルヘッダー定義
  * - name: テーブルの表示名
  * - uid: データフィールドの一意な識別子
  */
-export const CATEGORY_COLUMNS = [
-  { name: 'カテゴリ名', uid: 'name' },
-  { name: 'パンくず', uid: 'breadcrumb' },
-  { name: '説明', uid: 'description' },
-  { name: 'スラッグ', uid: 'slug' },
-  { name: '投稿数', uid: 'count' },
-  { name: 'アクション', uid: 'actions' },
-] as const
+export const createCategoryColumns = (language: Language) =>
+  [
+    { name: t(language, 'categories.columns.name'), uid: 'name' },
+    { name: t(language, 'categories.columns.breadcrumb'), uid: 'breadcrumb' },
+    { name: t(language, 'categories.columns.description'), uid: 'description' },
+    { name: t(language, 'categories.columns.slug'), uid: 'slug' },
+    { name: t(language, 'categories.columns.count'), uid: 'count' },
+    { name: t(language, 'categories.columns.actions'), uid: 'actions' },
+  ] as const
 
 /**
  * POST_COLUMNS: 投稿一覧画面のテーブルヘッダー定義
  * - name: テーブルの表示名
  * - uid: データフィールドの一意な識別子
  */
-export const POST_COLUMNS = [
-  { name: 'タイトル', uid: 'name' },
-  { name: 'スラッグ', uid: 'slug' },
-  { name: 'カテゴリ', uid: 'category' },
-  { name: 'タグ', uid: 'tag' },
-  { name: '作成日時', uid: 'createAt' },
-  { name: '最終更新日時', uid: 'updateAt' },
-  { name: 'ステータス', uid: 'status' },
-  { name: 'アクション', uid: 'actions' },
-] as const
+export const createPostColumns = (language: Language) =>
+  [
+    { name: t(language, 'posts.columns.title'), uid: 'name' },
+    { name: t(language, 'posts.columns.slug'), uid: 'slug' },
+    { name: t(language, 'posts.columns.category'), uid: 'category' },
+    { name: t(language, 'posts.columns.tag'), uid: 'tag' },
+    { name: t(language, 'posts.columns.createdAt'), uid: 'createAt' },
+    { name: t(language, 'posts.columns.updatedAt'), uid: 'updateAt' },
+    { name: t(language, 'posts.columns.status'), uid: 'status' },
+    { name: t(language, 'posts.columns.actions'), uid: 'actions' },
+  ] as const
 
 // メディア一覧テーブルのカラム定義
 export const MEDIA_LIST_COLUMNS = [

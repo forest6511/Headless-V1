@@ -15,10 +15,10 @@ export interface AuthResponse {
   authTokens: AuthTokens
 }
 
-export interface JwtPayload {
-  exp: number
-  email: string
-  role: string
-  sub: string
-  iat: number
+export interface SignInResponse {
+  email: Email
+  authTokens: AuthTokens
+  nickname: string
+  thumbnailUrl: string
+  language: string
 }

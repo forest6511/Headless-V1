@@ -20,6 +20,9 @@ class UserRepositoryImpl(
             .set(USERS.PASSWORD_HASH, user.passwordHash.value)
             .set(USERS.ROLE, user.role.name)
             .set(USERS.ENABLED, user.enable)
+            .set(USERS.NICKNAME, user.nickname)
+            .set(USERS.THUMBNAIL_URL, user.thumbnailUrl)
+            .set(USERS.LANGUAGE, user.language.value)
             .set(USERS.CREATED_AT, user.createdAt)
             .set(USERS.UPDATED_AT, user.updatedAt)
             .execute()
@@ -30,6 +33,13 @@ class UserRepositoryImpl(
         val result = dsl.selectFrom(USERS)
             .where(USERS.EMAIL.eq(email.value))
             .and(USERS.ENABLED.eq(true))
+            .fetchOne()
+        return result?.into(User::class.java)
+    }
+
+    override fun findByNickname(nickName: String): User? {
+        val result = dsl.selectFrom(USERS)
+            .where(USERS.NICKNAME.eq(nickName))
             .fetchOne()
         return result?.into(User::class.java)
     }

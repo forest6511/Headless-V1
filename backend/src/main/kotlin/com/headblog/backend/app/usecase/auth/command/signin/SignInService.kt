@@ -2,6 +2,8 @@ package com.headblog.backend.app.usecase.auth.command.signin
 
 import com.headblog.backend.domain.model.user.Email
 import com.headblog.backend.domain.model.user.UserRepository
+import com.headblog.backend.infra.api.admin.auth.response.SignInResponse
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.exception.AuthException
 import org.slf4j.LoggerFactory
@@ -15,6 +17,7 @@ class SignInService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val tokenService: TokenService,
+    private val storageProperties: StorageProperties,
 ) : SignInUseCase {
 
     private val logger = LoggerFactory.getLogger(SignInService::class.java)
@@ -42,9 +45,14 @@ class SignInService(
         val authTokens = tokenService.createAuthTokens(user)
 
         logger.info("sign-in successful for email: ${user.email}")
+        val thumbnailUrl = "${storageProperties.cloudflare.r2.publicEndpoint}/${checkNotNull(user.thumbnailUrl)}"
+
         return SignInResponse(
             email = user.email,
-            authTokens = authTokens
+            authTokens = authTokens,
+            nickname = user.nickname,
+            thumbnailUrl = thumbnailUrl,
+            language = user.language.value
         )
     }
 }

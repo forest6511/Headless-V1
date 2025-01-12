@@ -1,11 +1,11 @@
 import { apiClient } from '@/lib/api'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
-import { AuthResponse } from '@/types/api/auth/response'
+import { AuthResponse, SignInResponse } from '@/types/api/auth/response'
 import { SignInPayload, SignupPayload } from '@/types/api/auth/request'
 
 export const authApi = {
   signin: (payload: SignInPayload) => {
-    return apiClient.request(ADMIN_API_ENDPOINTS.AUTH.SIGNIN, {
+    return apiClient.request<SignInResponse>(ADMIN_API_ENDPOINTS.AUTH.SIGNIN, {
       method: 'POST',
       body: payload,
     })

@@ -6,6 +6,9 @@ CREATE TABLE users
     password_hash varchar(255),
     enabled       boolean      NOT NULL DEFAULT FALSE,
     role          varchar(50)  NOT NULL,
+    nickname      varchar(50)  NOT NULL UNIQUE,
+    thumbnail_url varchar(255),
+    language varchar(5)   NOT NULL DEFAULT 'ja',
     created_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -16,6 +19,8 @@ COMMENT ON COLUMN users.email IS 'User''s email address, must be unique';
 COMMENT ON COLUMN users.password_hash IS 'Hashed password for user authentication';
 COMMENT ON COLUMN users.enabled IS 'Default is false. Automatically set to true after user verification';
 COMMENT ON COLUMN users.role IS 'Role assigned to the user (e.g., admin, editor, user)';
+COMMENT ON COLUMN users.nickname IS 'User''s display name, must be unique';
+COMMENT ON COLUMN users.thumbnail_url IS 'URL of the user''s profile icon image';
 COMMENT ON COLUMN users.created_at IS 'Timestamp when the user was created';
 COMMENT ON COLUMN users.updated_at IS 'Timestamp when the user was last updated';
 

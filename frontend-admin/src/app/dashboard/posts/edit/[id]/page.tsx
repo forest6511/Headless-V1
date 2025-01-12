@@ -1,7 +1,6 @@
 'use client'
-// https://react.dev/reference/react/use
-import { use, useState } from 'react'
 
+import { use, useState, useEffect } from 'react'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { ROUTES } from '@/config/routes'
 import { PostForm } from '@/components/post/PostForm'
@@ -10,8 +9,8 @@ import {
   usePostDetail,
 } from '@/hooks/post/usePostDetail'
 import { Save } from 'lucide-react'
-import { Language } from '@/types/api/common/types'
-import { LanguageSelector } from '@/components/common/LanguageSelector'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface Props {
   params: Promise<{
@@ -21,15 +20,21 @@ interface Props {
 
 export default function EditPostPage(props: Props) {
   const params = use(props.params)
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { post, isLoading } = usePostDetail(params.id)
+  const currentLanguage = useLanguageStore((state) => state.language)
+  const [formKey, setFormKey] = useState(0)
+
+  // 言語が変更されたら、formKeyをインクリメント
+  useEffect(() => {
+    setFormKey((prev) => prev + 1)
+  }, [currentLanguage])
 
   if (isLoading) return <p>Loading...</p>
   if (!post) return null
 
   // 選択された言語に基づいてデータを変換
-  const initialData = convertPostResponseToFormData(post, currentLanguage)
+  const initialData = convertPostResponseToFormData(post)
 
   return (
     <Card className="w-full">
@@ -45,16 +50,12 @@ export default function EditPostPage(props: Props) {
               isLoading={isSubmitting}
               isDisabled={isSubmitting}
             >
-              記事の保存
+              {t(currentLanguage, 'common.edit')}
             </Button>
-            <LanguageSelector
-              currentLanguage={currentLanguage}
-              onLanguageChange={setCurrentLanguage}
-            />
           </div>
         </div>
         <PostForm
-          key={currentLanguage}
+          key={`${formKey}-${initialData.language}`}
           mode="update"
           redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
           id="post-form"

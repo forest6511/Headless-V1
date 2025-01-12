@@ -1,12 +1,9 @@
 import { z } from 'zod'
+import { Language } from '@/types/api/common/types'
 
 // 共通のベーススキーマ
 const baseCategorySchema = z.object({
-  language: z
-    .string()
-    .min(1, '言語は必須です')
-    .max(5, '言語は5文字以内で入力してください')
-    .default('ja'),
+  language: z.custom<Language>(),
   name: z
     .string()
     .min(1, '名前は必須です')

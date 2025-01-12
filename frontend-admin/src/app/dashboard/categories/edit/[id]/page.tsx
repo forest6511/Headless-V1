@@ -1,15 +1,16 @@
 'use client'
+
 import { use, useState, useEffect } from 'react'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { ROUTES } from '@/config/routes'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
-import { Language } from '@/types/api/common/types'
 import { UpdateCategoryData } from '@/schemas/category'
 import { UpdateCategoryForm } from '@/components/category/UpdateCategoryForm'
 import { Save } from 'lucide-react'
 import { Loading } from '@/components/ui/loading'
+import { useLanguageStore } from '@/stores/admin/languageStore'
 
 interface Props {
   params: Promise<{
@@ -19,8 +20,8 @@ interface Props {
 
 export default function EditCategoryPage({ params }: Props) {
   const router = useRouter()
+  const currentLanguage = useLanguageStore((state) => state.language)
   const categories = useCategoryStore((state) => state.categories)
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
   const [category, setCategory] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -39,6 +40,11 @@ export default function EditCategoryPage({ params }: Props) {
     }
   }, [resolvedParams.id, categories, router])
 
+  // 言語が変更されたら、formKeyをインクリメント
+  useEffect(() => {
+    setFormKey((prev) => prev + 1)
+  }, [currentLanguage])
+
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -55,11 +61,6 @@ export default function EditCategoryPage({ params }: Props) {
     parentId: category.parentId || '',
     language: currentLanguage, // 現在の言語を設定
   } as UpdateCategoryData
-
-  const handleLanguageChange = (language: Language) => {
-    setCurrentLanguage(language)
-    setFormKey((prev) => prev + 1) // フォームを強制的に再レンダリング
-  }
 
   return (
     <>
@@ -79,10 +80,7 @@ export default function EditCategoryPage({ params }: Props) {
               >
                 カテゴリーを更新
               </Button>
-              <LanguageSelector
-                currentLanguage={currentLanguage}
-                onLanguageChange={handleLanguageChange}
-              />
+              <LanguageSelector />
             </div>
           </div>
           <UpdateCategoryForm

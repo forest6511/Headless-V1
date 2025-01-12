@@ -3,23 +3,17 @@
 import { AddCategoryButton } from '@/components/category/AddCategoryButton'
 import { CategoryTable } from '@/components/category/CategoryTable'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { ROUTES } from '@/config/routes'
 import { useRouter } from 'next/navigation'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
-import { Language } from '@/types/api/common/types'
+import { useLanguageStore } from '@/stores/admin/languageStore'
 
 export default function CategoryList() {
   const router = useRouter()
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
+  const currentLanguage = useLanguageStore((state) => state.language)
   const { categories, isLoading, error, refetch } = useCategoryList()
 
-  // 言語変更時にデータを再フェッチ
-  const handleLanguageChange = useCallback((newLanguage: Language) => {
-    setCurrentLanguage(newLanguage)
-  }, [])
-
-  // useEffect to trigger refetch when language changes
   useEffect(() => {
     refetch()
   }, [currentLanguage, refetch])
@@ -41,10 +35,7 @@ export default function CategoryList() {
     <div className="w-full px-4 py-8">
       <div className="flex items-center gap-4 mb-4">
         <AddCategoryButton />
-        <LanguageSelector
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
+        <LanguageSelector />
       </div>
       <CategoryTable
         categories={categories}

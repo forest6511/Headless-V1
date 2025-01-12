@@ -6,20 +6,16 @@ import {
   SelectItem,
 } from '@/components/ui/select'
 import { Language, Languages } from '@/types/api/common/types'
+import { useLanguageStore } from '@/stores/admin/languageStore'
 
-interface LanguageSelectorProps {
-  currentLanguage: Language
-  onLanguageChange: (language: Language) => void
-}
+export function LanguageSelector() {
+  const language = useLanguageStore((state) => state.language)
+  const setLanguage = useLanguageStore((state) => state.setLanguage)
 
-export function LanguageSelector({
-  currentLanguage,
-  onLanguageChange,
-}: LanguageSelectorProps) {
   return (
     <Select
-      onValueChange={(value) => onLanguageChange(value as Language)}
-      defaultValue={currentLanguage}
+      onValueChange={(value) => setLanguage(value as Language)}
+      defaultValue={language}
     >
       <SelectTrigger className="w-32">
         <SelectValue placeholder="言語を選択" />

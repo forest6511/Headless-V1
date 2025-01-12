@@ -7,14 +7,14 @@ import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
 import { AddPostButton } from '@/components/post/AddPostButton'
 import { useCallback, useState } from 'react'
-import { Language } from '@/types/api/common/types'
 import { LanguageSelector } from '@/components/common/LanguageSelector'
+import { useLanguageStore } from '@/stores/admin/languageStore'
 
 const ROWS_PER_PAGE = 10
 
 export default function PostsPage() {
   const router = useRouter()
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
+  const language = useLanguageStore((state) => state.language)
 
   // カテゴリー情報
   const {
@@ -45,10 +45,7 @@ export default function PostsPage() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-4">
           <AddPostButton />
-          <LanguageSelector
-            currentLanguage={currentLanguage}
-            onLanguageChange={setCurrentLanguage}
-          />
+          <LanguageSelector />
         </div>
       </div>
       <PostTable
@@ -59,7 +56,7 @@ export default function PostsPage() {
         onPageChange={setPage}
         onEdit={handlePostEdit}
         onDelete={handlePostDeleted}
-        currentLanguage={currentLanguage}
+        currentLanguage={language}
       />
     </div>
   )

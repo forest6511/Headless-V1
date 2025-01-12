@@ -9,9 +9,12 @@ import { ROUTES } from '@/config/routes'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { ApiError } from '@/lib/api/core/client'
+import { userStore } from '@/stores/admin/userStore'
 
 export default function SignInForm() {
   const router = useRouter()
+  const setUser = userStore((state) => state.setUser)
+
   const {
     register,
     handleSubmit,
@@ -23,11 +26,12 @@ export default function SignInForm() {
 
   const onSubmit = async (data: SigninFormData) => {
     try {
-      await authApi.signin({
+      const response = await authApi.signin({
         email: data.email,
         password: data.password,
       })
 
+      setUser(response.nickname, response.thumbnailUrl, response.language)
       router.push(ROUTES.DASHBOARD.BASE)
     } catch (error) {
       if (error instanceof ApiError) {

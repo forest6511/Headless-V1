@@ -1,11 +1,8 @@
 import { z } from 'zod'
+import { Language } from '@/types/api/common/types'
 
 export const BasePostSchema = z.object({
-  language: z
-    .string()
-    .min(1, '言語は必須です')
-    .max(5, '言語は5文字以内で入力してください')
-    .default('ja'),
+  language: z.custom<Language>(),
   title: z
     .string()
     .min(1, 'タイトルは必須です')

@@ -9,4 +9,5 @@ data class SignInResponse(
     override val authTokens: AuthTokens,
     val nickname: String,
     val thumbnailUrl: String,
+    val language: String,
 ) : AuthenticationResponse

@@ -51,7 +51,8 @@ class SignInService(
             email = user.email,
             authTokens = authTokens,
             nickname = user.nickname,
-            thumbnailUrl = thumbnailUrl
+            thumbnailUrl = thumbnailUrl,
+            language = user.language.value
         )
     }
 }

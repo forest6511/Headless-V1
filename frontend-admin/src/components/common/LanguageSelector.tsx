@@ -17,12 +17,16 @@ export function LanguageSelector() {
       onValueChange={(value) => setLanguage(value as Language)}
       defaultValue={language}
     >
-      <SelectTrigger className="w-32">
+      <SelectTrigger className="w-32 text-black bg-gray-100">
         <SelectValue placeholder="言語を選択" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-gray-100 border-black text-black">
         {Languages.map((lang) => (
-          <SelectItem key={lang.value} value={lang.value}>
+          <SelectItem
+            key={lang.value}
+            value={lang.value}
+            className="hover:bg-gray-200 focus:bg-gray-200"
+          >
             {lang.label}
           </SelectItem>
         ))}

@@ -13,8 +13,6 @@ export default function SignUpForm() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -39,12 +37,7 @@ export default function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <LanguageSelector
-        currentLanguage={watch('language')}
-        onLanguageChange={(value) => {
-          setValue('language', value)
-        }}
-      />
+      <LanguageSelector />
       <Input
         {...register('nickname')}
         label="ニックネーム"

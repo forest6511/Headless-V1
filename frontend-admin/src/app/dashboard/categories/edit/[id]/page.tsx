@@ -5,7 +5,6 @@ import { Button, Card, CardBody } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { ROUTES } from '@/config/routes'
-import { LanguageSelector } from '@/components/common/LanguageSelector'
 import { UpdateCategoryData } from '@/schemas/category'
 import { UpdateCategoryForm } from '@/components/category/UpdateCategoryForm'
 import { Save } from 'lucide-react'
@@ -80,7 +79,6 @@ export default function EditCategoryPage({ params }: Props) {
               >
                 カテゴリーを更新
               </Button>
-              <LanguageSelector />
             </div>
           </div>
           <UpdateCategoryForm

@@ -6,7 +6,6 @@ import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { useCallback, useEffect } from 'react'
 import { ROUTES } from '@/config/routes'
 import { useRouter } from 'next/navigation'
-import { LanguageSelector } from '@/components/common/LanguageSelector'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 
 export default function CategoryList() {
@@ -35,7 +34,6 @@ export default function CategoryList() {
     <div className="w-full px-4 py-8">
       <div className="flex items-center gap-4 mb-4">
         <AddCategoryButton />
-        <LanguageSelector />
       </div>
       <CategoryTable
         categories={categories}

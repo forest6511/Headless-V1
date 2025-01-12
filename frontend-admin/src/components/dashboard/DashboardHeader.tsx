@@ -6,6 +6,7 @@ import { userStore } from '@/stores/admin/userStore'
 import { Avatar } from '@nextui-org/avatar'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/config/routes'
+import { LanguageSelector } from '@/components/common/LanguageSelector'
 
 export default function DashboardHeader() {
   const router = useRouter()
@@ -24,6 +25,7 @@ export default function DashboardHeader() {
         <h1 className="text-lg font-bold">管理画面</h1>
       </div>
       <div className="flex items-center gap-3">
+        <LanguageSelector />
         <Avatar
           src={thumbnailUrl || undefined}
           name={nickname?.charAt(0) || '?'}

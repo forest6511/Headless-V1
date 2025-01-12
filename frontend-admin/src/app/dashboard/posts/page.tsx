@@ -7,7 +7,6 @@ import { PostTable } from '@/components/post/PostTable'
 import { ROUTES } from '@/config/routes'
 import { AddPostButton } from '@/components/post/AddPostButton'
 import { useCallback } from 'react'
-import { LanguageSelector } from '@/components/common/LanguageSelector'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 
 const ROWS_PER_PAGE = 10
@@ -45,7 +44,6 @@ export default function PostsPage() {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-4">
           <AddPostButton />
-          <LanguageSelector />
         </div>
       </div>
       <PostTable

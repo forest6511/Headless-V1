@@ -9,7 +9,6 @@ import {
   usePostDetail,
 } from '@/hooks/post/usePostDetail'
 import { Save } from 'lucide-react'
-import { LanguageSelector } from '@/components/common/LanguageSelector'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 
 interface Props {
@@ -52,7 +51,6 @@ export default function EditPostPage(props: Props) {
             >
               記事の保存
             </Button>
-            <LanguageSelector />
           </div>
         </div>
         <PostForm

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -14,23 +14,30 @@ import { MediaFile } from '@/types/api/media/types'
 import { MediaView } from '@/components/media/MediaView'
 import { MediaUploadModal } from '@/components/media/MediaUploadModal'
 import { MediaDetailModal } from '@/components/media/MediaDetailModal'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
-export default function Home() {
+export default function MediaPage() {
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState<MediaFile | null>(null)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const currentLanguage = useLanguageStore((state) => state.language)
+
+  const handleUploadComplete = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1)
+  }, [])
 
   return (
     <div className="p-6 pt-0 w-full">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">メディアライブラリ</h1>
         <Button
           onClick={() => setIsUploadModalOpen(true)}
           className="bg-[rgb(0,111,238)] hover:bg-[rgb(0,91,218)] text-white"
         >
           <Upload className="w-4 h-4 mr-2" />
-          新しいメディアファイルを追加
+          {t(currentLanguage, 'media.addNew')}
         </Button>
       </div>
 
@@ -45,6 +52,7 @@ export default function Home() {
                 ? 'bg-[rgb(0,111,238)] hover:bg-[rgb(0,91,218)] text-white'
                 : ''
             }
+            title={t(currentLanguage, 'media.view.grid')}
           >
             <Grid2X2 className="w-4 h-4" />
           </Button>
@@ -57,6 +65,7 @@ export default function Home() {
                 ? 'bg-[rgb(0,111,238)] hover:bg-[rgb(0,91,218)] text-white'
                 : ''
             }
+            title={t(currentLanguage, 'media.view.list')}
           >
             <List className="w-4 h-4" />
           </Button>
@@ -64,28 +73,33 @@ export default function Home() {
 
         <Select defaultValue="date">
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="並び替え" />
+            <SelectValue placeholder={t(currentLanguage, 'media.sort.label')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="date">アップロード日</SelectItem>
-            {/* <SelectItem value="name">ファイル名</SelectItem> */}
-            {/* <SelectItem value="size">ファイルサイズ</SelectItem> */}
+            <SelectItem value="date">
+              {t(currentLanguage, 'media.sort.uploadDate')}
+            </SelectItem>
           </SelectContent>
         </Select>
 
         <Input
-          placeholder="メディアを検索"
+          placeholder={t(currentLanguage, 'media.search')}
           className="flex-grow"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
-      <MediaView view={view} onFileSelectAction={setSelectedFile} />
+      <MediaView
+        view={view}
+        onFileSelectAction={setSelectedFile}
+        refreshTrigger={refreshTrigger}
+      />
 
       <MediaUploadModal
         open={isUploadModalOpen}
         onOpenChangeAction={setIsUploadModalOpen}
+        onUploadComplete={handleUploadComplete}
       />
 
       <MediaDetailModal

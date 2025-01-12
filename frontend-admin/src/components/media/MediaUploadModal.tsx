@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState } from 'react'
 import {
   Dialog,
@@ -10,9 +11,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Upload, Loader2 } from 'lucide-react'
 import { apiClient } from '@/lib/api/core/client'
-// npx shadcn@latest add sonner
 import { toast } from 'sonner'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface MediaUploadModalProps {
   open: boolean
@@ -44,14 +46,15 @@ export function MediaUploadModal({
     status: 'idle',
     progress: 0,
   })
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   const validateFile = (file: File): boolean => {
     if (file.size > MAX_FILE_SIZE) {
-      toast.error('ファイルサイズが10MBを超えています')
+      toast.error(t(currentLanguage, 'media.upload.error.size'))
       return false
     }
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error('対応していないファイル形式です')
+      toast.error(t(currentLanguage, 'media.upload.error.format'))
       return false
     }
     return true
@@ -69,12 +72,12 @@ export function MediaUploadModal({
       }
 
       setUploadState({ status: 'success', progress: 100 })
-      toast.success('アップロードが完了しました')
+      toast.success(t(currentLanguage, 'media.upload.success'))
       onUploadComplete?.()
       onOpenChangeAction(false)
     } catch (error) {
       setUploadState({ status: 'error', progress: 0 })
-      toast.error('アップロードに失敗しました')
+      toast.error(t(currentLanguage, 'media.upload.error.general'))
     }
   }
 
@@ -98,7 +101,7 @@ export function MediaUploadModal({
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>新しいメディアファイルを追加</DialogTitle>
+          <DialogTitle>{t(currentLanguage, 'media.upload.title')}</DialogTitle>
         </DialogHeader>
         <div
           className={`
@@ -115,7 +118,7 @@ export function MediaUploadModal({
               <div className="flex flex-col items-center">
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
                 <p className="mt-4 text-sm text-muted-foreground">
-                  アップロード中...
+                  {t(currentLanguage, 'media.upload.uploading')}
                 </p>
               </div>
             ) : (
@@ -123,9 +126,11 @@ export function MediaUploadModal({
                 <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground">
-                    ファイルをドロップしてアップロード
+                    {t(currentLanguage, 'media.upload.dropzone.text')}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">または</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t(currentLanguage, 'media.upload.dropzone.or')}
+                  </p>
                   <Input
                     type="file"
                     className="hidden"
@@ -144,14 +149,14 @@ export function MediaUploadModal({
                       document.getElementById('file-upload')?.click()
                     }
                   >
-                    ファイルを選択
+                    {t(currentLanguage, 'media.upload.dropzone.button')}
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  最大アップロードサイズ: 10 MB
+                  {t(currentLanguage, 'media.upload.maxSize')}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  対応形式: JPG, PNG, GIF, WebP
+                  {t(currentLanguage, 'media.upload.formats')}
                 </p>
               </>
             )}

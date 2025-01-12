@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { CreateCategoryForm } from '@/components/category/CreateCategoryForm'

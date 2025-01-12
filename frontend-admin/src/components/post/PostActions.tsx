@@ -11,6 +11,8 @@ import { Edit, Trash2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { postApi } from '@/lib/api'
 import toast from 'react-hot-toast'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface PostActionsProps {
   postId: string
@@ -25,6 +27,7 @@ export const PostActions: React.FC<PostActionsProps> = ({
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [isDeleting, setIsDeleting] = useState(false)
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   const handleEdit = () => {
     onEdit(postId)
@@ -34,12 +37,11 @@ export const PostActions: React.FC<PostActionsProps> = ({
     try {
       setIsDeleting(true)
       await postApi.deletePost(postId)
-      toast.success('記事を削除しました')
-      // 記事再取得
+      toast.success(t(currentLanguage, 'posts.deleteSuccess'))
       onDelete()
     } catch (error) {
-      console.error('記事の削除に失敗しました:', error)
-      toast.error('記事の削除に失敗しました')
+      console.error(t(currentLanguage, 'posts.deleteError'), error)
+      toast.error(t(currentLanguage, 'posts.deleteError'))
     } finally {
       setIsDeleting(false)
     }
@@ -51,12 +53,17 @@ export const PostActions: React.FC<PostActionsProps> = ({
         <Button
           isIconOnly
           color="warning"
-          aria-label="編集"
+          aria-label={t(currentLanguage, 'common.edit')}
           onPress={handleEdit}
         >
           <Edit size={20} />
         </Button>
-        <Button isIconOnly color="danger" aria-label="削除" onPress={onOpen}>
+        <Button
+          isIconOnly
+          color="danger"
+          aria-label={t(currentLanguage, 'common.delete')}
+          onPress={onOpen}
+        >
           <Trash2 size={20} />
         </Button>
       </div>
@@ -65,13 +72,15 @@ export const PostActions: React.FC<PostActionsProps> = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>記事の削除</ModalHeader>
+              <ModalHeader>
+                {t(currentLanguage, 'posts.deleteConfirm.title')}
+              </ModalHeader>
               <ModalBody>
-                この記事を削除してもよろしいですか？ この操作は取り消せません。
+                {t(currentLanguage, 'posts.deleteConfirm.message')}
               </ModalBody>
               <ModalFooter>
                 <Button color="default" variant="light" onPress={onClose}>
-                  キャンセル
+                  {t(currentLanguage, 'common.cancel')}
                 </Button>
                 <Button
                   color="danger"
@@ -81,7 +90,7 @@ export const PostActions: React.FC<PostActionsProps> = ({
                     onClose()
                   }}
                 >
-                  削除
+                  {t(currentLanguage, 'common.delete')}
                 </Button>
               </ModalFooter>
             </>

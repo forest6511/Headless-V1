@@ -1,3 +1,5 @@
+'use client'
+
 import { MediaFile } from '@/types/api/media/types'
 import {
   Table,
@@ -8,7 +10,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatFileSize } from '@/lib/utils/media'
-import { MEDIA_LIST_COLUMNS } from '@/config/constants'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { createMediaListColumns } from '@/config/constants'
 
 // ListViewコンポーネントのプロパティの型定義
 interface ListViewProps {
@@ -18,12 +21,15 @@ interface ListViewProps {
 
 // リスト表示用のコンポーネント
 export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
+  const currentLanguage = useLanguageStore((state) => state.language)
+  const columns = createMediaListColumns(currentLanguage)
+
   return (
     <div className="mb-16">
       <Table>
         <TableHeader>
           <TableRow>
-            {MEDIA_LIST_COLUMNS.map((column) => (
+            {columns.map((column) => (
               <TableHead key={column.uid}>{column.name}</TableHead>
             ))}
           </TableRow>

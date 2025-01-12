@@ -1,5 +1,6 @@
-import { MediaFile } from '@/types/api/media/types'
+'use client'
 
+import { MediaFile } from '@/types/api/media/types'
 // GridViewコンポーネントのプロパティの型定義
 interface GridViewProps {
   files: MediaFile[]

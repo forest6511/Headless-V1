@@ -20,7 +20,7 @@ interface UsePostFormProps {
   initialData?: PostFormData
   mode: 'create' | 'update'
   currentLanguage: Language
-  schema?: ZodSchema // スキーマを任意のプロパティとして追加
+  schema?: ZodSchema
 }
 
 export const usePostForm = ({
@@ -28,7 +28,7 @@ export const usePostForm = ({
   initialData,
   mode,
   currentLanguage,
-  schema, // スキーマを受け取る
+  schema,
 }: UsePostFormProps) => {
   const router = useRouter()
   const [textLength, setTextLength] = useState(0)

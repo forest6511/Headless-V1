@@ -33,14 +33,15 @@ export const createPostColumns = (language: Language) =>
   ] as const
 
 // メディア一覧テーブルのカラム定義
-export const MEDIA_LIST_COLUMNS = [
-  { name: 'サムネイル', uid: 'thumbnail' },
-  { name: 'タイトル', uid: 'title' },
-  { name: 'アップロード日', uid: 'uploadDate' },
-  { name: 'サムネイルサイズ', uid: 'thumbnailSize' },
-  { name: '小サイズ', uid: 'smallSize' },
-  { name: '中サイズ', uid: 'mediumSize' },
-] as const
+export const createMediaListColumns = (language: Language) =>
+  [
+    { name: t(language, 'media.columns.thumbnail'), uid: 'thumbnail' },
+    { name: t(language, 'media.columns.title'), uid: 'title' },
+    { name: t(language, 'media.columns.uploadDate'), uid: 'uploadDate' },
+    { name: t(language, 'media.columns.thumbnailSize'), uid: 'thumbnailSize' },
+    { name: t(language, 'media.columns.smallSize'), uid: 'smallSize' },
+    { name: t(language, 'media.columns.mediumSize'), uid: 'mediumSize' },
+  ] as const
 
 // メディアグリッドの定数設定
 export const MEDIA_GRID_CONFIG = {

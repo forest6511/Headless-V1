@@ -16,9 +16,7 @@ export default function PostsPage() {
   const language = useLanguageStore((state) => state.language)
 
   // カテゴリー情報
-  const {
-    categories,
-  } = useCategoryList()
+  const { categories } = useCategoryList()
 
   // 記事情報
   const { posts, page, setPage, totalPages, refetch } =

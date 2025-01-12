@@ -1,19 +1,18 @@
-import { PostFormData } from '@/schemas/post'
-import { usePostForm } from '@/hooks/post/usePostForm'
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Select,
-  SelectItem,
-} from '@nextui-org/react'
+  PostFormData,
+  createPostSchema,
+  createUpdatePostSchema,
+} from '@/schemas/post'
+import { usePostForm } from '@/hooks/post/usePostForm'
+import { Card, CardBody, Input, Select, SelectItem } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
 import React, { useEffect } from 'react'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
 import pretty from 'pretty'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface PostFormProps {
   redirectPath: string
@@ -30,11 +29,13 @@ export function PostForm({
   id = 'post-form',
   onSubmittingChange,
 }: PostFormProps) {
+  const currentLanguage = useLanguageStore((state) => state.language)
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(
     categories,
-    initialData?.language || 'ja'
+    initialData?.language || currentLanguage
   )
+
   const {
     form,
     textLength,
@@ -46,7 +47,13 @@ export function PostForm({
     redirectPath,
     initialData,
     mode,
+    currentLanguage,
+    schema:
+      mode === 'create'
+        ? createPostSchema(currentLanguage)
+        : createUpdatePostSchema(currentLanguage),
   })
+
   const {
     register,
     formState: { errors },
@@ -62,27 +69,24 @@ export function PostForm({
     <form onSubmit={onSubmit} className="flex flex-row-reverse gap-6" id={id}>
       <div className="w-1/3 space-y-6">
         <Card>
-          <CardHeader>
-            <h2 className="text-lg font-semibold">基本情報</h2>
-          </CardHeader>
           <CardBody className="space-y-4">
             <Input
               {...register('title')}
-              label="タイトル"
-              placeholder="記事のタイトルを入力"
+              label={t(currentLanguage, 'post.form.title')}
+              placeholder={t(currentLanguage, 'post.form.placeholders.title')}
               isInvalid={!!errors.title}
               errorMessage={errors?.title?.message}
             />
             <Input
               {...register('tagNames')}
-              label="ハッシュタグ"
-              placeholder="#をつけてカンマ形式で入力. ex #beauty, #diet"
+              label={t(currentLanguage, 'post.form.hashtag')}
+              placeholder={t(currentLanguage, 'post.form.placeholders.hashtag')}
               isInvalid={!!errors.tagNames}
               errorMessage={errors?.tagNames?.message}
             />
             <Select
               {...register('categoryId')}
-              label="カテゴリ"
+              label={t(currentLanguage, 'post.form.category')}
               isInvalid={!!errors.categoryId}
               errorMessage={errors?.categoryId?.message}
             >
@@ -94,14 +98,13 @@ export function PostForm({
             </Select>
             <Select
               {...register('status')}
-              label="ステータス"
-              name="postStatus"
+              label={t(currentLanguage, 'post.form.status')}
               isInvalid={!!errors.status}
               errorMessage={errors?.status?.message}
             >
               {PostStatuses.map((status) => (
                 <SelectItem key={status.value} value={status.value}>
-                  {status.labels[initialData?.language || 'ja']}
+                  {status.labels[currentLanguage]}
                 </SelectItem>
               ))}
             </Select>
@@ -110,9 +113,6 @@ export function PostForm({
       </div>
       <div className="w-2/3 space-y-6">
         <Card>
-          <CardHeader>
-            <h2 className="text-lg font-semibold">記事内容</h2>
-          </CardHeader>
           <CardBody className="space-y-4">
             <div className="h-[800px] overflow-y-auto">
               {/* zod validationが効かないので、hidden項目に設定 */}
@@ -130,7 +130,7 @@ export function PostForm({
             {/* HTMLプレビュー */}
             <div className="mt-4 border-t pt-4">
               <h3 className="text-md font-semibold mb-2">
-                プレビュー 文字数: {textLength}
+                {t(currentLanguage, 'post.preview')} {textLength}
               </h3>
               <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
                 {pretty(contentHtml || '')}

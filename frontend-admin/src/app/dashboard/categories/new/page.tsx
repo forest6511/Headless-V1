@@ -5,9 +5,12 @@ import { CreateCategoryForm } from '@/components/category/CreateCategoryForm'
 import { ROUTES } from '@/config/routes'
 import { Save } from 'lucide-react'
 import { Loading } from '@/components/ui/loading'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 export default function NewCategoryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   return (
     <>
@@ -25,7 +28,7 @@ export default function NewCategoryPage() {
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
               >
-                新規カテゴリーを追加
+                {t(currentLanguage, 'common.addNew')}
               </Button>
               <span>日本語で入力してください</span>
             </div>

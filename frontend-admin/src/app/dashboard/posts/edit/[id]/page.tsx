@@ -10,6 +10,7 @@ import {
 } from '@/hooks/post/usePostDetail'
 import { Save } from 'lucide-react'
 import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface Props {
   params: Promise<{
@@ -49,7 +50,7 @@ export default function EditPostPage(props: Props) {
               isLoading={isSubmitting}
               isDisabled={isSubmitting}
             >
-              記事の保存
+              {t(currentLanguage, 'common.edit')}
             </Button>
           </div>
         </div>

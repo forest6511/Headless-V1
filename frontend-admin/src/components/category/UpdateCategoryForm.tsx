@@ -1,7 +1,10 @@
 'use client'
 
-import { UpdateCategoryData, updateCategorySchema } from '@/schemas/category'
-import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
+import {
+  UpdateCategoryData,
+  createUpdateCategorySchema,
+} from '@/schemas/category'
+import { Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import { useCategoryStore } from '@/stores/admin/categoryStore'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,6 +14,8 @@ import { UpdateCategoryRequest } from '@/types/api/category/request'
 import { ApiError } from '@/lib/api/core/client'
 import toast from 'react-hot-toast'
 import { createCategoryOptions } from '@/lib/utils/category'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface UpdateCategoryFormProps {
   redirectPath: string
@@ -26,6 +31,7 @@ export const UpdateCategoryForm = ({
   onSubmittingChange,
 }: UpdateCategoryFormProps) => {
   const router = useRouter()
+  const currentLanguage = useLanguageStore((state) => state.language)
   const categories = useCategoryStore((state) => state.categories)
 
   const {
@@ -33,15 +39,16 @@ export const UpdateCategoryForm = ({
     handleSubmit,
     formState: { errors },
   } = useForm<UpdateCategoryData>({
-    resolver: zodResolver(updateCategorySchema),
+    resolver: zodResolver(createUpdateCategorySchema(currentLanguage)),
     defaultValues: initialData,
     mode: 'onChange',
   })
 
   const categoryOptions = createCategoryOptions(
     categories,
-    initialData?.language || 'ja'
+    initialData?.language || currentLanguage
   )
+
   const onSubmit = async (data: UpdateCategoryData) => {
     try {
       onSubmittingChange?.(true)
@@ -56,9 +63,11 @@ export const UpdateCategoryForm = ({
       router.push(redirectPath)
     } catch (error) {
       if (error instanceof ApiError) {
-        toast.error(`カテゴリーの更新に失敗しました。 ${error?.details}`)
+        toast.error(
+          `${t(currentLanguage, 'category.toast.updateError')}. ${error?.details}`
+        )
       }
-      console.error('カテゴリーの更新に失敗しました:', error)
+      console.error(t(currentLanguage, 'category.toast.updateError'), error)
     } finally {
       onSubmittingChange?.(false)
     }
@@ -68,15 +77,18 @@ export const UpdateCategoryForm = ({
     <form id={id} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Input
         {...register('name')}
-        label="名前"
+        label={t(currentLanguage, 'category.form.name')}
         isInvalid={!!errors.name}
         errorMessage={errors.name?.message}
       />
       <Select
         {...register('parentId')}
         items={categoryOptions}
-        label="親カテゴリー"
-        placeholder="カテゴリーを選択してください"
+        label={t(currentLanguage, 'category.form.parentCategory')}
+        placeholder={t(
+          currentLanguage,
+          'category.form.parentCategoryPlaceholder'
+        )}
         onSelectionChange={async (keys) => {
           const selectedKey = Array.from(keys)[0]?.toString()
           await register('parentId').onChange({
@@ -93,7 +105,7 @@ export const UpdateCategoryForm = ({
 
       <Textarea
         {...register('description')}
-        label="説明"
+        label={t(currentLanguage, 'category.form.description')}
         isInvalid={!!errors.description}
         errorMessage={errors.description?.message}
       />

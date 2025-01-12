@@ -11,7 +11,7 @@ import { useLanguageStore } from '@/stores/admin/languageStore'
 export default function CategoryList() {
   const router = useRouter()
   const currentLanguage = useLanguageStore((state) => state.language)
-  const { categories, isLoading, error, refetch } = useCategoryList()
+  const { categories, isLoading, refetch } = useCategoryList()
 
   useEffect(() => {
     refetch()
@@ -26,12 +26,8 @@ export default function CategoryList() {
     await refetch()
   }, [refetch])
 
-  if (error) {
-    return <div>エラーが発生しました: {error.message}</div>
-  }
-
   return (
-    <div className="w-full px-4 py-8">
+    <div className="container mx-auto p-2 space-y-6">
       <div className="flex items-center gap-4 mb-4">
         <AddCategoryButton />
       </div>

@@ -10,6 +10,7 @@ import { UpdateCategoryForm } from '@/components/category/UpdateCategoryForm'
 import { Save } from 'lucide-react'
 import { Loading } from '@/components/ui/loading'
 import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface Props {
   params: Promise<{
@@ -77,7 +78,7 @@ export default function EditCategoryPage({ params }: Props) {
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
               >
-                カテゴリーを更新
+                {t(currentLanguage, 'common.edit')}
               </Button>
             </div>
           </div>

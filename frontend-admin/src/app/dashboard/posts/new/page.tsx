@@ -5,12 +5,13 @@ import { Button, Card, CardBody } from '@nextui-org/react'
 import { PostForm } from '@/components/post/PostForm'
 import { ROUTES } from '@/config/routes'
 import { Save } from 'lucide-react'
-import { Language } from '@/types/api/common/types'
 import { Loading } from '@/components/ui/loading'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 export default function NewPostPage() {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>('ja')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   return (
     <>
@@ -28,19 +29,19 @@ export default function NewPostPage() {
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
               >
-                記事の保存
+                {t(currentLanguage, 'common.addNew')}
               </Button>
               日本語で入力してください
             </div>
           </div>
           <PostForm
-            key={currentLanguage}
+            key={'ja'}
             mode="create"
             redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
             id="post-form"
             onSubmittingChange={setIsSubmitting}
             initialData={{
-              language: currentLanguage,
+              language: 'ja',
               title: '',
               content: '',
               status: 'DRAFT',

@@ -4,36 +4,45 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FileText, FolderTree, Image, Users } from 'lucide-react'
 import { ROUTES } from '@/config/routes'
-
-const menuItems = [
-  {
-    title: 'コンテンツ',
-    submenu: [
-      {
-        title: '記事投稿',
-        href: ROUTES.DASHBOARD.POSTS.BASE,
-        icon: FileText,
-      },
-      {
-        title: 'カテゴリ',
-        href: ROUTES.DASHBOARD.CATEGORIES.BASE,
-        icon: FolderTree,
-      },
-      {
-        title: 'メディア',
-        href: ROUTES.DASHBOARD.Medias.BASE,
-        icon: Image,
-      },
-    ],
-  },
-  {
-    title: '権限管理',
-    submenu: [{ title: 'ユーザー', href: '/dashboard/users', icon: Users }],
-  },
-]
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 export default function DashboardSidebar() {
   const pathname = usePathname()
+  const currentLanguage = useLanguageStore((state) => state.language)
+
+  const menuItems = [
+    {
+      title: t(currentLanguage, 'dashboard.sidebar.content'),
+      submenu: [
+        {
+          title: t(currentLanguage, 'dashboard.sidebar.menu.posts'),
+          href: ROUTES.DASHBOARD.POSTS.BASE,
+          icon: FileText,
+        },
+        {
+          title: t(currentLanguage, 'dashboard.sidebar.menu.categories'),
+          href: ROUTES.DASHBOARD.CATEGORIES.BASE,
+          icon: FolderTree,
+        },
+        {
+          title: t(currentLanguage, 'dashboard.sidebar.menu.media'),
+          href: ROUTES.DASHBOARD.Medias.BASE,
+          icon: Image,
+        },
+      ],
+    },
+    {
+      title: t(currentLanguage, 'dashboard.sidebar.permissions'),
+      submenu: [
+        {
+          title: t(currentLanguage, 'dashboard.sidebar.users'),
+          href: '/dashboard/users',
+          icon: Users,
+        },
+      ],
+    },
+  ]
 
   return (
     <aside className="w-48 bg-white border-r">

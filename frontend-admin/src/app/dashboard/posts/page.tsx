@@ -18,8 +18,6 @@ export default function PostsPage() {
   // カテゴリー情報
   const {
     categories,
-    isLoading: categoriesLoading,
-    error: categoriesError,
   } = useCategoryList()
 
   // 記事情報
@@ -35,12 +33,8 @@ export default function PostsPage() {
     await refetch()
   }, [refetch])
 
-  if (categoriesError) {
-    return <div>エラーが発生しました: {categoriesError.message}</div>
-  }
-
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-2 space-y-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-4">
           <AddPostButton />

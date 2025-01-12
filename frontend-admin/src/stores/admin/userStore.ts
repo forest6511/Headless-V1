@@ -5,7 +5,7 @@ interface UserStore {
   nickname: string | null
   thumbnailUrl: string | null
   language: string | null
-  setUser: (nickname: string, thumbnailUrl: string, language: string) => void
+  setUser: (nickname: string, thumbnailUrl: string) => void
   clearUser: () => void
 }
 
@@ -15,10 +15,8 @@ export const userStore = create<UserStore>()(
       nickname: null,
       thumbnailUrl: null,
       language: null,
-      setUser: (nickname, thumbnailUrl, language) =>
-        set({ nickname, thumbnailUrl, language }),
-      clearUser: () =>
-        set({ nickname: null, thumbnailUrl: null, language: null }),
+      setUser: (nickname, thumbnailUrl) => set({ nickname, thumbnailUrl }),
+      clearUser: () => set({ nickname: null, thumbnailUrl: null }),
     }),
     {
       // ストレージのキー

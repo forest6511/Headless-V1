@@ -153,12 +153,17 @@ class MediaRepositoryImplTest {
     }
 
     private fun createUser(): User {
+        val rand = UUID.randomUUID()
         return User.create(
-            id = idGenerator,
-            email = "${UUID.randomUUID()}@example.com",
+            id = UserId(idGenerator.generate().value),
+            email = "$rand@example.com",
             rawPassword = "test12345",
             passwordEncoder = passwordEncoder,
             role = UserRole.ADMIN,
+            enable = true,
+            nickname = "$rand-test-user",
+            thumbnailUrl = "$rand-thumbnail.png",
+            language = "ja",
             currentTime = LocalDateTime.now()
         ).let {
             userRepository.save(it)

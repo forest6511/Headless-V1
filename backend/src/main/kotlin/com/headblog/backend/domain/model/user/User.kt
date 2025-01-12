@@ -1,7 +1,5 @@
 package com.headblog.backend.domain.model.user
 
-import com.headblog.backend.shared.id.domain.EntityId
-import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -14,25 +12,34 @@ class User private constructor(
     val passwordHash: PasswordHash,
     val role: UserRole,
     val enable: Boolean,
+    val nickname: String,
+    val thumbnailUrl: String?,
+    val language: Language,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 ) : UserDetails {
 
     companion object {
         fun create(
-            id: IdGenerator<EntityId>,
+            id: UserId,
             email: String,
             rawPassword: String,
             passwordEncoder: PasswordEncoder,
-            role: UserRole = UserRole.USER,
-            enable: Boolean = false,
+            role: UserRole,
+            enable: Boolean,
+            nickname: String,
+            thumbnailUrl: String?,
+            language: String,
             currentTime: LocalDateTime = LocalDateTime.now()
         ): User = User(
-            id = UserId(id.generate().value),
+            id = id,
             email = Email.of(email),
             passwordHash = PasswordHash.of(passwordEncoder.encode(rawPassword)),
             role = role,
             enable = enable,
+            nickname = nickname,
+            thumbnailUrl = thumbnailUrl,
+            language = Language.of(language),
             createdAt = currentTime,
             updatedAt = currentTime
         )

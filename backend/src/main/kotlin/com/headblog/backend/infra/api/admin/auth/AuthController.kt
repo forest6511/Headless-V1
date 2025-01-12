@@ -54,7 +54,9 @@ class AuthController(
     private fun SignUpRequest.toCommand(): SignUpCommand {
         return SignUpCommand(
             email = this.email,
-            password = this.password
+            password = this.password,
+            nickname = this.nickname,
+            language = this.language,
         )
     }
 

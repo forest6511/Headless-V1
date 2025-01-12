@@ -3,6 +3,7 @@ package com.headblog.backend.app.service
 import com.auth0.jwt.JWT
 import com.headblog.backend.domain.model.auth.AuthTokens
 import com.headblog.backend.domain.model.user.User
+import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRole
 import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
@@ -35,11 +36,15 @@ class TokenServiceTest {
     @BeforeEach
     fun setUp() {
         user = User.create(
-            id = idGenerator,
+            id = UserId(idGenerator.generate().value),
             email = "admin@example.com",
             rawPassword = "correct_password",
             passwordEncoder = passwordEncoder,
             role = UserRole.ADMIN,
+            enable = true,
+            nickname = "testUser",
+            thumbnailUrl = "thumbnail.png",
+            language = "ja",
             currentTime = LocalDateTime.now()
         )
     }

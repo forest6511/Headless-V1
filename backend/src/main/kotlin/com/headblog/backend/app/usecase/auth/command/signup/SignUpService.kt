@@ -1,7 +1,12 @@
 package com.headblog.backend.app.usecase.auth.command.signup
 
+import com.headblog.backend.domain.model.media.StorageService
+import com.headblog.backend.domain.model.user.Language
+import com.headblog.backend.domain.model.user.ThumbnailGenerator
 import com.headblog.backend.domain.model.user.User
+import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
+import com.headblog.backend.domain.model.user.UserRole
 import com.headblog.backend.infra.service.auth.TokenService
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -17,20 +22,36 @@ class SignUpService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val idGenerator: IdGenerator<EntityId>,
-    private val tokenService: TokenService
+    private val tokenService: TokenService,
+    private val thumbnailGenerator: ThumbnailGenerator,
+    private val storageService: StorageService
 ) : SignUpUseCase {
 
     private val logger = LoggerFactory.getLogger(SignUpService::class.java)
 
+    private val imgExtension = "webp"
+    private val uploadFormat = "image/webp"
+
     override fun execute(command: SignUpCommand): SignUpResponse {
         logger.info("attempting to sign up user with email: ${command.email}")
 
+        val userId = UserId(idGenerator.generate().value)
+
+        val bateArray = thumbnailGenerator.generateThumbnailUrl(command.nickname, Language(command.language))
+        val key = "profile/${userId.value}.$imgExtension"
+        storageService.uploadFile(key, bateArray, uploadFormat)
+
         // create the user
         val user = User.create(
-            idGenerator,
-            command.email,
-            command.password,
-            passwordEncoder
+            id = userId,
+            email = command.email,
+            rawPassword = command.password,
+            passwordEncoder = passwordEncoder,
+            role = UserRole.USER,
+            enable = false,
+            nickname = command.nickname,
+            thumbnailUrl = key,
+            language = command.language,
         )
 
         // check if the email already exists

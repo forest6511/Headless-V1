@@ -32,7 +32,7 @@ export const CreateCategoryForm = ({
     handleSubmit,
     formState: { errors },
   } = useForm<CreateCategoryData>({
-    resolver: zodResolver(createCategorySchema),
+    resolver: zodResolver(createCategorySchema(currentLanguage)),
     defaultValues: {
       ...initialData,
       language: currentLanguage,

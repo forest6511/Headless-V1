@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import { Button, Card, CardBody } from '@nextui-org/react'
 import { CreateCategoryForm } from '@/components/category/CreateCategoryForm'
@@ -30,7 +31,6 @@ export default function NewCategoryPage() {
               >
                 {t(currentLanguage, 'common.addNew')}
               </Button>
-              <span>日本語で入力してください</span>
             </div>
           </div>
           <CreateCategoryForm

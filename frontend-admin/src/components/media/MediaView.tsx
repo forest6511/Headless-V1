@@ -1,4 +1,5 @@
 'use client'
+
 import { MediaFile } from '@/types/api/media/types'
 import { MediaGridView } from './MediaGridView'
 import { MediaListView } from './MediaListView'
@@ -12,10 +13,15 @@ type FileSelectActionHandler = (file: MediaFile) => void
 interface MediaViewProps {
   view: 'grid' | 'list'
   onFileSelectAction: FileSelectActionHandler
+  refreshTrigger: number
 }
 
-export function MediaView({ view, onFileSelectAction }: MediaViewProps) {
-  const { files, containerRef, isFetching } = useMediaView()
+export function MediaView({
+  view,
+  onFileSelectAction,
+  refreshTrigger,
+}: MediaViewProps) {
+  const { files, containerRef, isFetching } = useMediaView(refreshTrigger)
 
   return (
     <div

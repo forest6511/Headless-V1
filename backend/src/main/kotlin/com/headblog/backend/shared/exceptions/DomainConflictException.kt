@@ -1,4 +1,4 @@
-package com.headblog.backend.shared.exception
+package com.headblog.backend.shared.exceptions
 
 class DomainConflictException(
     message: String,

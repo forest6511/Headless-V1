@@ -5,7 +5,7 @@ import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
 

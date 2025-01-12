@@ -21,7 +21,7 @@ class TokenService(
     private val logger = LoggerFactory.getLogger(TokenService::class.java)
 
     fun createAuthTokens(user: User): AuthTokens {
-        logger.debug("generating jwt authentication result for user: ${user.id.value}")
+        logger.trace("generating jwt authentication result for user: {}", user.id.value)
 
         val accessToken = createToken(user, expiration)
         val refreshToken = createToken(user, refreshExpiration)
@@ -33,7 +33,7 @@ class TokenService(
             refreshExpiresAt = refreshExpiration.toDate()
         )
             .also {
-                logger.debug("jwt authentication result generated for user: ${user.id.value}")
+                logger.trace("jwt authentication result generated for user: {}", user.id.value)
             }
     }
 
@@ -48,12 +48,12 @@ class TokenService(
             .withExpiresAt(duration.toDate())
             .sign(Algorithm.HMAC256(secret))
             .let { JwtToken.of(it) }
-            .also { logger.debug("token generated successfully for user: {}", user.id.value) }
+            .also { logger.trace("token generated successfully for user: {}", user.id.value) }
 
     fun validateAccessToken(token: JwtToken): Email =
         validateToken(token) { decodedJWT ->
             decodedJWT.getClaim("email").asString().let {
-                logger.debug("access token validated successfully, email: $it")
+                logger.trace("access token validated successfully, email: $it")
                 Email.of(it)
             }
         }
@@ -62,7 +62,7 @@ class TokenService(
         validateToken(token) { decodedJWT ->
             decodedJWT.subject
                 .also {
-                    logger.debug("refresh token validated successfully, subject: $it")
+                    logger.trace("refresh token validated successfully, subject: $it")
                 }
         }
 

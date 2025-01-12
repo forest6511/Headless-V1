@@ -24,9 +24,4 @@ export const authApi = {
       }
     )
   },
-  // logout: () => {
-  //   return apiClient.request(ADMIN_API_ENDPOINTS.AUTH.LOGOUT, {
-  //     method: 'POST',
-  //   });
-  // }
 }

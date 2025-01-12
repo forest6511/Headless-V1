@@ -90,6 +90,12 @@
   "posts": {
     "tableLabel": "記事一覧",
     "notTranslated": "(未翻訳)",
+    "deleteSuccess": "記事を削除しました",
+    "deleteError": "記事の削除に失敗しました",
+    "deleteConfirm": {
+      "title": "記事の削除",
+      "message": "この記事を削除してもよろしいですか？ この操作は取り消せません。"
+    },
     "columns": {
       "title": "タイトル",
       "slug": "スラッグ",
@@ -142,5 +148,60 @@
       }
     },
     "preview": "プレビュー 文字数:"
+  },
+  "media": {
+    "addNew": "新しいメディアファイルを追加",
+    "view": {
+      "grid": "グリッド表示",
+      "list": "リスト表示"
+    },
+    "sort": {
+      "label": "並び替え",
+      "uploadDate": "アップロード日"
+    },
+    "search": "メディアを検索",
+    "upload": {
+      "title": "新しいメディアファイルを追加",
+      "dropzone": {
+        "text": "ファイルをドロップしてアップロード",
+        "or": "または",
+        "button": "ファイルを選択"
+      },
+      "maxSize": "最大アップロードサイズ: 10 MB",
+      "formats": "対応形式: JPG, PNG, GIF, WebP",
+      "uploading": "アップロード中...",
+      "success": "アップロードが完了しました",
+      "error": {
+        "general": "アップロードに失敗しました",
+        "size": "ファイルサイズが10MBを超えています",
+        "format": "対応していないファイル形式です"
+      }
+    },
+    "detail": {
+      "title": "メディアの詳細",
+      "thumbnail": "サムネイル",
+      "small": "小サイズ",
+      "medium": "中サイズ",
+      "createdAt": "作成日",
+      "uploadedBy": "アップロード",
+      "thumbnailSize": "サムネイルサイズ",
+      "smallSize": "小サイズ",
+      "mediumSize": "中サイズ",
+      "fileTitle": "タイトル",
+      "altText": "代替テキスト",
+      "thumbnailUrl": "サムネイルURL",
+      "smallUrl": "小サイズURL",
+      "mediumUrl": "中サイズURL",
+      "update": "更新する",
+      "copySuccess": "URLをコピーしました"
+    },
+    "columns": {
+      "thumbnail": "サムネイル",
+      "title": "タイトル",
+      "uploadDate": "アップロード日",
+      "thumbnailSize": "サムネイルサイズ",
+      "smallSize": "小サイズ",
+      "mediumSize": "中サイズ"
+    }
   }
 }

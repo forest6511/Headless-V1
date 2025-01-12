@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.service.media
 
 import com.headblog.backend.domain.model.media.ImageProcessor
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Paths

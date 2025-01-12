@@ -11,7 +11,7 @@ import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import org.slf4j.LoggerFactory

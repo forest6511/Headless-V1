@@ -26,13 +26,13 @@ class CookieService(
     fun createAuthTokenCookie(token: JwtToken, expiresAt: Date): ResponseCookie =
         createCookie(ACCESS_TOKEN_COOKIE_NAME, token.value, expiresAt)
             .also {
-                logger.debug("created auth cookie: {}", it)
+                logger.trace("created auth cookie: {}", it)
             }
 
     fun createRefreshTokenCookie(token: JwtToken, expiresAt: Date): ResponseCookie =
         createCookie(REFRESH_TOKEN_COOKIE_NAME, token.value, expiresAt)
             .also {
-                logger.debug("created refresh cookie: {}", it)
+                logger.trace("created refresh cookie: {}", it)
             }
 
     private fun createCookie(
@@ -50,6 +50,6 @@ class CookieService(
             .sameSite(sameSite)
             .build()
             .also {
-                logger.debug("cookie created: name={}, expiresAt={}", name, expiresAt)
+                logger.trace("cookie created: name={}, expiresAt={}", name, expiresAt)
             }
 }

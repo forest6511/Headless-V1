@@ -31,17 +31,16 @@ export default function NewPostPage() {
               >
                 {t(currentLanguage, 'common.addNew')}
               </Button>
-              日本語で入力してください
             </div>
           </div>
           <PostForm
-            key={'ja'}
+            key={currentLanguage}
             mode="create"
             redirectPath={ROUTES.DASHBOARD.POSTS.BASE}
             id="post-form"
             onSubmittingChange={setIsSubmitting}
             initialData={{
-              language: 'ja',
+              language: currentLanguage,
               title: '',
               content: '',
               status: 'DRAFT',

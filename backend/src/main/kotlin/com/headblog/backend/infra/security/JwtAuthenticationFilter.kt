@@ -20,17 +20,17 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        logger.debug("entering jwt authentication filter")
+        logger.trace("entering jwt authentication filter")
 
         logRequestDetails(request)
 
         extractToken(request)?.let {
-            logger.debug("token extracted from request: $it")
+            logger.trace("token extracted from request: $it")
             val jwtToken = JwtToken.of(it)
 
             try {
                 val userDetails = userAuthenticationService.getUserFromToken(jwtToken)
-                logger.debug("user authenticated: ${userDetails.email.value}")
+                logger.trace("user authenticated: ${userDetails.email.value}")
 
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails,
@@ -49,7 +49,7 @@ class JwtAuthenticationFilter(
     }
 
     private fun extractToken(request: HttpServletRequest): String? {
-        logger.debug("extracting token from request: ${request.requestURL}")
+        logger.trace("extracting token from request: ${request.requestURL}")
         return request.getHeader("Authorization")
             ?.takeIf { it.startsWith("Bearer ") }
             ?.substring(7)
@@ -61,19 +61,19 @@ class JwtAuthenticationFilter(
     }
 
     private fun logRequestDetails(request: HttpServletRequest) {
-        logger.debug("===================================================")
-        logger.debug("request method: ${request.method}")
-        logger.debug("request URI: ${request.requestURI}")
-        logger.debug("request URL: ${request.requestURL}")
-        logger.debug("request headers:")
+        logger.trace("===================================================")
+        logger.trace("request method: ${request.method}")
+        logger.trace("request URI: ${request.requestURI}")
+        logger.trace("request URL: ${request.requestURL}")
+        logger.trace("request headers:")
         request.headerNames.asIterator().forEachRemaining { headerName ->
-            logger.debug("  $headerName: ${request.getHeader(headerName)}")
+            logger.trace("  $headerName: ${request.getHeader(headerName)}")
         }
-        logger.debug("request parameters:")
+        logger.trace("request parameters:")
         request.parameterNames.asIterator().forEachRemaining { paramName ->
-            logger.debug("  $paramName: ${request.getParameter(paramName)}")
+            logger.trace("  $paramName: ${request.getParameter(paramName)}")
         }
-        logger.debug("request remote address: ${request.remoteAddr}")
-        logger.debug("===================================================")
+        logger.trace("request remote address: ${request.remoteAddr}")
+        logger.trace("===================================================")
     }
 }

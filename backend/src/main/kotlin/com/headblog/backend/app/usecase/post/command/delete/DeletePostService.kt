@@ -7,7 +7,7 @@ import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

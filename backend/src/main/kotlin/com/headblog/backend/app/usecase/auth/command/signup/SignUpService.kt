@@ -29,15 +29,16 @@ class SignUpService(
 
     private val logger = LoggerFactory.getLogger(SignUpService::class.java)
 
-    private val imgExtension = "webp"
-    private val uploadFormat = "image/webp"
+    private val imgExtension = "png"
+    private val uploadFormat = "image/png"
 
     override fun execute(command: SignUpCommand): SignUpResponse {
         logger.info("attempting to sign up user with email: ${command.email}")
 
         val userId = UserId(idGenerator.generate().value)
 
-        val bateArray = thumbnailGenerator.generateThumbnailUrl(command.nickname, Language(command.language))
+        val bateArray =
+            thumbnailGenerator.generateThumbnailUrl(command.nickname, Language(command.language), imgExtension)
         val key = "profile/${userId.value}.$imgExtension"
         storageService.uploadFile(key, bateArray, uploadFormat)
 

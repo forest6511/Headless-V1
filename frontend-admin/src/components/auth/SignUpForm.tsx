@@ -6,14 +6,20 @@ import { Button, Input } from '@nextui-org/react'
 import { SignupFormData, signupSchema } from '@/schemas/auth'
 import { authApi } from '@/lib/api'
 import toast from 'react-hot-toast'
+import { LanguageSelector } from '@/components/common/LanguageSelector'
 
 export default function SignUpForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      language: 'ja',
+    },
   })
 
   const onSubmit = async (data: SignupFormData) => {
@@ -22,6 +28,8 @@ export default function SignUpForm() {
       await authApi.signup({
         email: data.email,
         password: data.password,
+        nickname: data.nickname,
+        language: data.language,
       })
       toast.success('サインアップは成功しました。')
     } catch (error) {
@@ -31,6 +39,19 @@ export default function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <LanguageSelector
+        currentLanguage={watch('language')}
+        onLanguageChange={(value) => {
+          setValue('language', value)
+        }}
+      />
+      <Input
+        {...register('nickname')}
+        label="ニックネーム"
+        placeholder="ニックネームを入力"
+        isInvalid={!!errors.nickname}
+        errorMessage={errors.nickname?.message}
+      />
       <Input
         {...register('email')}
         label="メールアドレス"

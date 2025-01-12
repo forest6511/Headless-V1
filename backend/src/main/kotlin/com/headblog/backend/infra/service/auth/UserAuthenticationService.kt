@@ -3,7 +3,7 @@ package com.headblog.backend.infra.service.auth
 import com.headblog.backend.domain.model.auth.JwtToken
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserRepository
-import com.headblog.backend.shared.exception.AuthException
+import com.headblog.backend.shared.exceptions.AuthException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -15,11 +15,11 @@ class UserAuthenticationService(
     private val logger = LoggerFactory.getLogger(UserAuthenticationService::class.java)
 
     fun getUserFromToken(token: JwtToken): User {
-        logger.debug("validating token: ${token.value}")
+        logger.trace("validating token: ${token.value}")
 
         // トークンを検証し、メールアドレスを取得
         val email = tokenService.validateAccessToken(token)
-        logger.debug("token validated successfully, extracted email: $email")
+        logger.trace("token validated successfully, extracted email: $email")
 
         // ユーザーをリポジトリから取得
         val user = userRepository.findByEmail(email)
@@ -28,7 +28,7 @@ class UserAuthenticationService(
                 throw AuthException("user not found with email: $email")
             }
 
-        logger.debug("user found for email: $email")
+        logger.trace("user found for email: $email")
         return user
     }
 }

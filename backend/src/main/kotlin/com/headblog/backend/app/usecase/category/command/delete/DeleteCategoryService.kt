@@ -8,7 +8,7 @@ import com.headblog.backend.domain.model.category.Language
 import com.headblog.backend.domain.model.category.Slug
 import com.headblog.backend.domain.model.category.Translation
 import com.headblog.backend.domain.model.post.PostCategoryRepository
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service

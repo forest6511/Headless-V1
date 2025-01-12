@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.quota
 
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDate

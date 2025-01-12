@@ -1,6 +1,6 @@
-package com.headblog.backend.shared.exception
+package com.headblog.backend.shared.exceptions
 
-class AppConflictException(
+class AuthException(
     message: String,
     cause: Throwable? = null
 ) : RuntimeException(message, cause)

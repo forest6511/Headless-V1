@@ -4,7 +4,9 @@ import com.headblog.backend.app.usecase.translation.TranslationOptions
 import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.app.usecase.translation.TranslationStyle
 import com.headblog.backend.app.usecase.translation.TranslationTone
-import com.headblog.backend.infra.service.translation.prompt.TranslationPrompts
+import com.headblog.backend.infra.service.translation.prompt.TranslationEnPrompts
+import com.headblog.backend.infra.service.translation.prompt.TranslationJaPrompts
+import com.headblog.backend.shared.constants.LanguageConstants
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -14,8 +16,7 @@ class GeminiTranslationService(
 ) : TranslationService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    // コンテンツ翻訳
-    override fun translateToEnglish(content: String): Result<String> {
+    override fun translate(content: String, sourceLanguage: String): Result<String> {
         logger.debug("Starting translation process")
 
         val options = TranslationOptions(
@@ -23,10 +24,11 @@ class GeminiTranslationService(
             tone = TranslationTone.CONSISTENT_WITH_ORIGINAL
         )
 
-        val prompt = TranslationPrompts.createTranslationPrompt(
-            content = content,
-            options = options
-        )
+        val prompt = when (sourceLanguage) {
+            LanguageConstants.JA -> TranslationEnPrompts.createTranslationPrompt(content, options)
+            LanguageConstants.EN -> TranslationJaPrompts.createTranslationPrompt(content, options)
+            else -> throw IllegalArgumentException("Unsupported language: $sourceLanguage")
+        }
 
         return try {
             geminiClient.generateContent(prompt).also {
@@ -38,11 +40,14 @@ class GeminiTranslationService(
         }
     }
 
-    // コンテンツ要約
-    override fun summarizeJapaneseContent(content: String): Result<String> {
+    override fun summarizeContent(content: String, language: String): Result<String> {
         logger.debug("Starting summarization process")
 
-        val prompt = TranslationPrompts.createSummaryPrompt(content)
+        val prompt = when (language) {
+            LanguageConstants.JA -> TranslationEnPrompts.createSummaryPrompt(content)
+            LanguageConstants.EN -> TranslationJaPrompts.createSummaryPrompt(content)
+            else -> throw IllegalArgumentException("Unsupported language: $language")
+        }
 
         return try {
             geminiClient.generateContent(prompt).also {
@@ -54,10 +59,14 @@ class GeminiTranslationService(
         }
     }
 
-    override fun translateSummarizeToEnglish(excerpt: String): Result<String> {
+    override fun translateSummary(excerpt: String, sourceLanguage: String): Result<String> {
         logger.debug("Starting summary translation process")
 
-        val translatePrompt = TranslationPrompts.createSummaryTranslationPrompt(excerpt)
+        val translatePrompt = when (sourceLanguage) {
+            LanguageConstants.JA -> TranslationEnPrompts.createSummaryTranslationPrompt(excerpt)
+            LanguageConstants.EN -> TranslationJaPrompts.createSummaryTranslationPrompt(excerpt)
+            else -> throw IllegalArgumentException("Unsupported language: $sourceLanguage")
+        }
 
         return try {
             geminiClient.generateContent(translatePrompt).also {
@@ -69,11 +78,14 @@ class GeminiTranslationService(
         }
     }
 
-    // タイトル翻訳
-    override fun translateTitleToEnglish(title: String): Result<String> {
+    override fun translateTitle(title: String, sourceLanguage: String): Result<String> {
         logger.debug("Starting title translation process")
 
-        val prompt = TranslationPrompts.createTitleTranslationPrompt(title)
+        val prompt = when (sourceLanguage) {
+            LanguageConstants.JA -> TranslationEnPrompts.createTitleTranslationPrompt(title)
+            LanguageConstants.EN -> TranslationJaPrompts.createTitleTranslationPrompt(title)
+            else -> throw IllegalArgumentException("Unsupported language: $sourceLanguage")
+        }
 
         return try {
             geminiClient.generateContent(prompt).also {

@@ -2,7 +2,7 @@ package com.headblog.backend.infra.service.translation.prompt
 
 import com.headblog.backend.app.usecase.translation.TranslationOptions
 
-object TranslationPrompts {
+object TranslationJaPrompts {
 
     fun createTranslationPrompt(
         content: String,

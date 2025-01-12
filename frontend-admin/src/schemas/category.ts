@@ -18,7 +18,8 @@ const createBaseCategorySchema = (language: Language) =>
   })
 
 // 新規作成スキーマ
-export const createCategorySchema = createBaseCategorySchema('ja')
+export const createCategorySchema = (language: Language) =>
+  createBaseCategorySchema(language)
 
 // 更新スキーマ（IDを含む）
 export const createUpdateCategorySchema = (language: Language) =>
@@ -26,8 +27,10 @@ export const createUpdateCategorySchema = (language: Language) =>
     id: z.string().uuid(t(language, 'category.validation.invalidId')),
   })
 
-export const updateCategorySchema = createUpdateCategorySchema('ja')
-
 // 型の定義
-export type CreateCategoryData = z.infer<typeof createCategorySchema>
-export type UpdateCategoryData = z.infer<typeof updateCategorySchema>
+export type CreateCategoryData = z.infer<
+  ReturnType<typeof createCategorySchema>
+>
+export type UpdateCategoryData = z.infer<
+  ReturnType<typeof createUpdateCategorySchema>
+>

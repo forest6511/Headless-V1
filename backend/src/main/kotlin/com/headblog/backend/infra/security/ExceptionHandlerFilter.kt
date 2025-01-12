@@ -1,9 +1,9 @@
 package com.headblog.backend.infra.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.headblog.backend.shared.exception.AppConflictException
-import com.headblog.backend.shared.exception.AuthException
-import com.headblog.backend.shared.exception.DomainConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
+import com.headblog.backend.shared.exceptions.AuthException
+import com.headblog.backend.shared.exceptions.DomainConflictException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest

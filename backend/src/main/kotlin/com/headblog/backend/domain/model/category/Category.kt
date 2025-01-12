@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.category
 
-import com.headblog.backend.shared.exception.DomainConflictException
+import com.headblog.backend.shared.exceptions.DomainConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime

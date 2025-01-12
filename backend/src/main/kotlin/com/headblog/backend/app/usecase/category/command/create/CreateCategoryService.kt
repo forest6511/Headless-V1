@@ -6,7 +6,8 @@ import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Language
 import com.headblog.backend.domain.model.category.Translation
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.constants.LanguageConstants
+import com.headblog.backend.shared.exceptions.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import org.slf4j.LoggerFactory
@@ -23,17 +24,31 @@ class CreateCategoryService(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun execute(command: CreateCategoryCommand): CategoryId {
-        // 英語翻訳の生成
-        val englishName = translate {
-            translationService.translateTitleToEnglish(command.name)
+
+        val (sourceLang, targetLang) = when (command.language) {
+            LanguageConstants.JA -> LanguageConstants.JA to LanguageConstants.EN
+            LanguageConstants.EN -> LanguageConstants.EN to LanguageConstants.JA
+            else -> throw AppConflictException("Unsupported language: ${command.language}")
         }
-        val englishDescription = command.description?.let { description ->
+
+        // 翻訳の生成
+        val translatedName = translate {
+            translationService.translateTitle(command.name, targetLang)
+        }
+
+        val translatedDescription = command.description?.let { description ->
             translate {
-                translationService.translateToEnglish(description)
+                translationService.translate(description, targetLang)
             }
         }
 
-        val slug = generateSlug(englishName)
+        logger.debug("選択言語: ${command.language}")
+        logger.debug("翻訳言語: $targetLang")
+        logger.debug("タイトル: $translatedName")
+        logger.debug("翻訳タイトル: $translatedName")
+
+        // 常に英語のSlug
+        val slug = generateSlug(if (sourceLang == LanguageConstants.JA) translatedName else command.name)
 
         // slugの重複チェック
         categoryRepository.findBySlug(slug)?.let {
@@ -46,14 +61,14 @@ class CreateCategoryService(
             parentId = command.parentId,
             translations = listOf(
                 Translation(
-                    language = Language.of(command.language),
+                    language = Language.of(sourceLang),
                     name = command.name,
                     description = command.description
                 ),
                 Translation(
-                    language = Language.of("en"),
-                    name = englishName,
-                    description = englishDescription
+                    language = Language.of(targetLang),
+                    name = translatedName,
+                    description = translatedDescription
                 )
             )
         )

@@ -5,7 +5,7 @@ import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.backend.infra.api.admin.auth.response.SignInResponse
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.infra.service.auth.TokenService
-import com.headblog.backend.shared.exception.AuthException
+import com.headblog.backend.shared.exceptions.AuthException
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

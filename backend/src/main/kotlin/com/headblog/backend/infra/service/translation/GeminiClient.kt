@@ -2,7 +2,7 @@ package com.headblog.backend.infra.service.translation
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.headblog.backend.domain.model.quota.QuotaManagementService
-import com.headblog.backend.shared.exception.AppConflictException
+import com.headblog.backend.shared.exceptions.AppConflictException
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest

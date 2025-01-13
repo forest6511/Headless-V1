@@ -86,7 +86,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   }
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4 sticky top-0 z-10 bg-white border border-gray-300 rounded-sm">
+    <div className="flex flex-wrap gap-2 mb-4 bg-white border border-gray-300 rounded-sm p-2">
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -151,18 +151,26 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       </button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
-          <ModalHeader>{t(currentLanguage, 'editor.toolbar.image.title')}</ModalHeader>
+          <ModalHeader>
+            {t(currentLanguage, 'editor.toolbar.image.title')}
+          </ModalHeader>
           <ModalBody>
             <div className="space-y-4">
               <Input
                 label={t(currentLanguage, 'editor.toolbar.image.url')}
-                placeholder={t(currentLanguage, 'editor.toolbar.image.urlPlaceholder')}
+                placeholder={t(
+                  currentLanguage,
+                  'editor.toolbar.image.urlPlaceholder'
+                )}
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
               />
               <Input
                 label={t(currentLanguage, 'editor.toolbar.image.alt')}
-                placeholder={t(currentLanguage, 'editor.toolbar.image.altPlaceholder')}
+                placeholder={t(
+                  currentLanguage,
+                  'editor.toolbar.image.altPlaceholder'
+                )}
                 value={imageAlt}
                 onChange={(e) => setImageAlt(e.target.value)}
               />
@@ -189,18 +197,26 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       </button>
       <Modal isOpen={isLinkOpen} onClose={onLinkClose}>
         <ModalContent>
-          <ModalHeader>{t(currentLanguage, 'editor.toolbar.link.title')}</ModalHeader>
+          <ModalHeader>
+            {t(currentLanguage, 'editor.toolbar.link.title')}
+          </ModalHeader>
           <ModalBody>
             <div className="space-y-4">
               <Input
                 label={t(currentLanguage, 'editor.toolbar.link.url')}
-                placeholder={t(currentLanguage, 'editor.toolbar.link.urlPlaceholder')}
+                placeholder={t(
+                  currentLanguage,
+                  'editor.toolbar.link.urlPlaceholder'
+                )}
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
               />
               <Input
                 label={t(currentLanguage, 'editor.toolbar.link.text')}
-                placeholder={t(currentLanguage, 'editor.toolbar.link.textPlaceholder')}
+                placeholder={t(
+                  currentLanguage,
+                  'editor.toolbar.link.textPlaceholder'
+                )}
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
               />

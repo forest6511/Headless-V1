@@ -4,7 +4,20 @@ import {
   createUpdatePostSchema,
 } from '@/schemas/post'
 import { usePostForm } from '@/hooks/post/usePostForm'
-import { Card, CardBody, Input, Select, SelectItem } from '@nextui-org/react'
+import {
+  Button,
+  Card,
+  CardBody,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Select,
+  SelectItem,
+  useDisclosure,
+} from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
 import React, { useEffect } from 'react'
@@ -30,6 +43,8 @@ export function PostForm({
   onSubmittingChange,
 }: PostFormProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(
     categories,
@@ -60,7 +75,6 @@ export function PostForm({
     watch,
   } = form
 
-  // isSubmittingの状態が変更されたら親コンポーネントに通知
   useEffect(() => {
     onSubmittingChange?.(isSubmitting)
   }, [isSubmitting, onSubmittingChange])
@@ -108,15 +122,17 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
+            <Button className="mt-4" onPress={onOpen}>
+              {t(currentLanguage, 'post.preview')} ({textLength})
+            </Button>
           </CardBody>
         </Card>
       </div>
       <div className="w-2/3 space-y-6">
         <Card>
-          <CardBody className="space-y-4">
-            <div className="h-[800px] overflow-y-auto">
-              {/* zod validationが効かないので、hidden項目に設定 */}
-              <input type="hidden" {...register('content')} />
+          <CardBody className="relative h-[calc(100vh-200px)] overflow-hidden">
+            <input type="hidden" {...register('content')} />
+            <div className="relative h-full">
               <TiptapEditor
                 value={watch('content')}
                 onChange={handleEditorChange}
@@ -127,18 +143,24 @@ export function PostForm({
                 </p>
               )}
             </div>
-            {/* HTMLプレビュー */}
-            <div className="mt-4 border-t pt-4">
-              <h3 className="text-md font-semibold mb-2">
-                {t(currentLanguage, 'post.preview')} {textLength}
-              </h3>
-              <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
-                {pretty(contentHtml || '')}
-              </pre>
-            </div>
           </CardBody>
         </Card>
       </div>
+      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader>{t(currentLanguage, 'post.preview')}</ModalHeader>
+          <ModalBody>
+            <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
+              {pretty(contentHtml || '')}
+            </pre>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onPress={onClose}>
+              {t(currentLanguage, 'common.close')}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </form>
   )
 }

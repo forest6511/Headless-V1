@@ -130,7 +130,7 @@ export function PostForm({
       </div>
       <div className="w-2/3 space-y-6">
         <Card>
-          <CardBody className="relative h-[calc(100vh-200px)] overflow-hidden">
+          <CardBody className="relative h-[calc(100vh-200px)]">
             <input type="hidden" {...register('content')} />
             <div className="relative h-full">
               <TiptapEditor

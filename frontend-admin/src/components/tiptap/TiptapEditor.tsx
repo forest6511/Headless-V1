@@ -153,8 +153,8 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         </div>
       )}
       <div className="flex-1 overflow-hidden border rounded-sm">
-        <div className="h-full overflow-y-auto">
-          <EditorContent editor={editor} className="prose max-w-none" />
+        <div className="h-full overflow-y-auto p-2">
+          <EditorContent editor={editor} className="prose max-w-none p-2" />
         </div>
       </div>
     </div>

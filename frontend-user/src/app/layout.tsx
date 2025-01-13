@@ -3,8 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { MainNav } from '@/components/features/navigation'
 import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
-import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'
-import { Footer } from '@/components/layouts/footer'
+// import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'
+// import { Footer } from '@/components/layouts/footer'
 import React from 'react'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
@@ -35,17 +35,17 @@ export default function RootLayout({
                 <LeftSidebar inLayout />
                 <main className="flex-1 min-w-0">
                   <div className="px-0 sm:px-4">{children}</div>
-                  <div className="block lg:hidden">
-                    <RightSidebar />
-                  </div>
+                  {/*<div className="block lg:hidden">*/}
+                  {/*  <RightSidebar />*/}
+                  {/*</div>*/}
                 </main>
-                <div className="hidden lg:block">
-                  <RightSidebar />
-                </div>
+                {/*<div className="hidden lg:block">*/}
+                {/*  <RightSidebar />*/}
+                {/*</div>*/}
               </div>
             </div>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </body>
     </html>

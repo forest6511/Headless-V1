@@ -7,7 +7,7 @@ export function MobileMenu() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="lg:hidden -ml-0">
+        <Button variant="ghost" className="lg:hidden -ml-3">
           <Menu style={{ width: '24px', height: '24px' }} />
           <span className="sr-only">Open menu</span>
         </Button>

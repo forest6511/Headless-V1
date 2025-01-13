@@ -14,7 +14,7 @@ Translations are powered by [Gemini](https://gemini.google.com/app).
 
 To illustrate how to create and publish an article, watch the video below:
 
-[![Article Posting Demo](./docs/demo/demo-article-thumbnail.png)](./docs/demo/demo-article.mov)
+[![Article Posting Demo](./docs/demo/demo-article-thumbnail.png)](https://img.miwara.com/demo-article.mov)
 
 *Click the thumbnail to view the demo video.*
 

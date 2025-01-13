@@ -4,20 +4,7 @@ import {
   createUpdatePostSchema,
 } from '@/schemas/post'
 import { usePostForm } from '@/hooks/post/usePostForm'
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  useDisclosure,
-} from '@nextui-org/react'
+import { Card, CardBody, Input, Select, SelectItem } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
 import React, { useEffect } from 'react'
@@ -43,7 +30,6 @@ export function PostForm({
   onSubmittingChange,
 }: PostFormProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(
@@ -122,9 +108,18 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
-            <Button className="mt-4" onPress={onOpen}>
-              {t(currentLanguage, 'post.preview')} ({textLength})
-            </Button>
+            <div className="mt-4 border-t pt-4">
+              <h3 className="text-md font-semibold mb-2">
+                {t(currentLanguage, 'post.preview')} {textLength}
+              </h3>
+              <div className="h-[300px] overflow-y-auto">
+                {' '}
+                {/* 高さとスクロールを追加 */}
+                <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
+                  {pretty(contentHtml || '')}
+                </pre>
+              </div>
+            </div>
           </CardBody>
         </Card>
       </div>
@@ -146,21 +141,6 @@ export function PostForm({
           </CardBody>
         </Card>
       </div>
-      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
-        <ModalContent>
-          <ModalHeader>{t(currentLanguage, 'post.preview')}</ModalHeader>
-          <ModalBody>
-            <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
-              {pretty(contentHtml || '')}
-            </pre>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onPress={onClose}>
-              {t(currentLanguage, 'common.close')}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </form>
   )
 }

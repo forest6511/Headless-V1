@@ -1,5 +1,6 @@
 {
   "common": {
+    "close": "Close",
     "addNew": "Add New",
     "edit": "Edit",
     "cancel": "Cancel",

@@ -4,8 +4,22 @@
 ![Next.js Version](https://img.shields.io/badge/next.js-15.1.2-brightgreen)
 ![Spring Boot Version](https://img.shields.io/badge/spring--boot-3.4.0-brightgreen)
 
-## Setup Instructions
+## Multilingual Support
 
+HeadBlog is a headless CMS that enables seamless translation of article content between Japanese and English. You can easily translate content from Japanese to English and vice versa, allowing you to store and manage bilingual content efficiently.   
+
+Translations are powered by [Gemini](https://gemini.google.com/app).
+
+## Article Posting Demo
+
+To illustrate how to create and publish an article, watch the video below:
+
+[![Article Posting Demo](./docs/demo/demo-article-thumbnail.png)](./docs/demo/demo-article.mov)
+
+*Click the thumbnail to view the demo video.*
+
+
+## Setup Instructions
 ### 1. Clone the Repository
 Run the following command to clone the repository:
 ```bash

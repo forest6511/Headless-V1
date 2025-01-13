@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import '@/app/globals.css'
 import { MainNav } from '@/components/features/navigation'
 import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 // import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'

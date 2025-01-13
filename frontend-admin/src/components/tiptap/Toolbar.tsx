@@ -28,6 +28,8 @@ import {
   PopoverTrigger,
 } from '@nextui-org/react'
 import { useState } from 'react'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 const HIGHLIGHT_COLORS = [
   { label: 'Yellow', value: '#fef08a' },
@@ -41,6 +43,8 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
   if (!editor) {
     return null
   }
+
+  const currentLanguage = useLanguageStore((state) => state.language)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isLinkOpen,
@@ -83,22 +87,20 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
 
   return (
     <div className="flex flex-wrap gap-2 mb-4 sticky top-0 z-10 bg-white border border-gray-300 rounded-sm">
-      {/* H2 */}
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={`p-2 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
-        aria-label="見出し2"
+        aria-label={t(currentLanguage, 'editor.toolbar.heading2')}
       >
         <Heading2 size={20} />
       </button>
 
-      {/* H3 */}
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={`p-2 ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
-        aria-label="見出し3"
+        aria-label={t(currentLanguage, 'editor.toolbar.heading3')}
       >
         <Heading3 size={20} />
       </button>
@@ -107,7 +109,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`p-2 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
-        aria-label="太字"
+        aria-label={t(currentLanguage, 'editor.toolbar.bold')}
       >
         <Bold size={20} />
       </button>
@@ -116,7 +118,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-2 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
-        aria-label="イタリック"
+        aria-label={t(currentLanguage, 'editor.toolbar.italic')}
       >
         <Italic size={20} />
       </button>
@@ -125,7 +127,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`p-2 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
-        aria-label="箇条書きリスト"
+        aria-label={t(currentLanguage, 'editor.toolbar.bulletList')}
       >
         <List size={20} />
       </button>
@@ -134,34 +136,33 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`p-2 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
-        aria-label="番号付きリスト"
+        aria-label={t(currentLanguage, 'editor.toolbar.orderedList')}
       >
         <ListOrdered size={20} />
       </button>
 
-      {/* 画像 */}
       <button
         type="button"
         onClick={onOpen}
         className="p-2"
-        aria-label="画像を挿入"
+        aria-label={t(currentLanguage, 'editor.toolbar.image.button')}
       >
         <ImageIcon size={20} />
       </button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
-          <ModalHeader>画像の挿入</ModalHeader>
+          <ModalHeader>{t(currentLanguage, 'editor.toolbar.image.title')}</ModalHeader>
           <ModalBody>
             <div className="space-y-4">
               <Input
-                label="画像URL"
-                placeholder="https://example.com/image.jpg"
+                label={t(currentLanguage, 'editor.toolbar.image.url')}
+                placeholder={t(currentLanguage, 'editor.toolbar.image.urlPlaceholder')}
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
               />
               <Input
-                label="代替テキスト (任意)"
-                placeholder="画像の説明"
+                label={t(currentLanguage, 'editor.toolbar.image.alt')}
+                placeholder={t(currentLanguage, 'editor.toolbar.image.altPlaceholder')}
                 value={imageAlt}
                 onChange={(e) => setImageAlt(e.target.value)}
               />
@@ -169,38 +170,37 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
           </ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onClose}>
-              キャンセル
+              {t(currentLanguage, 'editor.toolbar.cancel')}
             </Button>
             <Button color="primary" onPress={handleAddImage}>
-              追加
+              {t(currentLanguage, 'editor.toolbar.add')}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* リンク */}
       <button
         type="button"
         onClick={onLinkOpen}
         className={`p-2 ${editor.isActive('link') ? 'bg-gray-200' : ''}`}
-        aria-label="リンクを挿入"
+        aria-label={t(currentLanguage, 'editor.toolbar.link.button')}
       >
         <Link size={20} />
       </button>
       <Modal isOpen={isLinkOpen} onClose={onLinkClose}>
         <ModalContent>
-          <ModalHeader>リンクの挿入</ModalHeader>
+          <ModalHeader>{t(currentLanguage, 'editor.toolbar.link.title')}</ModalHeader>
           <ModalBody>
             <div className="space-y-4">
               <Input
-                label="リンクURL"
-                placeholder="https://example.com"
+                label={t(currentLanguage, 'editor.toolbar.link.url')}
+                placeholder={t(currentLanguage, 'editor.toolbar.link.urlPlaceholder')}
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
               />
               <Input
-                label="リンクテキスト (任意)"
-                placeholder="表示テキスト"
+                label={t(currentLanguage, 'editor.toolbar.link.text')}
+                placeholder={t(currentLanguage, 'editor.toolbar.link.textPlaceholder')}
                 value={linkText}
                 onChange={(e) => setLinkText(e.target.value)}
               />
@@ -208,10 +208,10 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
           </ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onLinkClose}>
-              キャンセル
+              {t(currentLanguage, 'editor.toolbar.cancel')}
             </Button>
             <Button color="primary" onPress={handleAddLink}>
-              追加
+              {t(currentLanguage, 'editor.toolbar.add')}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -221,7 +221,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`p-2 ${editor.isActive('codeBlock') ? 'bg-gray-200' : ''}`}
-        aria-label="コードブロック"
+        aria-label={t(currentLanguage, 'editor.toolbar.code')}
       >
         <Code size={20} />
       </button>
@@ -230,17 +230,17 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`p-2 ${editor.isActive('blockquote') ? 'bg-gray-200' : ''}`}
+        aria-label={t(currentLanguage, 'editor.toolbar.quote')}
       >
         <Quote size={20} />
       </button>
 
-      {/* ハイライトボタン */}
       <Popover placement="bottom">
         <PopoverTrigger>
           <button
             type="button"
             className={`p-2 ${editor.isActive('highlight') ? 'bg-gray-200' : ''}`}
-            aria-label="ハイライト"
+            aria-label={t(currentLanguage, 'editor.toolbar.highlight')}
           >
             <Highlighter size={20} />
           </button>
@@ -272,7 +272,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type="button"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={`p-2 ${editor.isActive('underline') ? 'bg-gray-200' : ''}`}
-        aria-label="下線"
+        aria-label={t(currentLanguage, 'editor.toolbar.underline')}
       >
         <Underline size={20} />
       </button>

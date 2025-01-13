@@ -203,5 +203,37 @@
       "smallSize": "Small Size",
       "mediumSize": "Medium Size"
     }
+  },
+  "editor": {
+    "toolbar": {
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bold": "Bold",
+      "italic": "Italic",
+      "bulletList": "Bullet List",
+      "orderedList": "Ordered List",
+      "image": {
+        "button": "Insert Image",
+        "title": "Insert Image",
+        "url": "Image URL",
+        "alt": "Alt Text (Optional)",
+        "altPlaceholder": "Image description",
+        "urlPlaceholder": "https://example.com/image.jpg"
+      },
+      "link": {
+        "button": "Insert Link",
+        "title": "Insert Link",
+        "url": "Link URL",
+        "text": "Link Text (Optional)",
+        "urlPlaceholder": "https://example.com",
+        "textPlaceholder": "Display text"
+      },
+      "code": "Code Block",
+      "quote": "Quote",
+      "highlight": "Highlight",
+      "underline": "Underline",
+      "cancel": "Cancel",
+      "add": "Add"
+    }
   }
 }

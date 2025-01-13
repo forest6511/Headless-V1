@@ -1,5 +1,6 @@
 {
   "common": {
+    "close": "閉じる",
     "addNew": "新規追加",
     "edit": "編集",
     "cancel": "キャンセル",
@@ -202,6 +203,38 @@
       "thumbnailSize": "サムネイルサイズ",
       "smallSize": "小サイズ",
       "mediumSize": "中サイズ"
+    }
+  },
+  "editor": {
+    "toolbar": {
+      "heading2": "見出し2",
+      "heading3": "見出し3",
+      "bold": "太字",
+      "italic": "イタリック",
+      "bulletList": "箇条書きリスト",
+      "orderedList": "番号付きリスト",
+      "image": {
+        "button": "画像を挿入",
+        "title": "画像の挿入",
+        "url": "画像URL",
+        "alt": "代替テキスト (任意)",
+        "altPlaceholder": "画像の説明",
+        "urlPlaceholder": "https://example.com/image.jpg"
+      },
+      "link": {
+        "button": "リンクを挿入",
+        "title": "リンクの挿入",
+        "url": "リンクURL",
+        "text": "リンクテキスト (任意)",
+        "urlPlaceholder": "https://example.com",
+        "textPlaceholder": "表示テキスト"
+      },
+      "code": "コードブロック",
+      "quote": "引用",
+      "highlight": "ハイライト",
+      "underline": "下線",
+      "cancel": "キャンセル",
+      "add": "追加"
     }
   }
 }

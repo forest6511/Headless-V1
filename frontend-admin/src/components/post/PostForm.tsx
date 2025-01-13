@@ -30,6 +30,7 @@ export function PostForm({
   onSubmittingChange,
 }: PostFormProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
+
   const { categories } = useCategoryList()
   const categoryOptions = createCategoryOptions(
     categories,
@@ -60,7 +61,6 @@ export function PostForm({
     watch,
   } = form
 
-  // isSubmittingの状態が変更されたら親コンポーネントに通知
   useEffect(() => {
     onSubmittingChange?.(isSubmitting)
   }, [isSubmitting, onSubmittingChange])
@@ -108,15 +108,26 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
+            <div className="mt-4 border-t pt-4">
+              <h3 className="text-md font-semibold mb-2">
+                {t(currentLanguage, 'post.preview')} {textLength}
+              </h3>
+              <div className="h-[300px] overflow-y-auto">
+                {' '}
+                {/* 高さとスクロールを追加 */}
+                <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
+                  {pretty(contentHtml || '')}
+                </pre>
+              </div>
+            </div>
           </CardBody>
         </Card>
       </div>
       <div className="w-2/3 space-y-6">
         <Card>
-          <CardBody className="space-y-4">
-            <div className="h-[800px] overflow-y-auto">
-              {/* zod validationが効かないので、hidden項目に設定 */}
-              <input type="hidden" {...register('content')} />
+          <CardBody className="relative h-[calc(100vh-200px)]">
+            <input type="hidden" {...register('content')} />
+            <div className="relative h-full">
               <TiptapEditor
                 value={watch('content')}
                 onChange={handleEditorChange}
@@ -126,15 +137,6 @@ export function PostForm({
                   {errors.content.message}
                 </p>
               )}
-            </div>
-            {/* HTMLプレビュー */}
-            <div className="mt-4 border-t pt-4">
-              <h3 className="text-md font-semibold mb-2">
-                {t(currentLanguage, 'post.preview')} {textLength}
-              </h3>
-              <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
-                {pretty(contentHtml || '')}
-              </pre>
             </div>
           </CardBody>
         </Card>

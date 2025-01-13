@@ -43,7 +43,6 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
         },
         hardBreak: false,
       }),
-      // CSSの設定が必要ないなら下記は設定の必要なし
       OrderedList.configure({
         HTMLAttributes: {
           class: `${CSS_CLASS_NAME_PREFIX}`,
@@ -120,22 +119,18 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
     onUpdate: ({ editor }) => {
       let html = editor.getHTML()
 
-      // ListItem内のPタグを除去
       html = html.replace(
         /<li[^>]*><p[^>]*>(.*?)<\/p><\/li>/g,
         `<li class="${CSS_CLASS_NAME_PREFIX}">$1</li>`
       )
 
-      // Blockquote内のPタグを除去
       html = html.replace(
         /<blockquote[^>]*><p[^>]*>(.*?)<\/p><\/blockquote>/g,
         `<blockquote class="${CSS_CLASS_NAME_PREFIX}">$1</blockquote>`
       )
 
-      // 改行を除去した文字数
       const textLength = editor.getText().replace(/\n/g, '').length
 
-      // 空のエディタの場合は空文字を返す
       const content = html === EMPTY_CONTENT ? '' : html
       onChange?.(content, textLength)
     },
@@ -151,14 +146,16 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   }
 
   return (
-    <div className="relative">
+    <div className="flex flex-col h-full">
       {editor && (
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="sticky top-0 z-[100] bg-white shadow-sm">
           <Toolbar editor={editor} />
         </div>
       )}
-      <div className="overflow-y-auto mt-2 p-2 border rounded-sm">
-        <EditorContent editor={editor} className="prose max-w-none" />
+      <div className="flex-1 overflow-hidden border rounded-sm">
+        <div className="h-full overflow-y-auto p-2">
+          <EditorContent editor={editor} className="prose max-w-none p-2" />
+        </div>
       </div>
     </div>
   )

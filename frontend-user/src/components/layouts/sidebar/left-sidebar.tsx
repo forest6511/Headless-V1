@@ -46,8 +46,9 @@ export function LeftSidebar({
 }: LeftSidebarProps) {
   const content = (
     <div className="flex flex-col h-full">
+
       <div className="p-4">
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <p className="text-muted-foreground mb-4">
             あいうえお。あいうえお。あいうえお。あいうえお。
           </p>
@@ -62,7 +63,7 @@ export function LeftSidebar({
               <Link href="/login">ログイン</Link>
             </Button>
           </div>
-        </div>
+        </div>*/}
 
         {navLinks.map((section) => (
           <div className="mt-4" key={section.category}>
@@ -84,7 +85,7 @@ export function LeftSidebar({
           </div>
         ))}
 
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <Link className="mb-2 text-sm font-semibold" href="/public">
             その他
           </Link>
@@ -99,7 +100,7 @@ export function LeftSidebar({
               <Link href="/terms">利用規約</Link>
             </Button>
           </nav>
-        </div>
+        </div>*/}
       </div>
     </div>
   )
@@ -118,7 +119,7 @@ export function LeftSidebar({
     <div className="flex flex-col h-full">
       <SheetHeader className="px-4 pt-4 border-b">
         <SheetTitle className="flex justify-between items-center mb-3">
-          <span>タイトル</span>
+          <span>Menu</span>
         </SheetTitle>
       </SheetHeader>
       <div className="flex-1 overflow-y-auto">{content}</div>

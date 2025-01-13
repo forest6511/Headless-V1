@@ -10,3 +10,4 @@ ansible/REDADME.md
 ansible/inventory/hosts
 *.retry
 backend-app.log
+backend-app.*

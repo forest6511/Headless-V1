@@ -17,7 +17,6 @@ import { CategoryListResponse } from '@/types/api/category/response'
 import { PostActions } from '@/components/post/PostActions'
 import { ROUTES } from '@/config/routes'
 import { formatDateTime } from '@/lib/utils/post'
-import { getStatusLabel } from '@/types/api/post/types'
 import { t } from '@/lib/translations'
 
 interface PostTableProps {
@@ -41,12 +40,18 @@ export const PostTable = ({
   onEdit,
   onDelete,
 }: PostTableProps) => {
-  const getStatusColor = (status: string) => {
-    return status === 'PUBLISHED' ? 'success' : 'warning'
-  }
-
   const getPostTitle = (post: PostResponse) => {
     return post.translations.find((t) => t.language === currentLanguage)?.title
+  }
+
+  const getStatusInfo = (post: PostResponse) => {
+    const status = post.translations.find(
+      (t) => t.language === currentLanguage
+    )?.status
+    return {
+      color: status === 'PUBLISHED' ? 'success' : 'warning',
+      label: status,
+    } as const
   }
 
   return (
@@ -88,8 +93,8 @@ export const PostTable = ({
               <TableCell>{formatDateTime(post.createdAt)}</TableCell>
               <TableCell>{formatDateTime(post.updatedAt)}</TableCell>
               <TableCell>
-                <Chip color={getStatusColor(post.status)} variant="flat">
-                  {getStatusLabel(post.status, currentLanguage)}
+                <Chip color={getStatusInfo(post).color} variant="flat">
+                  {getStatusInfo(post).label}
                 </Chip>
               </TableCell>
               <TableCell>

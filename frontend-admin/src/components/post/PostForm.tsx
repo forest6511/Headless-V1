@@ -113,7 +113,6 @@ export function PostForm({
                 {t(currentLanguage, 'post.preview')} {textLength}
               </h3>
               <div className="h-[300px] overflow-y-auto">
-                {' '}
                 {/* 高さとスクロールを追加 */}
                 <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
                   {pretty(contentHtml || '')}

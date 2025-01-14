@@ -58,10 +58,6 @@ export const createUpdatePostSchema = (language: Language = 'ja') =>
     id: z.string().uuid(t(language, 'post.validation.category.invalidId')),
   })
 
-// デフォルトスキーマ（日本語）
-export const postSchema = createPostSchema()
-export const updatePostSchema = createUpdatePostSchema()
-
 export type CreatePostFormData = z.infer<ReturnType<typeof createPostSchema>>
 export type UpdatePostFormData = z.infer<
   ReturnType<typeof createUpdatePostSchema>

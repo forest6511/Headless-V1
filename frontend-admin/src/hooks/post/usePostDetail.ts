@@ -24,7 +24,7 @@ export const convertPostResponseToFormData = (
     language: parseLanguage(translation.language),
     title: translation.title,
     content: translation.content,
-    status: post.status as 'DRAFT' | 'PUBLISHED',
+    status: translation.status as 'DRAFT' | 'PUBLISHED',
     featuredImageId: post.featuredImageId,
     categoryId: post.categoryId,
     tagNames: post.tags.map((tag) => `${tag.name}`).join(','),

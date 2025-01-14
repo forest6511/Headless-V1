@@ -7,7 +7,6 @@ import java.util.*
 data class PostResponse(
     val id: UUID,
     val slug: String,
-    val status: String,
     val featuredImageId: UUID?,
     val categoryId: UUID,
     val tags: List<TagDto>,

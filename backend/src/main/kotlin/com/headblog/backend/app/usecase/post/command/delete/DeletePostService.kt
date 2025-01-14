@@ -31,7 +31,6 @@ class DeletePostService(
         val post = Post.fromCommand(
             id = postDto.id,
             slug = postDto.slug,
-            status = postDto.status,
             featuredImageId = postDto.featuredImageId,
             categoryId = postDto.categoryId,
             translations = emptyList()

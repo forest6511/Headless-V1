@@ -8,7 +8,6 @@ import java.util.*
 class Post private constructor(
     val id: PostId,
     val slug: Slug,
-    val status: Status,
     val featuredImageId: UUID?,
     val categoryId: CategoryId,
     val translations: List<Translation>,
@@ -18,7 +17,6 @@ class Post private constructor(
         fun create(
             id: IdGenerator<EntityId>,
             slug: String,
-            status: String,
             featuredImageId: UUID?,
             categoryId: UUID,
             translations: List<Translation>,
@@ -26,7 +24,6 @@ class Post private constructor(
             return Post(
                 id = PostId(id.generate().value),
                 slug = Slug.of(slug),
-                status = Status.of(status),
                 featuredImageId = featuredImageId,
                 categoryId = CategoryId(categoryId),
                 translations = translations
@@ -36,7 +33,6 @@ class Post private constructor(
         fun fromCommand(
             id: UUID,
             slug: String,
-            status: String,
             featuredImageId: UUID?,
             categoryId: UUID,
             translations: List<Translation>,
@@ -44,7 +40,6 @@ class Post private constructor(
             return Post(
                 id = PostId(id),
                 slug = Slug.of(slug),
-                status = Status.of(status),
                 featuredImageId = featuredImageId,
                 categoryId = CategoryId(categoryId),
                 translations = translations

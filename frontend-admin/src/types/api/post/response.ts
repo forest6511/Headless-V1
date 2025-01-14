@@ -1,5 +1,6 @@
 export interface Translation {
   language: string
+  status: string
   title: string
   excerpt: string
   content: string
@@ -22,7 +23,6 @@ export interface PostListResponse {
 export interface PostResponse {
   id: string
   slug: string
-  status: string
   featuredImageId: string | null
   categoryId: string
   tags: Tag[]

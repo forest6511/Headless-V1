@@ -7,6 +7,7 @@ import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
@@ -35,9 +36,9 @@ class UpdatePostService(
         val originalPostDto = postRepository.findById(command.id)
             ?: throw AppConflictException("Post with ID ${command.id} not found.")
 
-
         val translation = Translation(
             language = Language.of(command.language),
+            status = Status.of(command.status),
             title = command.title,
             excerpt = originalPostDto.translations.first { it.language == command.language }.excerpt,
             content = command.content
@@ -46,7 +47,6 @@ class UpdatePostService(
         val post = Post.fromCommand(
             id = command.id,
             slug = originalPostDto.slug,
-            status = command.status,
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
             translations = listOf(translation)

@@ -26,7 +26,6 @@ class GetPostQueryServiceImpl(
             PostResponse(
                 id = dto.id,
                 slug = dto.slug,
-                status = dto.status,
                 featuredImageId = dto.featuredImageId,
                 categoryId = dto.categoryId,
                 tags = dto.tags,
@@ -49,7 +48,6 @@ class GetPostQueryServiceImpl(
             PostResponse(
                 id = dto.id,
                 slug = dto.slug,
-                status = dto.status,
                 featuredImageId = dto.featuredImageId,
                 categoryId = dto.categoryId,
                 tags = dto.tags,
@@ -63,6 +61,7 @@ class GetPostQueryServiceImpl(
     private fun toTranslationResponse(t: com.headblog.backend.app.usecase.post.query.TranslationDto): TranslationResponse {
         return TranslationResponse(
             language = t.language,
+            status = t.status,
             title = t.title,
             excerpt = t.excerpt,
             content = t.content

@@ -111,12 +111,12 @@ class UpdatePostServiceTest {
         val post = Post.create(
             id = idGenerator,
             slug = slug,
-            status = Status.PUBLISHED.name,
             featuredImageId = null,
             categoryId = category.id.value,
             translations = listOf(
                 Translation(
                     language = Language.of("ja"),
+                    status = Status.of(Status.PUBLISHED.name),
                     title = title,
                     excerpt = "サンプル概要",
                     content = "サンプルコンテンツ"

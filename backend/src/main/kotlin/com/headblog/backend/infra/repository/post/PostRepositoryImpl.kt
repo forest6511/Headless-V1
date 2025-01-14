@@ -26,7 +26,6 @@ class PostRepositoryImpl(
         val insertedRows = dsl.insertInto(POSTS)
             .set(POSTS.ID, post.id.value)
             .set(POSTS.SLUG, post.slug.value)
-            .set(POSTS.STATUS, post.status.name)
             .set(POSTS.FEATURED_IMAGE_ID, post.featuredImageId)
             .execute()
 
@@ -35,6 +34,7 @@ class PostRepositoryImpl(
             dsl.insertInto(POST_TRANSLATIONS)
                 .set(POST_TRANSLATIONS.POST_ID, post.id.value)
                 .set(POST_TRANSLATIONS.LANGUAGE, translation.language.value)
+                .set(POST_TRANSLATIONS.STATUS, translation.status.name)
                 .set(POST_TRANSLATIONS.TITLE, translation.title)
                 .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
                 .set(POST_TRANSLATIONS.CONTENT, translation.content)
@@ -48,7 +48,6 @@ class PostRepositoryImpl(
         // UPDATE posts
         val updatedRows = dsl.update(POSTS)
             .set(POSTS.SLUG, post.slug.value)
-            .set(POSTS.STATUS, post.status.name)
             .set(POSTS.FEATURED_IMAGE_ID, post.featuredImageId)
             .set(POSTS.UPDATED_AT, LocalDateTime.now())
             .where(POSTS.ID.eq(post.id.value))
@@ -58,11 +57,13 @@ class PostRepositoryImpl(
             dsl.insertInto(POST_TRANSLATIONS)
                 .set(POST_TRANSLATIONS.POST_ID, post.id.value)
                 .set(POST_TRANSLATIONS.LANGUAGE, translation.language.value)
+                .set(POST_TRANSLATIONS.STATUS, translation.status.name)
                 .set(POST_TRANSLATIONS.TITLE, translation.title)
                 .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
                 .set(POST_TRANSLATIONS.CONTENT, translation.content)
                 .onConflict(POST_TRANSLATIONS.POST_ID, POST_TRANSLATIONS.LANGUAGE)
                 .doUpdate()
+                .set(POST_TRANSLATIONS.STATUS, translation.status.name)
                 .set(POST_TRANSLATIONS.TITLE, translation.title)
                 .set(POST_TRANSLATIONS.EXCERPT, translation.excerpt)
                 .set(POST_TRANSLATIONS.CONTENT, translation.content)
@@ -84,6 +85,7 @@ class PostRepositoryImpl(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
             POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
             POST_TRANSLATIONS.EXCERPT,
             POST_TRANSLATIONS.CONTENT
@@ -107,6 +109,7 @@ class PostRepositoryImpl(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
             POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
             POST_TRANSLATIONS.EXCERPT,
             POST_TRANSLATIONS.CONTENT
@@ -134,6 +137,7 @@ class PostRepositoryImpl(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
             POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
             POST_TRANSLATIONS.EXCERPT,
             POST_TRANSLATIONS.CONTENT
@@ -187,9 +191,7 @@ class PostRepositoryImpl(
     private fun List<Record>.toPostWithTranslationsDto(): PostDto {
         val first = this.first()
         val postId = requireNotNull(first.get(POSTS.ID))
-
         val slug = requireNotNull(first.get(POSTS.SLUG))
-        val status = requireNotNull(first.get(POSTS.STATUS))
         val featuredImageId = first.get(POSTS.FEATURED_IMAGE_ID)
         val categoryId = requireNotNull(first.get(POST_CATEGORIES.CATEGORY_ID))
         val createdAt = requireNotNull(first.get(POSTS.CREATED_AT))
@@ -200,6 +202,7 @@ class PostRepositoryImpl(
             val lang = requireNotNull(rec.get(POST_TRANSLATIONS.LANGUAGE))
             TranslationDto(
                 language = lang,
+                status = requireNotNull(rec.get(POST_TRANSLATIONS.STATUS)),
                 title = requireNotNull(rec.get(POST_TRANSLATIONS.TITLE)),
                 excerpt = requireNotNull(rec.get(POST_TRANSLATIONS.EXCERPT)),
                 content = requireNotNull(rec.get(POST_TRANSLATIONS.CONTENT)),
@@ -212,7 +215,6 @@ class PostRepositoryImpl(
         return PostDto(
             id = postId,
             slug = slug,
-            status = status,
             featuredImageId = featuredImageId,
             categoryId = categoryId,
             tags = tags,

@@ -7,6 +7,7 @@ import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.PostTagsRepository
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
@@ -79,18 +80,20 @@ class CreatePostService(
         val post = Post.create(
             id = idGenerator,
             slug = slug,
-            status = command.status,
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
             translations = listOf(
                 Translation(
                     language = Language.of(sourceLang),
+                    status = Status.of(command.status),
                     title = command.title,
                     content = command.content,
                     excerpt = sourceSummary
                 ),
                 Translation(
                     language = Language.of(targetLang),
+                    // 投稿記事作成時は、翻訳確認の為にステータスはDRAFT
+                    status = Status.DRAFT,
                     title = translatedTitle,
                     content = translatedContent,
                     excerpt = translatedSummary

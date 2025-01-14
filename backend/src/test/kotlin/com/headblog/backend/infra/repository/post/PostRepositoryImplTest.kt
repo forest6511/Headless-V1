@@ -162,10 +162,9 @@ class PostRepositoryImplTest {
             val post = Post.create(
                 id = idGenerator,
                 slug = "test-post-$i",
-                status = Status.PUBLISHED.name,
                 featuredImageId = null,
                 categoryId = defaultCategory.id.value,
-                translations = listOf(createTranslation("ja", "記事 $i"))
+                translations = listOf(createTranslation("ja", Status.PUBLISHED.name, "記事 $i"))
             )
             postRepository.save(post)
             postCategoryRepository.addRelation(post.id, defaultCategory.id)
@@ -186,8 +185,9 @@ class PostRepositoryImplTest {
 
     private fun createTranslation(
         language: String,
+        status: String,
         title: String,
         excerpt: String = "要約 $title",
         content: String = "本文 $title"
-    ): Translation = Translation(Language.of(language), title, excerpt, content)
+    ): Translation = Translation(Language.of(language), Status.of(status), title, excerpt, content)
 }

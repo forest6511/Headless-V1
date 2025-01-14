@@ -93,7 +93,6 @@ CREATE TABLE posts
 (
     id                uuid PRIMARY KEY,
     slug              varchar(255) NOT NULL UNIQUE,
-    status            varchar(10)  NOT NULL,
     featured_image_id uuid REFERENCES medias (id),
     created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -103,7 +102,6 @@ COMMENT ON TABLE posts IS 'Table for storing blog posts (common info)';
 
 COMMENT ON COLUMN posts.id IS 'Unique identifier for each post (UUID)';
 COMMENT ON COLUMN posts.slug IS 'Unique slug for the post, used in URLs';
-COMMENT ON COLUMN posts.status IS 'Status of the post (e.g., DRAFT, PUBLISHED)';
 COMMENT ON COLUMN posts.featured_image_id IS 'Reference to the featured image in the media table, if applicable';
 COMMENT ON COLUMN posts.created_at IS 'Timestamp when the post was created';
 COMMENT ON COLUMN posts.updated_at IS 'Timestamp when the post was last updated';
@@ -112,6 +110,7 @@ CREATE TABLE post_translations
 (
     post_id          uuid         NOT NULL,
     language    varchar(5)   NOT NULL,
+    status            varchar(10)  NOT NULL,
     title            varchar(255) NOT NULL,
     excerpt          varchar(510) NOT NULL,
     content          text         NOT NULL,
@@ -125,6 +124,7 @@ COMMENT ON TABLE post_translations IS 'Table for storing language-specific field
 
 COMMENT ON COLUMN post_translations.post_id IS 'Reference to posts.id (the main post ID)';
 COMMENT ON COLUMN post_translations.language IS 'Language code (e.g., ja, en)';
+COMMENT ON COLUMN post_translations.status IS 'Status of the post (e.g., DRAFT, PUBLISHED)';
 COMMENT ON COLUMN post_translations.title IS 'Post title for the given language';
 COMMENT ON COLUMN post_translations.excerpt IS 'Short excerpt of the post for the given language';
 COMMENT ON COLUMN post_translations.content IS 'Content of the post for the given language';
@@ -230,13 +230,13 @@ COMMENT ON COLUMN api_quota_logs.updated_at IS 'Timestamp when the record was la
 
 -- Indexes
 CREATE INDEX idx_posts_slug ON posts (slug);
-CREATE INDEX idx_posts_status ON posts (status);
 CREATE INDEX idx_categories_slug ON categories (slug);
 CREATE INDEX idx_post_categories_category ON post_categories (category_id);
 CREATE INDEX idx_post_categories_post ON post_categories (post_id);
 CREATE INDEX idx_post_tags_post ON post_tags (post_id);
 CREATE INDEX idx_post_tags_tag ON post_tags (tag_id);
 CREATE INDEX idx_post_translations_language ON post_translations (language);
+CREATE INDEX idx_post_translations_status ON post_translations (status);
 CREATE INDEX idx_api_quota_logs_service ON api_quota_logs (service);
 CREATE INDEX idx_api_quota_logs_date ON api_quota_logs (quota_date);
 CREATE INDEX idx_api_quota_logs_service_date ON api_quota_logs (service, quota_date);
@@ -299,7 +299,6 @@ VALUES (
 INSERT INTO posts (
     id,
     slug,
-    status,
     featured_image_id,
     created_at,
     updated_at
@@ -307,7 +306,6 @@ INSERT INTO posts (
 VALUES (
     '018df485-3cf2-7960-8000-66d818e6826b',
     'first-post',
-    'DRAFT',
     NULL,
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
@@ -317,6 +315,7 @@ VALUES (
 INSERT INTO post_translations (
     post_id,
     language,
+    status,
     title,
     excerpt,
     content,
@@ -326,6 +325,7 @@ INSERT INTO post_translations (
 VALUES (
     '018df485-3cf2-7960-8000-66d818e6826b',
     'ja',
+    'DRAFT',
     '最初のブログ投稿',
     '最初のブログ投稿です。マークダウンやHTMLタグを使い、太字、斜体、ハイライトなどを活用できます。簡単な記事内容とサンプル画像、箇条書きと番号付きリストの例を示しています。',
     '<h2 class="cms">見出し</h2><p class="cms">これは最初のブログ投稿の本文です。 マークダウンや HTML タグを含めることができます。</p><p class="cms">たとえば、太字や斜体、<mark class="cms" data-color="#fecdd3" style="background-color: #fecdd3; color: inherit">ハイライト</mark>などを活用できます。</p><h3 class="cms">簡単な記事内容</h3><p class="cms">ここには実際の記事内容を簡単に書きます。</p><h3 class="cms">記事画像イメージ</h3><p class="cms">下記の画像はサンプルです。</p><p class="cms"><img class="cms" src="https://placehold.jp/150x150.png"></p><p class="cms"><strong class="cms">UL / LI のサンプル</strong></p><ul class="cms"><li class="cms">まずはリストの１項目です</li><li class="cms">次の項目には詳細を記述できます</li><li class="cms">リストを使うと、要点を整理して伝えやすくなります</li></ul><p class="cms"><strong class="cms">OL / LI のサンプル</strong></p><ol class="cms"><li class="cms">これは番号付きリストの最初の項目です</li><li class="cms">次の項目も順番を意識して並べることができます</li><li class="cms">手順やステップを示すのに最適です</li></ol><p class="cms"><strong class="cms">簡単なサンプルコーディング</strong></p><pre class="cms"><code>console.log("Hello, world!");
@@ -342,6 +342,7 @@ greet("Alice");  // "Hello, Alice!" と表示されます</code></pre>',
 INSERT INTO post_translations (
     post_id,
     language,
+    status,
     title,
     excerpt,
     content,
@@ -351,6 +352,7 @@ INSERT INTO post_translations (
 VALUES (
     '018df485-3cf2-7960-8000-66d818e6826b',  -- 同じ post_id
     'en',                                   -- 英語
+    'DRAFT',
     'First Blog Post',                      -- タイトル
     'This is the first blog post. It demonstrates how to use Markdown and HTML tags, such as bold, italics, or highlights. It includes a brief article content, a sample image, and examples of bullet and numbered lists.',
     '<h2 class="cms">Heading</h2><p class="cms">This is the first blog post. You can include Markdown or HTML tags.</p><p class="cms">For instance, you can use bold, italics, or a <mark class="cms" data-color="#fecdd3" style="background-color: #fecdd3; color: inherit">highlight</mark>.</p><h3 class="cms">Brief Article Content</h3><p class="cms">Here you can write a concise overview of the content.</p><h3 class="cms">Article Image</h3><p class="cms">The following is a sample image.</p><p class="cms"><img class="cms" src="https://placehold.jp/150x150.png"></p><p class="cms"><strong class="cms">UL / LI Sample</strong></p><ul class="cms"><li class="cms">This is the first list item</li><li class="cms">You can add more details in subsequent items</li><li class="cms">Using lists helps organize key points effectively</li></ul><p class="cms"><strong class="cms">OL / LI Sample</strong></p><ol class="cms"><li class="cms">This is the first item in a numbered list</li><li class="cms">Subsequent items follow in order</li><li class="cms">Numbered lists are ideal for showing steps or sequences</li></ol><p class="cms"><strong class="cms">Simple Coding Sample</strong></p><pre class="cms"><code>console.log("Hello, world!");

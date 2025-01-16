@@ -1,3 +1,5 @@
+import sanitizeHtml from 'sanitize-html'
+import { Metadata } from 'next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +10,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import Link from 'next/link'
+import { type Locale } from '@/types/i18n'
 
 interface Article {
   id: string
@@ -50,12 +53,32 @@ async function getArticle(id: string): Promise<Article | null> {
   return articles.find((article) => article.id === id) || null
 }
 
-type PageProps = {
-  params: Promise<{ id: string }>
+export async function generateMetadata(props: {
+  params: Promise<{ lang: Locale; id: string }>
+}): Promise<Metadata> {
+  const params = await props.params
+  const articleId = await Promise.resolve(params.id)
+  const article = await getArticle(articleId)
+
+  return {
+    title: article?.title || '記事が見つかりません',
+    description: article?.content
+      ? sanitizeHtml(article.content, {
+        allowedTags: [],
+        allowedAttributes: {},
+        disallowedTagsMode: 'discard'
+      }).substring(0, 150)
+      : '記事の詳細情報',
+  }
 }
 
-export default async function ArticlePage({ params }: PageProps) {
-  const { id } = await params
+type PageProps = {
+  params: Promise<{ lang: Locale; id: string }>
+}
+export default async function ArticlePage(props: PageProps) {
+  const params = await props.params
+  const { id, lang } = params
+  console.log(`記事を言語: ${lang} で表示`)
   const article = await getArticle(id)
 
   if (!article) {

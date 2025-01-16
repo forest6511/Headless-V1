@@ -1,15 +1,16 @@
-// app/[lang]/page.tsx
+// app/page.tsx
 import { ArticleCard } from '@/components/features/article'
 import { type Locale } from '@/types/i18n'
 import { ArticleCardProps } from '@/components/features/article/types'
 
-export async function generateStaticParams() {
-  return [{ lang: 'en' }, { lang: 'ja' }]
+type PageProps = {
+  params: Promise<{ lang: Locale }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
   const res = await fetch(
-    `${process.env.API_BASE_URL}/api/client/posts?language=${lang}&pageSize=5`,
+    `${process.env.API_BASE_URL}/api/client/posts?language=${lang}&pageSize=20`,
     {
       next: { revalidate: 3600 },
     }
@@ -19,13 +20,10 @@ async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
     throw new Error('Failed to fetch articles')
   }
 
-  // APIのレスポンスはPostClientResponseの形式
   const articles = await res.json()
 
   return articles.map((article: ArticleCardProps) => ({
-    slug: article.slug,
-    title: article.title,
-    description: article.description,
+    ...article,
     createdAt: new Date(article.createdAt).toLocaleDateString(
       lang === 'ja' ? 'ja-JP' : 'en-US',
       { month: 'long', day: 'numeric' }
@@ -34,16 +32,13 @@ async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
       lang === 'ja' ? 'ja-JP' : 'en-US',
       { month: 'long', day: 'numeric' }
     ),
-    tags: article.tags,
-    category: article.category,
   }))
 }
 
-export default async function Home({
-  params: { lang },
-}: {
-  params: { lang: Locale }
-}) {
+export default async function Home(props: PageProps) {
+  const params = await props.params
+  // params からプロパティを非同期的に取得
+  const { lang } = await Promise.resolve(params)
   const articles = await getLatestArticles(lang)
 
   return (

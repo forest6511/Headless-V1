@@ -9,9 +9,9 @@ const nextConfig: NextConfig = {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         punycode: false,
-      };
+      }
     }
-    return config;
+    return config
   },
 }
 

@@ -1,39 +1,55 @@
+// app/[lang]/page.tsx
 import { ArticleCard } from '@/components/features/article'
+import { type Locale } from '@/types/i18n'
+import { ArticleCardProps } from '@/components/features/article/types'
 
-export default function Home() {
-  const articles = [
+export async function generateStaticParams() {
+  return [{ lang: 'en' }, { lang: 'ja' }]
+}
+
+async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
+  const res = await fetch(
+    `${process.env.API_BASE_URL}/api/client/posts?language=${lang}&pageSize=5`,
     {
-      title: 'Next.jsでミドルウェアをこのように使用する必要があります',
-      description:
-        'Next.jsのミドルウェアは見過ごされがちですが、その可能性を理解すれば、ゲームチェンジャーとなります。もしあなたがまだ使用していないのなら...',
-      author: {
-        name: 'テック太郎',
-        image: '/placeholder.svg',
-      },
-      date: '11月6日',
-      reactions: 247,
-      comments: 5,
-      tags: ['nextjs', 'middleware', 'webdev'],
-    },
-    {
-      title: 'フロントエンド開発者が知っておくべき重要なパフォーマンス最適化',
-      description:
-        '現代のウェブアプリケーションでは、パフォーマンスが極めて重要です。このガイドでは、重要な最適化テクニックを紹介します...',
-      author: {
-        name: 'テック太郎',
-        image: '/placeholder.svg',
-      },
-      date: '12月27日',
-      reactions: 183,
-      comments: 12,
-      tags: ['performance', 'frontend', 'optimization'],
-    },
-  ]
+      next: { revalidate: 3600 },
+    }
+  )
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch articles')
+  }
+
+  // APIのレスポンスはPostClientResponseの形式
+  const articles = await res.json()
+
+  return articles.map((article: ArticleCardProps) => ({
+    slug: article.slug,
+    title: article.title,
+    description: article.description,
+    createdAt: new Date(article.createdAt).toLocaleDateString(
+      lang === 'ja' ? 'ja-JP' : 'en-US',
+      { month: 'long', day: 'numeric' }
+    ),
+    updatedAt: new Date(article.updatedAt).toLocaleDateString(
+      lang === 'ja' ? 'ja-JP' : 'en-US',
+      { month: 'long', day: 'numeric' }
+    ),
+    tags: article.tags,
+    category: article.category,
+  }))
+}
+
+export default async function Home({
+  params: { lang },
+}: {
+  params: { lang: Locale }
+}) {
+  const articles = await getLatestArticles(lang)
 
   return (
     <div className="py-4">
-      {articles.map((article, index) => (
-        <ArticleCard key={index} {...article} />
+      {articles.map((article) => (
+        <ArticleCard key={article.slug} {...article} />
       ))}
     </div>
   )

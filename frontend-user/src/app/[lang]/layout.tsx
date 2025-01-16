@@ -6,26 +6,38 @@ import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 // import { RightSidebar } from '@/components/layouts/sidebar/right-sidebar'
 // import { Footer } from '@/components/layouts/footer'
 import React from 'react'
+import { siteConfig } from '@/config/site'
+import { type Locale } from '@/types/i18n'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
-export const metadata: Metadata = {
-  title: 'サイトタイトル',
-  description: 'サイトタイトル 説明',
-}
-
 export const viewport: Viewport = {
   width: 'device-width',
-  initialScale: 1
+  initialScale: 1,
+}
+
+export async function generateMetadata({
+  params: { lang },
+}: {
+  params: { lang: Locale }
+}): Promise<Metadata> {
+  const i18n = siteConfig.i18n[lang]
+
+  return {
+    title: i18n.title,
+    description: i18n.description,
+  }
 }
 
 export default function RootLayout({
   children,
+  params: { lang },
 }: {
   children: React.ReactNode
+  params: { lang: Locale }
 }) {
   return (
-    <html lang="ja">
+    <html lang={lang}>
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
           <MainNav />

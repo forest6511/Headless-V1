@@ -51,3 +51,46 @@ jobs:
           ansible-playbook playbooks/deploy_app.yml \
             --extra-vars "ansible_become_pass=$ANSIBLE_BECOME_PASS" \
             --private-key ~/.ssh/deploy_key
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Install dependencies of frontend-admin
+        run: |
+          cd frontend-admin
+          npm install
+
+      - name: Build the admin project
+        run: |
+          cd frontend-admin
+          npm run build
+
+      - name: Deploy Admin to Vercel (Prod)
+        if: success() && github.event_name == 'pull_request'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          cd frontend-admin
+          npm install -g vercel
+          vercel --prod --token $VERCEL_TOKEN --yes
+
+      - name: Install dependencies of frontend-user
+        run: |
+          cd frontend-user
+          npm install
+
+      - name: Build the user project
+        run: |
+          cd frontend-user
+          npm run build
+
+      - name: Deploy User to Vercel (Preview)
+        if: success() && github.event_name == 'pull_request'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          cd frontend-user
+          npm install -g vercel
+          vercel --prod --token $VERCEL_TOKEN --yes

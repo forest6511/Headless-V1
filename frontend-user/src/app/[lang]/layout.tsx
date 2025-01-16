@@ -9,33 +9,54 @@ import React from 'react'
 import { siteConfig } from '@/config/site'
 import { type Locale } from '@/types/i18n'
 
+// Inter フォントの設定（Latin文字サブセット、スワップ表示）
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
+// ビューポートの設定
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 }
 
+// メタデータ生成関数（非同期）
 export async function generateMetadata({
-  params: { lang },
+  params,
 }: {
   params: { lang: Locale }
 }): Promise<Metadata> {
-  const i18n = siteConfig.i18n[lang]
+  try {
+    // params からプロパティを非同期的に取得
+    const { lang } = await Promise.resolve(params)
 
-  return {
-    title: i18n.title,
-    description: i18n.description,
+    // サイト設定からデフォルト情報を取得
+    const i18n = siteConfig.i18n[lang] || siteConfig.i18n['ja']
+
+    return {
+      title: {
+        default: i18n.title,
+        template: `%s | ${i18n.title}`,
+      },
+      description: i18n.description,
+    }
+  } catch {
+    return {
+      title: 'Tech Blog',
+      description: 'Technology Information Blog',
+    }
   }
 }
 
-export default function RootLayout({
+// ルートレイアウトコンポーネント（非同期）
+export default async function RootLayout({
   children,
-  params: { lang },
+  params,
 }: {
   children: React.ReactNode
   params: { lang: Locale }
 }) {
+  // params からプロパティを非同期的に取得
+  const { lang } = await Promise.resolve(params)
+
   return (
     <html lang={lang}>
       <body className={inter.className}>

@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html'
 import { Metadata } from 'next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -62,7 +63,12 @@ export async function generateMetadata(props: {
   return {
     title: article?.title || '記事が見つかりません',
     description: article?.content
-      ? article.content.replace(/<[^>]*>/g, '').substring(0, 150)
+      ? sanitizeHtml(article.content, {
+          allowedTags: [],
+          allowedAttributes: {},
+        })
+          .replace(/<[^>]*>/g, '')
+          .substring(0, 150)
       : '記事の詳細情報',
   }
 }

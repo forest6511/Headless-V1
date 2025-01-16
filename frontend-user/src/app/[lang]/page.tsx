@@ -4,8 +4,8 @@ import { type Locale } from '@/types/i18n'
 import { ArticleCardProps } from '@/components/features/article/types'
 
 type PageProps = {
-  params: { lang: Locale }
-  searchParams?: { [key: string]: string | string[] | undefined }
+  params: Promise<{ lang: Locale }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
@@ -35,7 +35,8 @@ async function getLatestArticles(lang: Locale): Promise<ArticleCardProps[]> {
   }))
 }
 
-export default async function Home({ params }: PageProps) {
+export default async function Home(props: PageProps) {
+  const params = await props.params
   // params からプロパティを非同期的に取得
   const { lang } = await Promise.resolve(params)
   const articles = await getLatestArticles(lang)

@@ -19,11 +19,10 @@ export const viewport: Viewport = {
 }
 
 // メタデータ生成関数（非同期）
-export async function generateMetadata({
-  params,
-}: {
-  params: { lang: Locale }
+export async function generateMetadata(props: {
+  params: Promise<{ lang: Locale }>
 }): Promise<Metadata> {
+  const params = await props.params
   try {
     // params からプロパティを非同期的に取得
     const { lang } = await Promise.resolve(params)
@@ -47,13 +46,14 @@ export async function generateMetadata({
 }
 
 // ルートレイアウトコンポーネント（非同期）
-export default async function RootLayout({
-  children,
-  params,
-}: {
+export default async function RootLayout(props: {
   children: React.ReactNode
-  params: { lang: Locale }
+  params: Promise<{ lang: Locale }>
 }) {
+  const params = await props.params
+
+  const { children } = props
+
   // params からプロパティを非同期的に取得
   const { lang } = await Promise.resolve(params)
 

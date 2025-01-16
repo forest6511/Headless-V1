@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -31,7 +32,22 @@ class SecurityConfig(
     }
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    @Order(1)
+    fun clientFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
+            .csrf { csrf -> csrf.disable() }
+            .securityMatcher("/api/client/**")
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers(HttpMethod.GET).permitAll()
+                    .anyRequest().denyAll()
+            }
+        return http.build()
+    }
+
+    @Bean
+    @Order(2)
+    fun adminSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .csrf { csrf -> csrf.disable() }

@@ -18,4 +18,11 @@ interface PostRepository {
     ): List<PostDto>
 
     fun count(): Int
+
+    fun findPublishedPosts(
+        language: String,
+        cursorPostId: UUID?,
+        pageSize: Int
+    ): List<PostDto>
+
 }

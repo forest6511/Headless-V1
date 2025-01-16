@@ -46,7 +46,6 @@ export function LeftSidebar({
 }: LeftSidebarProps) {
   const content = (
     <div className="flex flex-col h-full">
-
       <div className="p-4">
         {/* <div className="mb-6">
           <p className="text-muted-foreground mb-4">

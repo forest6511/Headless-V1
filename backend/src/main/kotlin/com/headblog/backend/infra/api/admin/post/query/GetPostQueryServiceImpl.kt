@@ -1,17 +1,22 @@
 package com.headblog.backend.infra.api.admin.post.query
 
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
+import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
+import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
+import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
 
 @Service
 class GetPostQueryServiceImpl(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val categoryRepository: CategoryRepository,
 ) : GetPostQueryService {
 
     override fun findPostList(cursorPostId: UUID?, pageSize: Int): PostListResponse {
@@ -56,6 +61,44 @@ class GetPostQueryServiceImpl(
                 updatedAt = dto.updatedAt
             )
         } ?: throw AppConflictException("Post not found. id: $postId")
+    }
+
+    override fun findPublishedPosts(
+        language: String,
+        cursorPostId: UUID?,
+        pageSize: Int
+    ): List<PostClientResponse> {
+        return postRepository.findPublishedPosts(language, cursorPostId, pageSize)
+            .map { post ->
+                val translation = post.translations.first()
+                PostClientResponse(
+                    slug = post.slug,
+                    title = translation.title,
+                    description = translation.excerpt,
+                    createdAt = post.createdAt.toString(),
+                    updatedAt = post.updatedAt.toString(),
+                    tags = post.tags.map { it.slug },
+                    category = CategoryClientResponse(
+                        path = buildCategoryPath(post.categoryId, language)
+                    )
+                )
+            }
+    }
+
+    private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> {
+        return generateSequence(categoryId) { currentId ->
+            categoryRepository.findByIdAndLanguage(currentId, language)?.parentId
+        }
+            .mapNotNull { id ->
+                categoryRepository.findByIdAndLanguage(id, language)?.let { category ->
+                    CategoryPathDto(
+                        slug = category.slug,
+                        name = category.translations.first().name
+                    )
+                }
+            }
+            .toList()
+            .reversed()
     }
 
     private fun toTranslationResponse(t: com.headblog.backend.app.usecase.post.query.TranslationDto): TranslationResponse {

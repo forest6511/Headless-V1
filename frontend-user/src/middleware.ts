@@ -41,14 +41,14 @@ export function middleware(request: NextRequest) {
     const locale = getLocale(request)
     // 302リダイレクト（一時的なリダイレクト）を使用
     return NextResponse.redirect(new URL(`/${locale}`, request.url), {
-      status: 302
+      status: 302,
     })
   }
 
   // その他のパスの場合
   const locale = getLocale(request)
   return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url), {
-    status: 302
+    status: 302,
   })
 }
 
@@ -59,5 +59,5 @@ export const config = {
     '/',
     // _next, api, 静的ファイル以外のすべてのパス
     '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
-  ]
+  ],
 }

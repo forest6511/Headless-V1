@@ -5,6 +5,7 @@ import com.headblog.backend.app.usecase.post.query.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import com.headblog.infra.jooq.tables.references.POST_TAGS
@@ -171,6 +172,56 @@ class PostRepositoryImpl(
 
     override fun count(): Int = dsl.fetchCount(POSTS)
 
+    override fun findPublishedPosts(
+        language: String,
+        cursorPostId: UUID?,
+        pageSize: Int
+    ): List<PostDto> {
+        val query = dsl.select(
+            POSTS.asterisk(),
+            POST_CATEGORIES.CATEGORY_ID,
+            POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.STATUS,
+            POST_TRANSLATIONS.TITLE,
+            POST_TRANSLATIONS.EXCERPT
+        )
+            .from(POSTS)
+            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+            .where(POST_TRANSLATIONS.LANGUAGE.eq(language))
+            .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
+
+        // カーソル条件
+        cursorPostId?.let { id ->
+            query.and(POSTS.ID.lessThan(id))
+        }
+
+        val records = query
+            .orderBy(POSTS.ID.desc())
+            .limit(pageSize + 1)
+            .fetch()
+
+        return records.map { record ->
+            PostDto(
+                id = requireNotNull(record.get(POSTS.ID)),
+                slug = requireNotNull(record.get(POSTS.SLUG)),
+                featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID),
+                categoryId = requireNotNull(record.get(POST_CATEGORIES.CATEGORY_ID)),
+                tags = fetchTagsForPost(record.get(POSTS.ID)!!),
+                translations = listOf(
+                    TranslationDto(
+                        language = language,
+                        status = record.get(POST_TRANSLATIONS.STATUS)!!,
+                        title = record.get(POST_TRANSLATIONS.TITLE)!!,
+                        excerpt = record.get(POST_TRANSLATIONS.EXCERPT)!!,
+                        content = "" // contentは不要なので空文字を設定
+                    )
+                ),
+                createdAt = requireNotNull(record.get(POSTS.CREATED_AT)),
+                updatedAt = requireNotNull(record.get(POSTS.UPDATED_AT))
+            )
+        }
+    }
 
     private fun fetchTagsForPost(postId: UUID): List<TagDto> {
         return dsl.select(TAGS.ID, TAGS.NAME, TAGS.SLUG)

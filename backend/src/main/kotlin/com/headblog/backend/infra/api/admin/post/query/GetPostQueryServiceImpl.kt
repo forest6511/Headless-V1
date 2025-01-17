@@ -11,6 +11,7 @@ import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,6 +20,7 @@ class GetPostQueryServiceImpl(
     private val categoryRepository: CategoryRepository,
 ) : GetPostQueryService {
 
+    private val logger = LoggerFactory.getLogger(GetPostQueryServiceImpl::class.java)
     override fun findPostList(cursorPostId: UUID?, pageSize: Int): PostListResponse {
         // 総件数を取得
         val totalCount = postRepository.count()
@@ -68,7 +70,7 @@ class GetPostQueryServiceImpl(
         cursorPostId: UUID?,
         pageSize: Int
     ): List<PostClientResponse> {
-        return postRepository.findPublishedPosts(language, cursorPostId, pageSize)
+        val response =  postRepository.findPublishedPosts(language, cursorPostId, pageSize)
             .map { post ->
                 val translation = post.translations.first()
                 PostClientResponse(
@@ -83,6 +85,7 @@ class GetPostQueryServiceImpl(
                     )
                 )
             }
+        return response
     }
 
     private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> {

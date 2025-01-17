@@ -4,13 +4,20 @@ import { TagList } from '@/components/features/article/components/tag-list'
 interface ArticleContentProps {
   title: string
   description: string
-  tags?: string[]
+  tags: string[]
+  category: {
+    path: {
+      slug: string
+      name: string
+    }[]
+  }
 }
 
 export function ArticleContent({
   title,
   description,
   tags,
+  category,
 }: ArticleContentProps) {
   return (
     <div className="space-y-2">
@@ -19,7 +26,7 @@ export function ArticleContent({
           {title}
         </h2>
       </Link>
-      <TagList tags={tags} />
+      <TagList category={category} tags={tags} />
       <p className="text-muted-foreground break-words">{description}</p>
     </div>
   )

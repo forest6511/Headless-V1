@@ -157,6 +157,17 @@ class CategoryRepositoryImpl(
             }
     }
 
+    override fun findAll(): List<CategoryDto> {
+        return dsl.select()
+            .from(CATEGORIES)
+            .leftJoin(CATEGORY_TRANSLATIONS)
+            .on(CATEGORIES.ID.eq(CATEGORY_TRANSLATIONS.CATEGORY_ID))
+            .fetch()
+            .groupBy { it[CATEGORIES.ID] }
+            .values
+            .map { it.toCategoryDto() }
+    }
+
     private fun List<Record>.toCategoryDto(): CategoryDto {
         val firstRecord = first()
         return CategoryDto(

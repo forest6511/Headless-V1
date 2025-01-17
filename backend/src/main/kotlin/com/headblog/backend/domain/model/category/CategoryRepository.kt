@@ -16,5 +16,5 @@ interface CategoryRepository {
     fun findWithPostIds(): List<CategoryWithPostIdsDto>
     fun findAllByParentId(parentId: UUID): List<CategoryDto>
     fun findByIdAndLanguage(id: UUID, language: String): CategoryDto?
-
+    fun findAll(): List<CategoryDto>
 }

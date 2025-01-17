@@ -1,9 +1,16 @@
+// components/features/navigation/components/mobile-menu.tsx
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Category } from '@/types/category'
 
-export function MobileMenu() {
+// プロパティの型定義を追加
+interface MobileMenuProps {
+  categories: Category[]
+}
+
+export function MobileMenu({ categories }: MobileMenuProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -13,7 +20,7 @@ export function MobileMenu() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0">
-        <LeftSidebar />
+        <LeftSidebar categories={categories} />
       </SheetContent>
     </Sheet>
   )

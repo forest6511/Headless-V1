@@ -7,6 +7,7 @@ import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 import React from 'react'
 import { getMetadata } from '@/lib/metadata'
 import { type Locale } from '@/types/i18n'
+import { getCategories } from '@/lib/api/category'
 
 // Inter フォントの設定（Latin文字サブセット、スワップ表示）
 const inter = Inter({
@@ -43,6 +44,7 @@ export default async function RootLayout({
   params,
 }: RootLayoutProps) {
   const { lang } = await Promise.resolve(params)
+  const categories = await getCategories(lang)
 
   return (
     <html
@@ -54,7 +56,7 @@ export default async function RootLayout({
         <div className="min-h-screen flex flex-col">
           {/* ヘッダー */}
           <header>
-            <MainNav />
+            <MainNav categories={categories} />
           </header>
 
           {/* メインコンテンツ */}
@@ -63,7 +65,7 @@ export default async function RootLayout({
               <div className="flex">
                 {/* サイドバー */}
                 <aside>
-                  <LeftSidebar inLayout />
+                  <LeftSidebar inLayout categories={categories} />
                 </aside>
 
                 {/* メインコンテンツエリア */}

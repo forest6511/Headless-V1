@@ -1,9 +1,5 @@
 // config/site.ts
-import {
-  LOCALES,
-  DEFAULT_LOCALE,
-  LOCALE_NAMES,
-} from '@/types/i18n'
+import { LOCALES, DEFAULT_LOCALE, LOCALE_NAMES } from '@/types/i18n'
 
 export const siteConfig = {
   locales: LOCALES,

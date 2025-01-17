@@ -1,7 +1,8 @@
 // lib/api/home.ts
 import { type Locale } from '@/types/i18n'
-import { ArticleCardProps } from '@/components/features/article/types'
+import { ArticleCardProps } from '@/types/article'
 import { formatDate } from '@/lib/date'
+import { getCacheOptions } from '@/lib/fetchOptions'
 
 export async function getLatestArticles(
   lang: Locale
@@ -9,7 +10,7 @@ export async function getLatestArticles(
   const res = await fetch(
     `${process.env.API_BASE_URL}/api/client/posts?language=${lang}&pageSize=20`,
     {
-      next: { revalidate: 3600 },
+      ...getCacheOptions(),
       headers: {
         Accept: 'application/json',
       },

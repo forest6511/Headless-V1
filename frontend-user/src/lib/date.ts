@@ -2,13 +2,13 @@
 import { type Locale } from '@/types/i18n'
 
 type DateFormatOptions = {
-  long?: boolean // より詳細な日付フォーマットが必要な場合用
+  long?: boolean
 }
 
 export function formatDate(
   date: string,
   lang: Locale,
-  options: DateFormatOptions = {}
+  options: DateFormatOptions = { long: true }
 ): string {
   const locale = lang === 'ja' ? 'ja-JP' : 'en-US'
 

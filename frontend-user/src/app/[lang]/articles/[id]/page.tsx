@@ -64,10 +64,10 @@ export async function generateMetadata(props: {
     title: article?.title || '記事が見つかりません',
     description: article?.content
       ? sanitizeHtml(article.content, {
-        allowedTags: [],
-        allowedAttributes: {},
-        disallowedTagsMode: 'discard'
-      }).substring(0, 150)
+          allowedTags: [],
+          allowedAttributes: {},
+          disallowedTagsMode: 'discard',
+        }).substring(0, 150)
       : '記事の詳細情報',
   }
 }

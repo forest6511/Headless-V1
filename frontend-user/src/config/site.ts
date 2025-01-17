@@ -1,6 +1,6 @@
+// config/site.ts
 import {
   LOCALES,
-  type Locale,
   DEFAULT_LOCALE,
   LOCALE_NAMES,
 } from '@/types/i18n'
@@ -32,7 +32,6 @@ export const siteConfig = {
     },
   },
 
-  // サイト全体で共通の設定
   site: {
     copyright: '© 2025 Tech Blog',
     social: {
@@ -41,13 +40,3 @@ export const siteConfig = {
     },
   },
 } as const
-
-// generateStaticParamsのユーティリティ関数
-export function getStaticParams() {
-  return LOCALES.map((lang) => ({
-    lang,
-  }))
-}
-
-// 型ヘルパー
-export type I18nConfig = (typeof siteConfig.i18n)[Locale]

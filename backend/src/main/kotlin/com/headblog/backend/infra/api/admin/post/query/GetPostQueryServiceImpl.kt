@@ -85,15 +85,6 @@ class GetPostQueryServiceImpl(
                     )
                 )
             }
-
-        println("ああああああああああs")
-        println("ああああああああああs")
-
-        println("ああああああああああs")
-
-        logger.info("-------------------------")
-        logger.info("$response")
-        logger.info("-------------------------")
         return response
     }
 

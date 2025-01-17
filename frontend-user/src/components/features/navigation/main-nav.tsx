@@ -13,7 +13,7 @@ export function MainNav({ categories }: MainNavProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="mx-auto max-w-[1440px] px-4">
         <div className="flex h-14 items-center gap-4">
-          <MobileMenu categories={categories} /> {/* カテゴリーを渡す */}
+          <MobileMenu categories={categories} />
           <Logo />
           <div className="flex flex-1 items-center justify-end gap-4">
             {/* <SearchBar /> */}

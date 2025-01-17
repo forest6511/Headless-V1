@@ -12,22 +12,33 @@ interface LeftSidebarProps {
 
 function CategoryMenu({ category }: { category: Category }) {
   return (
-    <div className="mt-4">
+    <div className="mt-2">
       <Link
-        className="mb-2 text-sm font-semibold"
+        className="text-sm text-gray-700 font-medium mb-0.5"
         href={`/${category.fullPath}`}
       >
         {category.name}
       </Link>
-      <nav className="-space-y-1">
-        {category.children.map((child) => (
+      <nav className="space-y-0.5 md:space-y-0.5">
+        {category.children.map((child, index) => (
           <Button
             key={child.id}
             variant="ghost"
-            className="w-full justify-start"
+            className={`w-full justify-start
+          min-h-[44px]  // モバイル時は44px
+          md:min-h-[24px]  // デスクトップ時は24px
+          md:py-1.5 md:px-3
+          text-sm md:text-sm
+          sm:text-base
+          ${index === category.children.length - 1 ? '-mb-4' : ''}`}
             asChild
           >
-            <Link href={`/${child.fullPath}`}>{child.name}</Link>
+            <Link
+              className="text-gray-500 w-full h-full"
+              href={`/${child.fullPath}`}
+            >
+              {child.name}
+            </Link>
           </Button>
         ))}
       </nav>

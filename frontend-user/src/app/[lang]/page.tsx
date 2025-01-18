@@ -36,9 +36,9 @@ export default async function HomePage(props: PageProps) {
 
     return (
       <article className="py-4">
-        <h1 className="sr-only">最新の記事一覧</h1>
+        <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">最新の記事一覧</h1>
 
-        <div className="space-y-4">
+        <div className="grid gap-4">
           {articles.map((article) => (
             <ArticleCard key={article.slug} {...article} lang={lang} />
           ))}

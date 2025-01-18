@@ -56,13 +56,12 @@ export async function generateMetadata({
 }
 
 type PageProps = {
-  params: { lang: Locale; slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ lang: Locale, slug: string }>
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-export default async function ArticlePage({ params, searchParams }: PageProps) {
-  console.log(searchParams)
-  const { slug, lang } = params
+export default async function ArticlePage({ params }: PageProps) {
+  const { lang, slug } = await Promise.resolve(params)
   const article = await getArticle(slug, lang)
 
   if (!article) {

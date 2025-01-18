@@ -38,7 +38,9 @@ export default async function HomePage(props: PageProps) {
 
     return (
       <article className="py-4">
-        <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">{dictionary.home.latestArticles}</h1>
+        <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">
+          {dictionary.home.latestArticles}
+        </h1>
 
         <div className="grid gap-4">
           {articles.map((article) => (

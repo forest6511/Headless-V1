@@ -4,7 +4,7 @@ import { LOCALES, DEFAULT_LOCALE, LOCALE_NAMES } from '@/types/i18n'
 export const siteConfig = {
   locales: LOCALES,
   defaultLocale: DEFAULT_LOCALE,
-
+  baseUrl: process.env.NEXT_CLIENT_URL || 'http://localhost:3005',
   i18n: {
     ja: {
       name: LOCALE_NAMES.ja,

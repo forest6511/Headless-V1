@@ -16,11 +16,10 @@ import { type Locale } from '@/types/i18n'
 import { getArticle } from '@/lib/api/article'
 import { formatDate, toISODate } from '@/lib/date'
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { lang: Locale; slug: string }
+export async function generateMetadata(props: {
+  params: Promise<{ lang: Locale; slug: string }>
 }): Promise<Metadata> {
+  const params = await props.params
   const { lang, slug } = params
   const article = await getArticle(slug, lang)
 
@@ -56,11 +55,12 @@ export async function generateMetadata({
 }
 
 type PageProps = {
-  params: Promise<{ lang: Locale, slug: string }>
+  params: Promise<{ lang: Locale; slug: string }>
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-export default async function ArticlePage({ params }: PageProps) {
+export default async function ArticlePage(props: PageProps) {
+  const params = await props.params
   const { lang, slug } = await Promise.resolve(params)
   const article = await getArticle(slug, lang)
 

@@ -4,7 +4,7 @@ import { getSitemapArticles } from '@/lib/api/sitemap'
 import { LOCALES, type Locale } from '@/types/i18n'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_CLIENT_URL || ''
+  const baseUrl = process.env.NEXT_CLIENT_URL
 
   const routes = LOCALES.map((locale: Locale) => ({
     url: `${baseUrl}/${locale}`,

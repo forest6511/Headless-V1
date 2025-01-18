@@ -64,3 +64,117 @@
     @apply bg-background text-foreground;
   }
 }
+
+p.cms {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+h1.cms {
+  font-size: 2rem;
+  color: #11181c;
+  margin-bottom: 1rem;
+}
+
+h2.cms {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #11181c;
+  margin-bottom: 1rem;
+}
+
+h3.cms {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #11181c;
+  margin-bottom: 1rem;
+}
+
+strong.cms {
+  font-weight: bold; /* 太字を強調 */
+  color: #11181c; /* テキストカラー */
+  padding: 0.2rem 0.4rem; /* 内側の余白 */
+  font-size: 1rem; /* 基本フォントサイズ */
+}
+
+ol.cms {
+  list-style: decimal; /* 数字付きリスト */
+  margin: 1rem 0; /* 上下の余白 */
+  padding-left: 2rem; /* 左側の余白 */
+  font-size: 1rem; /* リスト全体のフォントサイズ */
+  color: #11181c; /* リスト全体の文字色 */
+}
+
+ul.cms {
+  list-style: disc; /* 通常の丸付きリスト */
+  margin: 1rem 0; /* 上下の余白 */
+  padding-left: 1.5rem; /* 左側のインデント */
+  font-size: 1rem; /* フォントサイズ */
+  color: #11181c; /* 全体の文字色 */
+}
+
+li.cms {
+  margin: 0.5rem 0; /* 各リストアイテムの上下余白 */
+  line-height: 1.6; /* 行間 */
+}
+
+li.cms::marker {
+  color: #4b5563; /* マーカー（番号）の色 */
+}
+
+em.cms {
+  color: #6b7280; /* 薄いグレー (通常文字色より薄く設定) */
+  font-style: italic; /* 斜体 */
+  font-weight: normal; /* フォントウェイトは軽め */
+  background-color: transparent; /* 背景を透明に設定 */
+}
+
+pre.cms {
+  background-color: #000; /* 背景を黒色に */
+  color: #fff; /* 文字色を白色に */
+  border-radius: 0.2rem; /* 角を少しだけ丸くする */
+  padding: 1rem; /* 内側の余白 */
+  margin: 1rem 0; /* 上下の余白 */
+  font-family: 'JetBrainsMono', monospace; /* 等幅フォント */
+  overflow-x: auto; /* 横スクロールを許可 */
+}
+
+pre.cms code {
+  display: block; /* コード全体をブロック表示 */
+  white-space: pre; /* 改行を保持 */
+  color: inherit; /* 親の文字色を継承 */
+  font-size: 0.9rem; /* フォントサイズを調整 */
+}
+
+a.cms {
+  color: blue; /* 通常のリンクの色 */
+  text-decoration: underline; /* 下線を表示 */
+  cursor: pointer; /* ポインタ表示 */
+}
+
+a.cms:hover {
+  color: darkblue; /* ホバー時の色 */
+  text-decoration: underline; /* ホバー時も下線を維持 */
+}
+
+a.cms:focus {
+  outline: 2px solid #0078d4; /* フォーカス時のアクセシビリティ強化 */
+  outline-offset: 2px; /* フォーカス枠を少し外側に */
+}
+
+blockquote.cms {
+  border-left: 4px solid #ccc; /* 左側のボーダーで引用を強調 */
+  background-color: #f9f9f9; /* 引用部分の背景色を薄いグレーに */
+  padding: 1rem 1.5rem; /* 内側の余白 */
+  margin: 1rem 0; /* 上下の余白 */
+  font-style: italic; /* 斜体で引用を表現 */
+  color: #555; /* テキスト色を少し薄いグレーに */
+  font-size: 1rem; /* テキストサイズ */
+  line-height: 1.6; /* 行間を広くして読みやすく */
+}
+
+img.cms {
+  /* TODO */
+}
+

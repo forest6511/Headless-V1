@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-backend:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
@@ -51,3 +51,65 @@ jobs:
           ansible-playbook playbooks/deploy_app.yml \
             --extra-vars "ansible_become_pass=$ANSIBLE_BECOME_PASS" \
             --private-key ~/.ssh/deploy_key
+
+  deploy-admin-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Deploy Admin Frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.PROD_API_URL }}
+        run: |
+          cd frontend-admin
+          npm install
+          npm run build
+          npm install -g vercel
+          vercel --prod --token $VERCEL_TOKEN --yes --confirm
+
+  deploy-user-frontend:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Deploy User Frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.PROD_API_URL }}
+        run: |
+          cd frontend-user
+          npm install
+          npm run build
+          npm install -g vercel
+          vercel --prod --token $VERCEL_TOKEN --yes --confirm

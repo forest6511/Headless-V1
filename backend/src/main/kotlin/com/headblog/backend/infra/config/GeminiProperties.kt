@@ -19,7 +19,7 @@ data class GeminiProperties(
     )
 
     data class TimeoutConfig(
-        val connect: Duration = Duration.ofSeconds(60),
-        val request: Duration = Duration.ofSeconds(120)
+        val connect: Duration = Duration.ofSeconds(300),
+        val request: Duration = Duration.ofSeconds(300)
     )
 }

@@ -3,6 +3,7 @@ package com.headblog.backend.app.usecase.post.query
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
+import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
 import java.util.*
 
 interface GetPostQueryService {
@@ -13,4 +14,9 @@ interface GetPostQueryService {
         cursorPostId: UUID?,
         pageSize: Int
     ): List<PostClientResponse>
+
+    fun findPublishedPostBySlug(
+        language: String,
+        slug: String
+    ): PostDetailClientResponse
 }

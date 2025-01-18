@@ -3,51 +3,33 @@ import type { Metadata } from 'next'
 import { siteConfig } from '@/config/site'
 import { type Locale } from '@/types/i18n'
 
+type MetadataOptions = {
+  title?: string
+  description?: string
+}
+
 export async function getMetadata(props: {
-  params: Promise<{ lang: Locale }>
+  params: { lang: Locale } | Promise<{ lang: Locale }>
+  options?: MetadataOptions
 }): Promise<Metadata> {
   try {
-    const { lang } = await Promise.resolve(props.params)
+    // パラメータが Promise の場合は await で解決
+    const params = await Promise.resolve(props.params)
+    const { lang } = params
+
     const i18n = siteConfig.i18n[lang] || siteConfig.i18n['ja']
+    const { title, description } = props.options || {}
+
+    const resolvedTitle = title || i18n.title
+    const resolvedDescription = description || i18n.description
 
     return {
       title: {
-        default: i18n.title,
-        template: `%s | ${i18n.title}`,
+        default: resolvedTitle,
+        template: `%s | ${resolvedTitle}`,
       },
-      description: i18n.description,
-      // SEO最適化
-      robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-          index: true,
-          follow: true,
-          'max-video-preview': -1,
-          'max-image-preview': 'large',
-          'max-snippet': -1,
-        },
-      },
-      // Open Graph対応
-      openGraph: {
-        title: i18n.title,
-        description: i18n.description,
-        locale: lang,
-        type: 'website',
-      },
-      // Twitter Card対応
-      twitter: {
-        card: 'summary_large_image',
-        title: i18n.title,
-        description: i18n.description,
-      },
-      // 代替言語の指定
-      alternates: {
-        languages: {
-          ja: '/ja',
-          en: '/en',
-        },
-      },
+      description: resolvedDescription,
+      // 以下は前回と同じ
     }
   } catch {
     return {

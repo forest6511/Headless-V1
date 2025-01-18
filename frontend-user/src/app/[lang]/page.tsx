@@ -10,9 +10,8 @@ type PageProps = {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params
   const baseMetadata = await getMetadata({ params })
   const { lang } = await Promise.resolve(params)
 
@@ -28,8 +27,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function HomePage({ params }: PageProps) {
-  const { lang } = await Promise.resolve(params)
+export default async function HomePage(props: PageProps) {
+  const params = await props.params
+  const { lang } = params
 
   try {
     const articles = await getLatestArticles(lang)
@@ -40,7 +40,7 @@ export default async function HomePage({ params }: PageProps) {
 
         <div className="space-y-4">
           {articles.map((article) => (
-            <ArticleCard key={article.slug} {...article} />
+            <ArticleCard key={article.slug} {...article} lang={lang} />
           ))}
         </div>
       </article>

@@ -211,9 +211,9 @@ class PostRepositoryImpl(
                 translations = listOf(
                     TranslationDto(
                         language = language,
-                        status = record.get(POST_TRANSLATIONS.STATUS)!!,
-                        title = record.get(POST_TRANSLATIONS.TITLE)!!,
-                        excerpt = record.get(POST_TRANSLATIONS.EXCERPT)!!,
+                        status = requireNotNull(record.get(POST_TRANSLATIONS.STATUS)),
+                        title = requireNotNull(record.get(POST_TRANSLATIONS.TITLE)),
+                        excerpt = requireNotNull(record.get(POST_TRANSLATIONS.EXCERPT)),
                         content = "" // contentは不要なので空文字を設定
                     )
                 ),
@@ -221,6 +221,29 @@ class PostRepositoryImpl(
                 updatedAt = requireNotNull(record.get(POSTS.UPDATED_AT))
             )
         }
+    }
+
+    override fun findPublishedPostBySlug(
+        language: String,
+        slug: String
+    ): PostDto? {
+        val query = dsl.select(
+            POSTS.asterisk(),
+            POST_CATEGORIES.CATEGORY_ID,
+            POST_TRANSLATIONS.LANGUAGE,
+            POST_TRANSLATIONS.STATUS,
+            POST_TRANSLATIONS.TITLE,
+            POST_TRANSLATIONS.CONTENT,
+            POST_TRANSLATIONS.EXCERPT
+        )
+            .from(POSTS)
+            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+            .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+            .where(POSTS.SLUG.eq(slug))
+            .and(POST_TRANSLATIONS.LANGUAGE.eq(language))
+            .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
+
+        return query.fetchOne()?.toPostDto()
     }
 
     private fun fetchTagsForPost(postId: UUID): List<TagDto> {
@@ -272,6 +295,29 @@ class PostRepositoryImpl(
             translations = translationList,
             createdAt = createdAt,
             updatedAt = updatedAt,
+        )
+    }
+
+    private fun Record.toPostDto(): PostDto {
+        val postId = requireNotNull(get(POSTS.ID))
+
+        return PostDto(
+            id = postId,
+            slug = requireNotNull(get(POSTS.SLUG)),
+            featuredImageId = get(POSTS.FEATURED_IMAGE_ID),
+            categoryId = requireNotNull(get(POST_CATEGORIES.CATEGORY_ID)),
+            tags = fetchTagsForPost(postId),
+            translations = listOf(
+                TranslationDto(
+                    language = requireNotNull(get(POST_TRANSLATIONS.LANGUAGE)),
+                    status = requireNotNull(get(POST_TRANSLATIONS.STATUS)),
+                    title = requireNotNull(get(POST_TRANSLATIONS.TITLE)),
+                    excerpt = requireNotNull(get(POST_TRANSLATIONS.EXCERPT)),
+                    content = requireNotNull(get(POST_TRANSLATIONS.CONTENT))
+                )
+            ),
+            createdAt = requireNotNull(get(POSTS.CREATED_AT)),
+            updatedAt = requireNotNull(get(POSTS.UPDATED_AT))
         )
     }
 

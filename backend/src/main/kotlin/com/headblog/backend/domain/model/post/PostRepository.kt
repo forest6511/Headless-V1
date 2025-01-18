@@ -25,4 +25,8 @@ interface PostRepository {
         pageSize: Int
     ): List<PostDto>
 
+    fun findPublishedPostBySlug(
+        language: String,
+        slug: String,
+    ): PostDto?
 }

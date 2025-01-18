@@ -39,10 +39,11 @@ type RootLayoutProps = {
 }
 
 // ルートレイアウトコンポーネント（非同期）
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
+export default async function RootLayout(props: RootLayoutProps) {
+  const params = await props.params
+
+  const { children } = props
+
   const { lang } = await Promise.resolve(params)
   const categories = await getCategories(lang)
 

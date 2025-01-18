@@ -31,7 +31,7 @@ export function ArticleContent({
         </h2>
       </Link>
       <div className="mt-2">
-        <TagList category={category} tags={tags} />
+        <TagList category={category} tags={tags} lang={lang} />
       </div>
       <p className="text-muted-foreground break-words">{description}</p>
     </div>

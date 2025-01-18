@@ -1,191 +1,103 @@
-import {
-  // ThumbsUp,
-  // MessageSquare,
-  // Bookmark,
-  // MoreHorizontal,
-  ChevronRight,
-} from 'lucide-react'
-import Link from 'next/link'
+// app/[lang]/categories/[[..slug]]/page.tsx
+import { ArticleCard } from '@/components/features/article'
 import { type Locale } from '@/types/i18n'
-// import { ArticlePageProps } from '@/types/article'
-import { getArticle } from '@/lib/api/article'
-import { formatDate, toISODate } from '@/lib/date'
 import { getMetadata } from '@/lib/metadata'
+import { type Metadata } from 'next'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import { notFound } from 'next/navigation'
+import { getCategoryArticles } from '@/lib/api/category'
+import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 
-export async function generateMetadata(props: {
-  params: Promise<{ lang: Locale; slug: string }>
-}) {
+type PageProps = {
+  params: Promise<{ lang: Locale; slug?: string[] }>
+}
+
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params
-  const article = await getArticle(params.slug, params.lang)
+  const { lang, slug = [] } = params
+  const dictionary = await getDictionary(lang)
+  const categoryPath = slug.join('/')
+  const categoryWithArticles = await getCategoryArticles(categoryPath, lang)
+
   return getMetadata({
     params,
     options: {
-      title: article ? article.title : '記事が見つかりません',
-      description: article ? article.description : '記事の詳細情報',
+      title: categoryWithArticles
+        ? categoryWithArticles.category.name
+        : dictionary.common.notFound,
+      description: categoryWithArticles
+        ? categoryWithArticles.category.description ||
+          categoryWithArticles.category.name // description が null の場合は name を使用
+        : dictionary.common.notFound,
     },
   })
 }
 
-type PageProps = {
-  params: Promise<{ lang: Locale; slug: string }>
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
-}
-
-export default async function ArticlePage(props: PageProps) {
+export default async function CategoriesPage(props: PageProps) {
   const params = await props.params
-  const { lang, slug } = params
+  const { lang, slug = [] } = params
   const dictionary = await getDictionary(lang)
-  const article = await getArticle(slug, lang)
+  const categoryPath = slug.join('/')
 
-  if (!article) {
-    notFound()
-  }
+  try {
+    const categoryWithArticles = await getCategoryArticles(categoryPath, lang)
 
-  const formattedDate = formatDate(article.updatedAt, lang)
-
-  return (
-    <main className="py-6 ml-4 mr-4 -mt-1 pb-2">
-      <nav className="mb-6 overflow-auto" aria-label="パンくずリスト">
-        <ol className="flex min-w-0 items-center space-x-2 text-sm text-muted-foreground whitespace-nowrap">
-          <li>
-            <Link href={`/${lang}`} className="hover:text-foreground">
-              {dictionary.common.home}
-            </Link>
-          </li>
-          <li aria-hidden="true">
-            <ChevronRight className="h-4 w-4" />
-          </li>
-          {article.category.path.map((cat, index) => (
-            <li key={cat.slug}>
-              <Link
-                href={`/${lang}/categories/${cat.slug}`}
-                className="hover:text-foreground"
-              >
-                {cat.name}
+    return (
+      <article className="py-4">
+        {/* パンくずリスト */}
+        <nav className="mb-6 overflow-auto" aria-label="パンくずリスト">
+          <ol className="flex min-w-0 items-center space-x-2 text-sm text-muted-foreground whitespace-nowrap">
+            <li>
+              <Link href={`/${lang}`} className="hover:text-foreground">
+                {dictionary.common.home}
               </Link>
-              {index < article.category.path.length - 1 && (
-                <ChevronRight
-                  className="h-4 w-4 inline ml-2"
-                  aria-hidden="true"
-                />
-              )}
             </li>
-          ))}
-        </ol>
-      </nav>
+            {slug.map((s, index) => {
+              // 現在のカテゴリまでのパスを構築
+              const currentPath = slug.slice(0, index + 1).join('/')
+              return (
+                <li key={s} className="flex items-center">
+                  <ChevronRight className="h-4 w-4 mx-2" />
+                  <Link
+                    href={`/${lang}/categories/${currentPath}`}
+                    className="hover:text-foreground"
+                  >
+                    {s}
+                  </Link>
+                </li>
+              )
+            })}
+          </ol>
+        </nav>
 
-      <article itemScope itemType="http://schema.org/Article">
-        {/* 著者情報のコメントアウト部分 - そのまま維持 */}
-        {/*<div className="flex items-center space-x-2 mb-6">*/}
-        {/*  <Avatar className="h-8 w-8">*/}
-        {/*    <AvatarImage src={article.author.image} alt={article.author.name} />*/}
-        {/*    <AvatarFallback>{article.author.name[0]}</AvatarFallback>*/}
-        {/*  </Avatar>*/}
-        {/*  <div>*/}
-        {/*    <div className="flex items-center">*/}
-        {/*      <Link href="#" className="font-medium hover:text-blue-600">*/}
-        {/*        {article.author.name}*/}
-        {/*      </Link>*/}
-        {/*    </div>*/}
-        {/*    <p className="text-sm text-muted-foreground">{article.date}</p>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        <header>
-          <h1
-            itemProp="headline"
-            className="text-xl sm:text-3xl font-bold mb-4"
-          >
-            {article.title}
+        {/* カテゴリ情報 */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold mb-2">
+            {categoryWithArticles.category.name}
           </h1>
-          <time
-            dateTime={toISODate(article.updatedAt)}
-            itemProp="dateModified"
-            className="text-sm text-muted-foreground mb-4 block"
-          >
-            {dictionary.common.lastUpdated}: {formattedDate}
-          </time>
-          {article.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {article.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/${lang}/tags/${tag}`}
-                  className="text-sm text-muted-foreground hover:text-blue-600"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
+          {categoryWithArticles.category.description && (
+            <p className="text-muted-foreground">
+              {categoryWithArticles.category.description}
+            </p>
           )}
-        </header>
+        </div>
 
-        <div
-          itemProp="articleBody"
-          className="prose prose-lg max-w-none mb-3"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
-
-        {/*<div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">*/}
-        {/*  <div className="flex flex-wrap items-center gap-2">*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <ThumbsUp className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.reactions}</span>*/}
-        {/*    </Button>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <MessageSquare className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.comments}</span>*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*  <div className="flex items-center gap-2">*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <Bookmark className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <MoreHorizontal className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        {/*<div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">*/}
-        {/*  <div className="flex flex-wrap items-center gap-2">*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <ThumbsUp className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.reactions}</span>*/}
-        {/*    </Button>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <MessageSquare className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.comments}</span>*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*  <div className="flex items-center gap-2">*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <Bookmark className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <MoreHorizontal className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        {/* 記事一覧 */}
+        <div className="grid gap-4">
+          {categoryWithArticles.articles.map((article) => (
+            <ArticleCard key={article.slug} {...article} lang={lang} />
+          ))}
+        </div>
       </article>
-    </main>
-  )
+    )
+  } catch (error) {
+    console.error('Failed to fetch category articles:', error)
+    return (
+      <div className="py-4">
+        <p role="alert" className="text-center text-red-500">
+          {dictionary.common.fetchError}
+        </p>
+      </div>
+    )
+  }
 }

@@ -1,17 +1,7 @@
 // app/[lang]/articles/[slug]/page.tsx
-// import sanitizeHtml from 'sanitize-html'
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-// import { Button } from '@/components/ui/button'
-import {
-  // ThumbsUp,
-  // MessageSquare,
-  // Bookmark,
-  // MoreHorizontal,
-  ChevronRight,
-} from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { type Locale } from '@/types/i18n'
-// import { ArticlePageProps } from '@/types/article'
 import { getArticle } from '@/lib/api/article'
 import { formatDate, toISODate } from '@/lib/date'
 import { getMetadata } from '@/lib/metadata'
@@ -22,19 +12,19 @@ export async function generateMetadata(props: {
   params: Promise<{ lang: Locale; slug: string }>
 }) {
   const params = await props.params
+  const dictionary = await getDictionary(params.lang)
   const article = await getArticle(params.slug, params.lang)
   return getMetadata({
     params,
     options: {
-      title: article ? article.title : '記事が見つかりません',
-      description: article ? article.description : '記事の詳細情報',
+      title: article ? article.title : dictionary.common.notFound,
+      description: article ? article.description : dictionary.common.notFound,
     },
   })
 }
 
 type PageProps = {
   params: Promise<{ lang: Locale; slug: string }>
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function ArticlePage(props: PageProps) {
@@ -61,27 +51,34 @@ export default async function ArticlePage(props: PageProps) {
           <li aria-hidden="true">
             <ChevronRight className="h-4 w-4" />
           </li>
-          {article.category.path.map((cat, index) => (
-            <li key={cat.slug}>
-              <Link
-                href={`/${lang}/categories/${cat.slug}`}
-                className="hover:text-foreground"
-              >
-                {cat.name}
-              </Link>
-              {index < article.category.path.length - 1 && (
-                <ChevronRight
-                  className="h-4 w-4 inline ml-2"
-                  aria-hidden="true"
-                />
-              )}
-            </li>
-          ))}
+          {article.category.path.map((cat, index) => {
+            // 現在のカテゴリまでのパスを構築
+            const categoryPath = article.category.path
+              .slice(0, index + 1)
+              .map((c) => c.slug)
+              .join('/')
+
+            return (
+              <li key={cat.slug}>
+                <Link
+                  href={`/${lang}/categories/${categoryPath}`}
+                  className="hover:text-foreground"
+                >
+                  {cat.name}
+                </Link>
+                {index < article.category.path.length - 1 && (
+                  <ChevronRight
+                    className="h-4 w-4 inline ml-2"
+                    aria-hidden="true"
+                  />
+                )}
+              </li>
+            )
+          })}
         </ol>
       </nav>
 
       <article itemScope itemType="http://schema.org/Article">
-        {/* 著者情報のコメントアウト部分 - そのまま維持 */}
         {/*<div className="flex items-center space-x-2 mb-6">*/}
         {/*  <Avatar className="h-8 w-8">*/}
         {/*    <AvatarImage src={article.author.image} alt={article.author.name} />*/}
@@ -132,50 +129,14 @@ export default async function ArticlePage(props: PageProps) {
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
+        {/* 記事アクションのコメントアウト部分 - そのまま維持 */}
         {/*<div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">*/}
         {/*  <div className="flex flex-wrap items-center gap-2">*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
+        {/*    <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">*/}
         {/*      <ThumbsUp className="mr-1 h-4 w-4" />*/}
         {/*      <span className="text-sm">{article.reactions}</span>*/}
         {/*    </Button>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <MessageSquare className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.comments}</span>*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*  <div className="flex items-center gap-2">*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <Bookmark className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">*/}
-        {/*      <MoreHorizontal className="h-4 w-4" />*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        {/*<div className="flex flex-wrap items-center justify-between pt-3 border-t gap-4">*/}
-        {/*  <div className="flex flex-wrap items-center gap-2">*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
-        {/*      <ThumbsUp className="mr-1 h-4 w-4" />*/}
-        {/*      <span className="text-sm">{article.reactions}</span>*/}
-        {/*    </Button>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="h-8 text-muted-foreground"*/}
-        {/*    >*/}
+        {/*    <Button variant="ghost" size="sm" className="h-8 text-muted-foreground">*/}
         {/*      <MessageSquare className="mr-1 h-4 w-4" />*/}
         {/*      <span className="text-sm">{article.comments}</span>*/}
         {/*    </Button>*/}

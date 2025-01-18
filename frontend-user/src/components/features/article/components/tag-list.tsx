@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 interface TagListProps {
+  lang: string
   tags: string[]
   category: {
     path: {
@@ -10,7 +11,7 @@ interface TagListProps {
   }
 }
 
-export function TagList({ tags, category }: TagListProps) {
+export function TagList({ tags, category, lang }: TagListProps) {
   // カテゴリの表示名を取得（最下層のカテゴリ名を使用）
   const categoryName = category?.path?.length
     ? category.path[category.path.length - 1].name
@@ -24,7 +25,7 @@ export function TagList({ tags, category }: TagListProps) {
       {categoryName && (
         <div>
           <Link
-            href={`/${categoryPath}`}
+            href={`/${lang}/categories/${categoryPath}`}
             className="text-sm text-muted-foreground hover:text-blue-600"
           >
             {categoryName}

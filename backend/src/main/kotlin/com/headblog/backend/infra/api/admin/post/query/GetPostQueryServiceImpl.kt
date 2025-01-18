@@ -9,6 +9,7 @@ import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
 import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
 import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
+import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -70,7 +71,7 @@ class GetPostQueryServiceImpl(
         cursorPostId: UUID?,
         pageSize: Int
     ): List<PostClientResponse> {
-        val response =  postRepository.findPublishedPosts(language, cursorPostId, pageSize)
+        val response = postRepository.findPublishedPosts(language, cursorPostId, pageSize)
             .map { post ->
                 val translation = post.translations.first()
                 PostClientResponse(
@@ -87,6 +88,29 @@ class GetPostQueryServiceImpl(
             }
         return response
     }
+
+    override fun findPublishedPostBySlug(
+        language: String,
+        slug: String
+    ): PostDetailClientResponse {
+        val response = postRepository.findPublishedPostBySlug(language, slug)?.let { post ->
+            val translation = post.translations.first()
+            PostDetailClientResponse(
+                slug = post.slug,
+                title = translation.title,
+                content = translation.content,
+                description = translation.excerpt,
+                createdAt = post.createdAt.toString(),
+                updatedAt = post.updatedAt.toString(),
+                tags = post.tags.map { it.slug },
+                category = CategoryClientResponse(
+                    path = buildCategoryPath(post.categoryId, language)
+                )
+            )
+        }
+        return checkNotNull(response)
+    }
+
 
     private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> {
         return generateSequence(categoryId) { currentId ->

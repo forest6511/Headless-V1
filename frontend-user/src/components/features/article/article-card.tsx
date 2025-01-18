@@ -12,6 +12,7 @@ export function ArticleCard(props: ArticleCardProps) {
           date={props.updatedAt}
         />
         <ArticleContent
+          slug={props.slug}
           category={props.category}
           title={props.title}
           description={props.description}

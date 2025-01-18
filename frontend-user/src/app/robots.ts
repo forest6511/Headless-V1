@@ -1,4 +1,4 @@
-// lib/robots.ts
+// app/robots.ts
 import { MetadataRoute } from 'next'
 import { LOCALES } from '@/types/i18n'
 
@@ -9,13 +9,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: [
-          '/',
-          ...LOCALES.map(locale => `/${locale}/articles/`)
-        ],
-        disallow: ['/api/']
-      }
+        allow: ['/', ...LOCALES.map((locale) => `/${locale}/articles/`)],
+        disallow: ['/api/'],
+      },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`
+    sitemap: `${baseUrl}/sitemap.xml`,
   }
 }

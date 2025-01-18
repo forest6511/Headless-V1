@@ -3,6 +3,7 @@ import { TagList } from '@/components/features/article/components/tag-list'
 
 interface ArticleContentProps {
   title: string
+  slug: string
   description: string
   tags: string[]
   category: {
@@ -15,13 +16,14 @@ interface ArticleContentProps {
 
 export function ArticleContent({
   title,
+  slug,
   description,
   tags,
   category,
 }: ArticleContentProps) {
   return (
     <div className="space-y-2">
-      <Link href="/articles/1" className="block">
+      <Link href={`/articles/${slug}`} className="block">
         <h2 className="text-xl sm:text-2xl font-bold hover:text-blue-600 break-words">
           {title}
         </h2>

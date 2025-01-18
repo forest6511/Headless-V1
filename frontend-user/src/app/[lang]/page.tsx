@@ -40,7 +40,7 @@ export default async function HomePage({ params }: PageProps) {
 
         <div className="space-y-4">
           {articles.map((article) => (
-            <ArticleCard key={article.slug} {...article} />
+            <ArticleCard key={article.slug} {...article} lang={lang} />
           ))}
         </div>
       </article>

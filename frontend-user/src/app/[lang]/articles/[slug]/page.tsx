@@ -1,6 +1,5 @@
 // app/[lang]/articles/[slug]/page.tsx
-import sanitizeHtml from 'sanitize-html'
-import { Metadata } from 'next'
+// import sanitizeHtml from 'sanitize-html'
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 // import { Button } from '@/components/ui/button'
 import {
@@ -15,43 +14,21 @@ import { type Locale } from '@/types/i18n'
 // import { ArticlePageProps } from '@/types/article'
 import { getArticle } from '@/lib/api/article'
 import { formatDate, toISODate } from '@/lib/date'
+import { getMetadata } from '@/lib/metadata'
 
-export async function generateMetadata(props: {
-  params: Promise<{ lang: Locale; slug: string }>
-}): Promise<Metadata> {
-  const params = await props.params
-  const { lang, slug } = params
-  const article = await getArticle(slug, lang)
-
-  if (!article)
-    return {
-      title: '記事が見つかりません',
-      description: '記事の詳細情報',
-    }
-
-  const sanitizedDescription = sanitizeHtml(article.description, {
-    allowedTags: [],
-    allowedAttributes: {},
-    disallowedTagsMode: 'discard',
+export async function generateMetadata({
+  params,
+}: {
+  params: { lang: Locale; slug: string }
+}) {
+  const article = await getArticle(params.slug, params.lang)
+  return getMetadata({
+    params,
+    options: {
+      title: article ? article.title : '記事が見つかりません',
+      description: article ? article.description : '記事の詳細情報',
+    },
   })
-
-  return {
-    title: article.title,
-    description: sanitizedDescription,
-    openGraph: {
-      title: article.title,
-      description: sanitizedDescription,
-      type: 'article',
-      publishedTime: toISODate(article.createdAt),
-      modifiedTime: toISODate(article.updatedAt),
-      tags: article.tags,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: article.title,
-      description: sanitizedDescription,
-    },
-  }
 }
 
 type PageProps = {

@@ -25,12 +25,14 @@ export function ArticleContent({
 }: ArticleContentProps) {
   return (
     <div className="space-y-2">
-      <Link href={`/${lang}/articles/${slug}`} className="block">
+      <Link href={`/${lang}/articles/${slug}`}>
         <h2 className="text-xl sm:text-2xl font-bold hover:text-blue-600 break-words">
           {title}
         </h2>
       </Link>
-      <TagList category={category} tags={tags} />
+      <div className="mt-2">
+        <TagList category={category} tags={tags} lang={lang} />
+      </div>
       <p className="text-muted-foreground break-words">{description}</p>
     </div>
   )

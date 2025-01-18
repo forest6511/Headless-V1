@@ -57,7 +57,7 @@ export default async function RootLayout(props: RootLayoutProps) {
         <div className="min-h-screen flex flex-col">
           {/* ヘッダー */}
           <header>
-            <MainNav categories={categories} />
+            <MainNav categories={categories} lang={lang} />
           </header>
 
           {/* メインコンテンツ */}
@@ -66,7 +66,7 @@ export default async function RootLayout(props: RootLayoutProps) {
               <div className="flex">
                 {/* サイドバー */}
                 <aside>
-                  <LeftSidebar inLayout categories={categories} />
+                  <LeftSidebar inLayout categories={categories} lang={lang} />
                 </aside>
 
                 {/* メインコンテンツエリア */}

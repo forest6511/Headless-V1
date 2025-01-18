@@ -4,13 +4,15 @@ import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Category } from '@/types/category'
+import { Locale } from '@/types/i18n'
 
 // プロパティの型定義を追加
 interface MobileMenuProps {
   categories: Category[]
+  lang: Locale
 }
 
-export function MobileMenu({ categories }: MobileMenuProps) {
+export function MobileMenu({ categories, lang }: MobileMenuProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -20,7 +22,7 @@ export function MobileMenu({ categories }: MobileMenuProps) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0">
-        <LeftSidebar categories={categories} />
+        <LeftSidebar categories={categories} lang={lang} />
       </SheetContent>
     </Sheet>
   )

@@ -1,0 +1,11 @@
+{
+  "home": {
+    "latestArticles": "Latest Articles"
+  },
+  "common": {
+    "home": "Home",
+    "notFound": "Article not found",
+    "lastUpdated": "Last updated",
+    "fetchError": "Failed to fetch articles. Please try again later."
+  }
+}

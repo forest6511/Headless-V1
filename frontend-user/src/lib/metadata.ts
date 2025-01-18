@@ -22,6 +22,7 @@ export async function getMetadata(props: {
 
     const resolvedTitle = title || i18n.title
     const resolvedDescription = description || i18n.description
+    const baseUrl = new URL(siteConfig.baseUrl)
 
     return {
       title: {
@@ -29,7 +30,14 @@ export async function getMetadata(props: {
         template: `%s | ${resolvedTitle}`,
       },
       description: resolvedDescription,
-      // 以下は前回と同じ
+      metadataBase: baseUrl,
+      alternates: {
+        canonical: `/${lang}`,
+        languages: {
+          ja: '/ja',
+          en: '/en',
+        },
+      },
     }
   } catch {
     return {

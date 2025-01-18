@@ -4,6 +4,7 @@ import { type Locale } from '@/types/i18n'
 import { getLatestArticles } from '@/lib/api/home'
 import { getMetadata } from '@/lib/metadata'
 import { type Metadata } from 'next'
+import { getDictionary } from '@/lib/i18n/dictionaries'
 
 type PageProps = {
   params: Promise<{ lang: Locale }>
@@ -30,13 +31,14 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 export default async function HomePage(props: PageProps) {
   const params = await props.params
   const { lang } = params
+  const dictionary = await getDictionary(lang)
 
   try {
     const articles = await getLatestArticles(lang)
 
     return (
       <article className="py-4">
-        <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">最新の記事一覧</h1>
+        <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">{dictionary.home.latestArticles}</h1>
 
         <div className="grid gap-4">
           {articles.map((article) => (

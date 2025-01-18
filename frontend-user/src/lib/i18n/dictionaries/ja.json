@@ -1,0 +1,10 @@
+{
+  "home": {
+    "latestArticles": "最新の記事一覧"
+  },
+  "common": {
+    "home": "ホーム",
+    "notFound": "記事が見つかりません",
+    "lastUpdated": "最終更新"
+  }
+}

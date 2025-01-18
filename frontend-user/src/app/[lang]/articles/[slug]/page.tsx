@@ -15,6 +15,8 @@ import { type Locale } from '@/types/i18n'
 import { getArticle } from '@/lib/api/article'
 import { formatDate, toISODate } from '@/lib/date'
 import { getMetadata } from '@/lib/metadata'
+import { getDictionary } from '@/lib/i18n/dictionaries'
+import { notFound } from 'next/navigation'
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: Locale; slug: string }>
@@ -38,10 +40,11 @@ type PageProps = {
 export default async function ArticlePage(props: PageProps) {
   const params = await props.params
   const { lang, slug } = params
+  const dictionary = await getDictionary(lang)
   const article = await getArticle(slug, lang)
 
   if (!article) {
-    return <div className="p-4">記事が見つかりません</div>
+    notFound()
   }
 
   const formattedDate = formatDate(article.updatedAt, lang)
@@ -52,7 +55,7 @@ export default async function ArticlePage(props: PageProps) {
         <ol className="flex min-w-0 items-center space-x-2 text-sm text-muted-foreground whitespace-nowrap">
           <li>
             <Link href={`/${lang}`} className="hover:text-foreground">
-              ホーム
+              {dictionary.common.home}
             </Link>
           </li>
           <li aria-hidden="true">
@@ -106,7 +109,7 @@ export default async function ArticlePage(props: PageProps) {
             itemProp="dateModified"
             className="text-sm text-muted-foreground mb-4 block"
           >
-            最終更新: {formattedDate}
+            {dictionary.common.lastUpdated}: {formattedDate}
           </time>
           {article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">

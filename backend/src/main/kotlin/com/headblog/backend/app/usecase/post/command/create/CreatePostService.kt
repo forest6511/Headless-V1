@@ -120,8 +120,6 @@ class CreatePostService(
         return block().getOrElse {
             logger.error("Translation failed", it)
             throw AppConflictException("Translation failed")
-        }.also {
-            Thread.sleep(2000) // 2秒間のスリープ
         }
     }
 

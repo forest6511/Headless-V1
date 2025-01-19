@@ -21,16 +21,14 @@ export function TagList({ tags, category, lang }: TagListProps) {
   const categoryPath = category?.path?.map((p) => p.slug)?.join('/') || ''
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 items-center">
       {categoryName && (
-        <div>
-          <Link
-            href={`/${lang}/categories/${categoryPath}`}
-            className="text-sm text-muted-foreground hover:text-blue-600"
-          >
-            {categoryName}
-          </Link>
-        </div>
+        <Link
+          href={`/${lang}/categories/${categoryPath}`}
+          className="text-sm text-muted-foreground hover:text-blue-600"
+        >
+          {categoryName}
+        </Link>
       )}
       {tags.map((tag) => (
         <Link

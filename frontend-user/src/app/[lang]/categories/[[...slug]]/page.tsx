@@ -5,8 +5,7 @@ import { getMetadata } from '@/lib/metadata'
 import { type Metadata } from 'next'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getCategoryArticles } from '@/lib/api/category'
-import { ChevronRight } from 'lucide-react'
-import Link from 'next/link'
+import { CategoryBreadcrumbs } from '@/components/features/article/components/category-breadcrumbs'
 
 type PageProps = {
   params: Promise<{ lang: Locale; slug?: string[] }>
@@ -44,43 +43,20 @@ export default async function CategoriesPage(props: PageProps) {
 
     return (
       <article className="py-4">
-        {/* パンくずリスト */}
-        <nav className="mb-6 overflow-auto" aria-label="パンくずリスト">
-          <ol className="flex min-w-0 items-center space-x-2 text-sm text-muted-foreground whitespace-nowrap">
-            <li>
-              <Link href={`/${lang}`} className="hover:text-foreground">
-                {dictionary.common.home}
-              </Link>
-            </li>
-            {slug.map((s, index) => {
-              // 現在のカテゴリまでのパスを構築
-              const currentPath = slug.slice(0, index + 1).join('/')
-              return (
-                <li key={s} className="flex items-center">
-                  <ChevronRight className="h-4 w-4 mx-2" />
-                  <Link
-                    href={`/${lang}/categories/${currentPath}`}
-                    className="hover:text-foreground"
-                  >
-                    {s}
-                  </Link>
-                </li>
-              )
-            })}
-          </ol>
-        </nav>
-
         {/* カテゴリ情報 */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold mb-2">
+        <div className="mb-4">
+          <h1 className="text-xl font-semibold mb-4 text-left pl-4 sm:pl-0">
             {categoryWithArticles.category.name}
           </h1>
+
           {categoryWithArticles.category.description && (
-            <p className="text-muted-foreground">
-              {categoryWithArticles.category.description}
-            </p>
-          )}
-        </div>
+            <div className="font-semibold mb-2 text-left pl-4 sm:pl-0">
+              <p className="text-muted-foreground">
+                {categoryWithArticles.category.description}
+              </p>
+            </div>
+              )}
+            </div>
 
         {/* 記事一覧 */}
         <div className="grid gap-4">

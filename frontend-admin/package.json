@@ -22,6 +22,7 @@
     "@tiptap/extension-code-block-lowlight": "^2.10.3",
     "@tiptap/extension-heading": "^2.10.3",
     "@tiptap/extension-highlight": "^2.10.4",
+    "@tiptap/extension-history": "^2.11.2",
     "@tiptap/extension-image": "^2.10.3",
     "@tiptap/extension-italic": "^2.10.3",
     "@tiptap/extension-link": "^2.10.3",

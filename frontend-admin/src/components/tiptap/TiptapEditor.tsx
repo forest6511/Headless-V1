@@ -17,6 +17,7 @@ import { Link } from '@tiptap/extension-link'
 import { Blockquote } from '@tiptap/extension-blockquote'
 import { Highlight } from '@tiptap/extension-highlight'
 import { Underline } from '@tiptap/extension-underline'
+// History拡張機能のインポートを削除
 
 const lowlight = createLowlight(common)
 
@@ -35,7 +36,10 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        history: false,
+        history: {
+          depth: 100,
+          newGroupDelay: 500
+        },
         paragraph: {
           HTMLAttributes: {
             class: `${CSS_CLASS_NAME_PREFIX}`,
@@ -107,6 +111,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
+      // 別途追加していたHistory拡張機能を削除
     ],
     autofocus: true,
     content: value || EMPTY_CONTENT,

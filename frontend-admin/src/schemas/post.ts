@@ -56,6 +56,14 @@ export const createPostSchema = (language: Language = 'ja') =>
 export const createUpdatePostSchema = (language: Language = 'ja') =>
   createBasePostSchema(language).extend({
     id: z.string().uuid(t(language, 'post.validation.category.invalidId')),
+    slug: z
+      .string()
+      .min(1, t(language, 'post.validation.slug.required'))
+      .max(255, t(language, 'post.validation.slug.tooLong')),
+    excerpt: z
+      .string()
+      .min(1, t(language, 'post.validation.excerpt.required'))
+      .max(500, t(language, 'post.validation.excerpt.tooLong')),
   })
 
 export type CreatePostFormData = z.infer<ReturnType<typeof createPostSchema>>

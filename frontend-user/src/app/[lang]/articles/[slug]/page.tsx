@@ -7,6 +7,7 @@ import { formatDate, toISODate } from '@/lib/date'
 import { getMetadata } from '@/lib/metadata'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { notFound } from 'next/navigation'
+import { CategoryBreadcrumbs } from '@/components/features/article/components/category-breadcrumbs'
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: Locale; slug: string }>
@@ -51,30 +52,10 @@ export default async function ArticlePage(props: PageProps) {
           <li aria-hidden="true">
             <ChevronRight className="h-4 w-4" />
           </li>
-          {article.category.path.map((cat, index) => {
-            // 現在のカテゴリまでのパスを構築
-            const categoryPath = article.category.path
-              .slice(0, index + 1)
-              .map((c) => c.slug)
-              .join('/')
-
-            return (
-              <li key={cat.slug}>
-                <Link
-                  href={`/${lang}/categories/${categoryPath}`}
-                  className="hover:text-foreground"
-                >
-                  {cat.name}
-                </Link>
-                {index < article.category.path.length - 1 && (
-                  <ChevronRight
-                    className="h-4 w-4 inline ml-2"
-                    aria-hidden="true"
-                  />
-                )}
-              </li>
-            )
-          })}
+          <CategoryBreadcrumbs
+            lang={lang}
+            categoryPath={article.category.path}
+          />
         </ol>
       </nav>
 

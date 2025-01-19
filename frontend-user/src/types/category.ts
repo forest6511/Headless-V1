@@ -38,3 +38,14 @@ export interface CategoryWithArticles {
     }
   }[]
 }
+
+export type FullCategoryPathItem = {
+  slug: string
+  name: string
+  description: string | null
+}
+
+export type CategoryPath = {
+  slug: string
+  name: string
+}[]

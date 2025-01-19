@@ -55,7 +55,7 @@ export default async function ArticlePage(props: PageProps) {
           <CategoryBreadcrumbs
             lang={lang}
             categoryPath={article.category.path}
-            />
+          />
         </ol>
       </nav>
 

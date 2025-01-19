@@ -5,7 +5,6 @@ import { getMetadata } from '@/lib/metadata'
 import { type Metadata } from 'next'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { getCategoryArticles } from '@/lib/api/category'
-import { CategoryBreadcrumbs } from '@/components/features/article/components/category-breadcrumbs'
 
 type PageProps = {
   params: Promise<{ lang: Locale; slug?: string[] }>
@@ -55,8 +54,8 @@ export default async function CategoriesPage(props: PageProps) {
                 {categoryWithArticles.category.description}
               </p>
             </div>
-              )}
-            </div>
+          )}
+        </div>
 
         {/* 記事一覧 */}
         <div className="grid gap-4">

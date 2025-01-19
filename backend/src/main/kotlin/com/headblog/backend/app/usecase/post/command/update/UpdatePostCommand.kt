@@ -10,5 +10,7 @@ data class UpdatePostCommand(
     val status: String,
     val featuredImageId: UUID?,
     val categoryId: UUID,
-    val tagNames: Set<String> = emptySet()
+    val tagNames: Set<String> = emptySet(),
+    val slug: String,
+    val excerpt: String,
 )

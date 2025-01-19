@@ -40,13 +40,13 @@ class UpdatePostService(
             language = Language.of(command.language),
             status = Status.of(command.status),
             title = command.title,
-            excerpt = originalPostDto.translations.first { it.language == command.language }.excerpt,
+            excerpt = command.excerpt,
             content = command.content
         )
 
         val post = Post.fromCommand(
             id = command.id,
-            slug = originalPostDto.slug,
+            slug = command.slug,
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
             translations = listOf(translation)

@@ -4,7 +4,14 @@ import {
   createUpdatePostSchema,
 } from '@/schemas/post'
 import { usePostForm } from '@/hooks/post/usePostForm'
-import { Card, CardBody, Input, Select, SelectItem } from '@nextui-org/react'
+import {
+  Card,
+  CardBody,
+  Input,
+  Select,
+  SelectItem,
+  Textarea,
+} from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
 import React, { useEffect } from 'react'
@@ -108,6 +115,32 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
+            {mode === 'update' && (
+              <>
+                <Input
+                  {...register('slug')}
+                  label={t(currentLanguage, 'post.form.slug')}
+                  placeholder={t(
+                    currentLanguage,
+                    'post.form.placeholders.slug'
+                  )}
+                  isInvalid={!!errors.slug}
+                  errorMessage={errors?.slug?.message}
+                />
+                <Textarea
+                  {...register('excerpt')}
+                  label={t(currentLanguage, 'post.form.excerpt')}
+                  placeholder={t(
+                    currentLanguage,
+                    'post.form.placeholders.excerpt'
+                  )}
+                  isInvalid={!!errors.excerpt}
+                  errorMessage={errors?.excerpt?.message}
+                  minRows={6}
+                  maxRows={5}
+                />
+              </>
+            )}
             <div className="mt-4 border-t pt-4">
               <h3 className="text-md font-semibold mb-2">
                 {t(currentLanguage, 'post.preview')} {textLength}

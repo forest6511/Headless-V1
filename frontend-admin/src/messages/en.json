@@ -114,9 +114,13 @@
       "hashtag": "Hashtag",
       "category": "Category",
       "status": "Status",
+      "slug": "Slug",
+      "excerpt": "Excerpt",
       "placeholders": {
         "title": "Enter post title",
-        "hashtag": "Enter comma-separated hashtags with #, e.g. #beauty, #diet"
+        "hashtag": "Enter comma-separated hashtags with #, e.g. #beauty, #diet",
+        "slug": "Used as part of the URL",
+        "excerpt": "Enter a summary of the article"
       }
     },
     "toast": {
@@ -146,6 +150,14 @@
       },
       "tags": {
         "format": "Tags must be in #alphanumeric format, comma-separated, max 3 tags"
+      },
+      "slug": {
+        "required": "Slug is required",
+        "tooLong": "Slug must be 255 characters or less"
+      },
+      "excerpt": {
+        "required": "Excerpt is required",
+        "tooLong": "Excerpt must be 500 characters or less"
       }
     },
     "preview": "Preview - Character count:"

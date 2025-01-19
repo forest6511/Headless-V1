@@ -42,13 +42,12 @@ class GeminiTranslationService(
 
     override fun summarizeContent(content: String, language: String): Result<String> {
         logger.debug("Starting summarization process")
-
+        // コンテンツの要約は、翻訳ではなく同じ言語で要約するのみ
         val prompt = when (language) {
-            LanguageConstants.JA -> TranslationEnPrompts.createSummaryPrompt(content)
-            LanguageConstants.EN -> TranslationJaPrompts.createSummaryPrompt(content)
+            LanguageConstants.JA -> TranslationJaPrompts.createSummaryPrompt(content)
+            LanguageConstants.EN -> TranslationEnPrompts.createSummaryPrompt(content)
             else -> throw IllegalArgumentException("Unsupported language: $language")
         }
-
         return try {
             geminiClient.generateContent(prompt).also {
                 logger.debug("Summarization completed successfully")

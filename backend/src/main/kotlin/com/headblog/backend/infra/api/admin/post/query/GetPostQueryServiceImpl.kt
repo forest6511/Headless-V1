@@ -120,7 +120,8 @@ class GetPostQueryServiceImpl(
                 categoryRepository.findByIdAndLanguage(id, language)?.let { category ->
                     CategoryPathDto(
                         slug = category.slug,
-                        name = category.translations.first().name
+                        name = category.translations.first().name,
+                        description = category.translations.first().description,
                     )
                 }
             }

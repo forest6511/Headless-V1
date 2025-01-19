@@ -38,7 +38,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
       StarterKit.configure({
         history: {
           depth: 100,
-          newGroupDelay: 500
+          newGroupDelay: 500,
         },
         paragraph: {
           HTMLAttributes: {
@@ -153,7 +153,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
   return (
     <div className="flex flex-col h-full">
       {editor && (
-        <div className="sticky top-0 z-[100] bg-white shadow-sm">
+        <div className="sticky top-0 z-[10] bg-white/100 shadow-sm backdrop-blur-sm">
           <Toolbar editor={editor} />
         </div>
       )}

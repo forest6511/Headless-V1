@@ -30,4 +30,12 @@ data class UpdatePostRequest(
     val categoryId: UUID,
 
     val tagNames: Set<String> = emptySet(),
+
+    @field:NotBlank(message = "Slug is required")
+    @field:Size(max = 255, message = "Slug must be less than 255 characters")
+    val slug: String,
+
+    @field:NotBlank(message = "Excerpt is required")
+    @field:Size(max = 500, message = "Excerpt must be less than 500 characters")
+    val excerpt: String,
 )

@@ -56,7 +56,9 @@ class UpdatePostServiceTest {
             status = "PUBLISHED",
             featuredImageId = null,
             categoryId = category.id.value,
-            tagNames = emptySet()
+            tagNames = emptySet(),
+            slug = "update-slug",
+            excerpt = "更新後の要約"
         )
 
         // WHEN
@@ -65,9 +67,10 @@ class UpdatePostServiceTest {
         // THEN
         val updatedPost = postRepository.findById(postId)
         assertNotNull(updatedPost)
-        assertEquals(originalPost.slug.value, checkNotNull(updatedPost).slug)
+        assertEquals("update-slug", checkNotNull(updatedPost).slug)
         val updatedTranslation = updatedPost.translations.first()
         assertEquals("更新後のタイトル", updatedTranslation.title)
+        assertEquals("更新後の要約", updatedTranslation.excerpt)
     }
 
     @Test
@@ -88,7 +91,9 @@ class UpdatePostServiceTest {
             status = "PUBLISHED",
             featuredImageId = null,
             categoryId = category.id.value,
-            tagNames = newTagNames
+            tagNames = newTagNames,
+            slug = "test-tag-slug",
+            excerpt = "要約"
         )
 
         // WHEN

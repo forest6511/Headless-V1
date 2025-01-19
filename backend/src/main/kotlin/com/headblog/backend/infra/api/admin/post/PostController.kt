@@ -95,6 +95,8 @@ class PostController(
             featuredImageId = this.featuredImageId,
             categoryId = this.categoryId,
             tagNames = this.tagNames,
+            excerpt = this.excerpt,
+            slug = this.slug,
         )
     }
 }

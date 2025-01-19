@@ -30,15 +30,17 @@ export function TagList({ tags, category, lang }: TagListProps) {
           {categoryName}
         </Link>
       )}
-      {tags.map((tag) => (
-        <Link
-          key={tag}
-          href={`/tag/${tag}`}
-          className="text-sm text-muted-foreground hover:text-blue-600"
-        >
-          #{tag}
-        </Link>
-      ))}
+      {tags
+        .map((tag) => tag.replace(/^#+/, ''))
+        .map((tag) => (
+          <Link
+            key={tag}
+            href={`/tags/${tag}`}
+            className="text-sm text-muted-foreground hover:text-blue-600"
+          >
+            #{tag}
+          </Link>
+        ))}
     </div>
   )
 }

@@ -1,6 +1,5 @@
 package com.headblog.backend.infra.api.client.post.response
 
-
 data class PostDetailClientResponse(
     val slug: String,
     val title: String,

@@ -106,7 +106,8 @@ class GetClientCategoryArticlesQueryServiceImpl(
                 categoryRepository.findByIdAndLanguage(id, language)?.run {
                     CategoryPathDto(
                         slug = slug,
-                        name = firstTranslation.name
+                        name = firstTranslation.name,
+                        description = firstTranslation.description,
                     )
                 }
             }

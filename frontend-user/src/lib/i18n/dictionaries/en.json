@@ -4,6 +4,7 @@
   },
   "common": {
     "home": "Home",
+    "articles": "Articles",
     "notFound": "Article not found",
     "lastUpdated": "Last updated",
     "fetchError": "Failed to fetch articles. Please try again later."

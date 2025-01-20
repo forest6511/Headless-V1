@@ -4,9 +4,9 @@ import { Inter } from 'next/font/google'
 import '@/app/globals.css'
 import { MainNav } from '@/components/features/navigation'
 import { LeftSidebar } from '@/components/layouts/sidebar/left-sidebar'
-import React from 'react'
+import type React from 'react'
 import { getMetadata } from '@/lib/metadata'
-import { type Locale } from '@/types/i18n'
+import type { Locale } from '@/types/i18n'
 import { getCategories } from '@/lib/api/category'
 
 // Inter フォントの設定（Latin文字サブセット、スワップ表示）
@@ -62,22 +62,22 @@ export default async function RootLayout(props: RootLayoutProps) {
 
           {/* メインコンテンツ */}
           <div className="flex-1 flex flex-col">
-            <div className="mx-auto w-full max-w-[1440px]">
-              <div className="flex">
+            {/* 全体の横幅 */}
+            <div className="mx-auto w-full max-w-[1150px]">
+              {/* フレックスコンテナにパディングを追加 */}
+              <div className="flex px-4 sm:px-6 lg:px-8">
                 {/* サイドバー */}
-                <aside>
+                <aside className="hidden md:block w-64 flex-shrink-0">
                   <LeftSidebar inLayout categories={categories} lang={lang} />
                 </aside>
 
                 {/* メインコンテンツエリア */}
-                <main role="main" className="flex-1 min-w-0">
-                  <div className="px-0 sm:px-4">{children}</div>
+                <main
+                  role="main"
+                  className="flex-1 min-w-0 max-w-full lg:max-w-[720px] xl:max-w-[800px]"
+                >
+                  <div className="px-0 sm:px-4 lg:px-5">{children}</div>
                 </main>
-
-                {/* 将来の右サイドバー実装用にコメントを残す */}
-                {/*<aside className="hidden lg:block">*/}
-                {/*  <RightSidebar />*/}
-                {/*</aside>*/}
               </div>
             </div>
           </div>

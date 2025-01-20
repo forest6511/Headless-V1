@@ -12,7 +12,7 @@ interface MainNavProps {
 
 export function MainNav({ categories, lang }: MainNavProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-background shadow-md">
       <div className="mx-auto max-w-[1440px] px-4">
         <div className="flex h-14 items-center gap-4">
           <MobileMenu categories={categories} lang={lang} />

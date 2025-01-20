@@ -18,6 +18,10 @@ https://github.com/user-attachments/assets/7a475d40-6e16-4edd-8816-e326978aa383
 
 *Click the thumbnail to view the demo video.*
 
+## Headless Blog Output Sample
+
+Check out a sample of a headless blog powered by this project at the following link:  
+[https://miwara.com/](https://miwara.com/)
 
 ## Setup Instructions
 ### 1. Clone the Repository

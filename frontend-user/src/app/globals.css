@@ -175,5 +175,11 @@ blockquote.cms {
 }
 
 img.cms {
-  /* TODO */
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  width: 100%;
 }

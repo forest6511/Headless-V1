@@ -31,8 +31,12 @@ class MediaController(
     fun create(
         httpServletRequest: HttpServletRequest,
         @RequestParam("file") file: MultipartFile,
+        @RequestParam("language", required = true) language: String,
+        @RequestParam("title", required = true) title: String,
         @AuthenticationPrincipal user: User
     ): MediaResponse {
+        // TODO
+        logger.info("Media upload request - language: {}, title: {}", language, title)
         val command = CreateMediaCommand(file, user)
         return createMediaUseCase.execute(command)
     }

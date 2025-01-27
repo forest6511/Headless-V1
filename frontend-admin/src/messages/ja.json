@@ -175,6 +175,12 @@
     "search": "メディアを検索",
     "upload": {
       "title": "新しいメディアファイルを追加",
+      "validation": {
+        "titleRequired": "タイトルは必須です",
+        "titleTooLong": "タイトルは50文字以内で入力してください"
+      },
+      "titleLabel": "タイトル",
+      "titlePlaceholder": "画像のタイトルを入力してください",
       "dropzone": {
         "text": "ファイルをドロップしてアップロード",
         "or": "または",

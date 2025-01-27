@@ -94,7 +94,7 @@ export function MediaUploadModal({
     e.preventDefault()
     setIsDragging(false)
     const files = Array.from(e.dataTransfer.files)
-    handleFiles(files)
+    void handleFiles(files)
   }
 
   return (
@@ -139,7 +139,7 @@ export function MediaUploadModal({
                     accept={ALLOWED_TYPES.join(',')}
                     onChange={(e) => {
                       const files = Array.from(e.target.files || [])
-                      handleFiles(files)
+                      void handleFiles(files)
                     }}
                   />
                   <Button

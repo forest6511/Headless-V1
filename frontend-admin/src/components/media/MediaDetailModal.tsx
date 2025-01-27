@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Button as NextUiButton } from '@nextui-org/react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { MediaFile } from '@/types/api/media/types'
+import type { MediaFile } from '@/types/api/media/types'
 import { Copy } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { t } from '@/lib/translations'
+import { useState } from 'react'
+import { ImageModal } from './ImageModal'
 
 interface MediaDetailModalProps {
   file: MediaFile | null
@@ -24,6 +26,7 @@ export function MediaDetailModal({
   onOpenChangeAction,
 }: MediaDetailModalProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   if (!file) return null
 
@@ -33,6 +36,10 @@ export function MediaDetailModal({
       duration: 3000,
       position: 'bottom-right',
     })
+  }
+
+  const handleImageClick = (url: string) => {
+    setSelectedImage(url)
   }
 
   const formatFileSize = (size: number) => {
@@ -58,11 +65,12 @@ export function MediaDetailModal({
                   {t(currentLanguage, 'media.detail.thumbnail')}
                 </p>
                 <img
-                  src={file.thumbnailUrl}
+                  src={file.thumbnailUrl || '/placeholder.svg'}
                   alt={t(currentLanguage, 'media.detail.thumbnail')}
                   width={100}
                   height={100}
-                  className="object-cover rounded mt-1"
+                  className="object-cover rounded mt-1 cursor-pointer"
+                  onClick={() => handleImageClick(file.thumbnailUrl)}
                 />
               </div>
               <div>
@@ -70,11 +78,12 @@ export function MediaDetailModal({
                   {t(currentLanguage, 'media.detail.small')}
                 </p>
                 <img
-                  src={file.smallUrl}
+                  src={file.smallUrl || '/placeholder.svg'}
                   alt={t(currentLanguage, 'media.detail.small')}
                   width={100}
                   height={100}
-                  className="object-cover rounded mt-1"
+                  className="object-cover rounded mt-1 cursor-pointer"
+                  onClick={() => handleImageClick(file.smallUrl)}
                 />
               </div>
               <div>
@@ -82,11 +91,12 @@ export function MediaDetailModal({
                   {t(currentLanguage, 'media.detail.medium')}
                 </p>
                 <img
-                  src={file.mediumUrl}
+                  src={file.mediumUrl || '/placeholder.svg'}
                   alt={t(currentLanguage, 'media.detail.medium')}
                   width={100}
                   height={100}
-                  className="object-cover rounded mt-1"
+                  className="object-cover rounded mt-1 cursor-pointer"
+                  onClick={() => handleImageClick(file.mediumUrl)}
                 />
               </div>
             </div>
@@ -193,6 +203,11 @@ export function MediaDetailModal({
             </div>
           </div>
         </div>
+        <ImageModal
+          imageUrl={selectedImage}
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
       </DialogContent>
     </Dialog>
   )

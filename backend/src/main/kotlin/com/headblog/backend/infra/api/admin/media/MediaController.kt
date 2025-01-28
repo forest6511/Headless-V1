@@ -35,9 +35,7 @@ class MediaController(
         @RequestParam("title", required = true) title: String,
         @AuthenticationPrincipal user: User
     ): MediaResponse {
-        // TODO
-        logger.info("Media upload request - language: {}, title: {}", language, title)
-        val command = CreateMediaCommand(file, user)
+        val command = CreateMediaCommand(file, user, language, title)
         return createMediaUseCase.execute(command)
     }
 

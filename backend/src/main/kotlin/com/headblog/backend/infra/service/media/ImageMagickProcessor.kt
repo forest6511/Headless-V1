@@ -31,8 +31,8 @@ class ImageMagickProcessor : ImageProcessor {
         input: InputStream,
         format: String
     ): ByteArray {
+        // サイズ指定なし。変換のみ
         return processImageInternal(input, format) {
-            // サイズ指定なし。変換のみ
         }
     }
 

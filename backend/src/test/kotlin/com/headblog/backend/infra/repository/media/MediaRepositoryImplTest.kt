@@ -1,13 +1,16 @@
 package com.headblog.backend.infra.repository.media
 
+import com.headblog.backend.domain.model.media.Language
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
+import com.headblog.backend.domain.model.media.Translation
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
 import com.headblog.backend.domain.model.user.UserRole
+import com.headblog.backend.shared.constants.LanguageConstants
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import java.time.LocalDateTime
@@ -70,11 +73,23 @@ class MediaRepositoryImplTest {
             assertTrue(currentId > nextId, "ID should be in descending order")
         }
 
-        assertEquals("Test Media 10", mediasWithoutLastItem[0].title)
-        assertEquals("Test Media 9", mediasWithoutLastItem[1].title)
-        assertEquals("Test Media 8", mediasWithoutLastItem[2].title)
-        assertEquals("Test Media 7", mediasWithoutLastItem[3].title)
-        assertEquals("Test Media 6", mediasWithoutLastItem[4].title)
+        mediasWithoutLastItem.forEachIndexed { index, media ->
+            val mediaNumber = 10 - index
+            assertEquals("test-$mediaNumber", media.title)
+            assertEquals(2, media.translations.size)
+
+            // 日本語の翻訳を確認
+            assertTrue(media.translations.any { translation ->
+                translation.language == LanguageConstants.JA &&
+                        translation.title == "test-$mediaNumber"
+            })
+
+            // 英語の翻訳を確認
+            assertTrue(media.translations.any { translation ->
+                translation.language == LanguageConstants.EN &&
+                        translation.title == "test-$mediaNumber"
+            })
+        }
     }
 
     @Test
@@ -118,9 +133,24 @@ class MediaRepositoryImplTest {
         // Then
         assertNotNull(lastPage)
         assertEquals(3, lastPage.size)
-        assertEquals("Test Media 3", lastPage[0].title)
-        assertEquals("Test Media 2", lastPage[1].title)
-        assertEquals("Test Media 1", lastPage[2].title)
+
+        lastPage.forEachIndexed { index, media ->
+            val mediaNumber = 3 - index
+            assertEquals("test-$mediaNumber", media.title)
+            assertEquals(2, media.translations.size)
+
+            // 日本語の翻訳を確認
+            assertTrue(media.translations.any { translation ->
+                translation.language == LanguageConstants.JA &&
+                        translation.title == "test-$mediaNumber"
+            })
+
+            // 英語の翻訳を確認
+            assertTrue(media.translations.any { translation ->
+                translation.language == LanguageConstants.EN &&
+                        translation.title == "test-$mediaNumber"
+            })
+        }
     }
 
     @Test
@@ -174,20 +204,24 @@ class MediaRepositoryImplTest {
         return (1..count).map { i ->
             val media = Media.create(
                 idGenerator = idGenerator,
-                title = "Test Media $i",
-                altText = "Alternative text $i",
                 uploadedBy = userId,
                 thumbnail = MediaSize(
                     url = "thumbnail-$i.jpg",
                     size = 100L * i
                 ),
-                small = MediaSize(
-                    url = "small-$i.jpg",
-                    size = 300L * i
-                ),
                 medium = MediaSize(
                     url = "medium-$i.jpg",
                     size = 800L * i
+                ),
+                translations = listOf(
+                    Translation(
+                        Language.of(LanguageConstants.JA),
+                        "test-$i"
+                    ),
+                    Translation(
+                        Language.of(LanguageConstants.EN),
+                        "test-$i"
+                    )
                 )
             )
             mediaRepository.save(media)

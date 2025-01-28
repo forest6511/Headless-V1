@@ -61,32 +61,47 @@ COMMENT ON COLUMN refresh_tokens.created_at IS 'Timestamp when the refresh token
 -- Media table
 CREATE TABLE medias
 (
-    id             uuid PRIMARY KEY,
-    title          varchar(255),
-    alt_text       varchar(255),
-    uploaded_by    uuid REFERENCES users (id),
+    id           uuid PRIMARY KEY,
+    title        varchar(255),
+    uploaded_by  uuid REFERENCES users (id),
     thumbnail_url  varchar(255) NOT NULL,
     thumbnail_size bigint       NOT NULL,
-    small_url      varchar(255) NOT NULL,
-    small_size     bigint       NOT NULL,
-    medium_url     varchar(255) NOT NULL,
-    medium_size    bigint       NOT NULL,
-    created_at     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    medium_url   varchar(255) NOT NULL,
+    medium_size  bigint       NOT NULL,
+    created_at   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE medias IS 'Table for storing media files like images and videos with multiple size URLs and their sizes';
 
 COMMENT ON COLUMN medias.id IS 'Unique identifier for each media file';
 COMMENT ON COLUMN medias.title IS 'Optional title or description for the media file';
-COMMENT ON COLUMN medias.alt_text IS 'Alternative text for the media file, used for accessibility or when the image cannot be displayed';
 COMMENT ON COLUMN medias.uploaded_by IS 'UUID of the user who uploaded the media file, referencing the users table';
-COMMENT ON COLUMN medias.thumbnail_url IS 'URL of the thumbnail version of the media file';
-COMMENT ON COLUMN medias.thumbnail_size IS 'File size of the thumbnail version in bytes';
-COMMENT ON COLUMN medias.small_url IS 'URL of the small version of the media file';
-COMMENT ON COLUMN medias.small_size IS 'File size of the small version in bytes';
 COMMENT ON COLUMN medias.medium_url IS 'URL of the medium version of the media file';
 COMMENT ON COLUMN medias.medium_size IS 'File size of the medium version in bytes';
 COMMENT ON COLUMN medias.created_at IS 'Timestamp when the media file was uploaded';
+
+-- Media Translations table
+CREATE TABLE media_translations
+(
+    media_id    uuid       NOT NULL,
+    language    varchar(5) NOT NULL,
+    title       varchar(255),
+    description varchar(255),
+    created_at  timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- 複合主キーとする (同じ media_id + language の組み合わせは1つだけ)
+    PRIMARY KEY (media_id, language),
+    FOREIGN KEY (media_id) REFERENCES medias (id)
+);
+
+COMMENT ON TABLE media_translations IS 'Table for storing translations for media titles and descriptions';
+
+COMMENT ON COLUMN media_translations.media_id IS 'Reference to the media file in the medias table';
+COMMENT ON COLUMN media_translations.language IS 'Language code for the translation (e.g., en, ja)';
+COMMENT ON COLUMN media_translations.title IS 'Translated title for the media file';
+COMMENT ON COLUMN media_translations.description IS 'Translated description for the media file';
+COMMENT ON COLUMN media_translations.created_at IS 'Timestamp when the translation was created';
+COMMENT ON COLUMN media_translations.updated_at IS 'Timestamp when the translation was last updated';
 
 -- Posts table
 CREATE TABLE posts
@@ -156,7 +171,7 @@ CREATE TABLE category_translations
     description  varchar(255),
     created_at   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    -- 複合主キーとする (同じ post_id + language の組み合わせは1つだけ)
+    -- 複合主キーとする (同じ category_id + language の組み合わせは1つだけ)
     PRIMARY KEY (category_id, language),
     FOREIGN KEY (category_id) REFERENCES categories (id)
 );
@@ -251,6 +266,11 @@ ALTER TABLE post_translations
 ALTER TABLE category_translations
     ADD CONSTRAINT fk_category_translations_categories FOREIGN KEY (category_id)
     REFERENCES categories (id) ON DELETE CASCADE;
+
+-- 外部キー制約を追加 (medias.id を参照)。メディアが削除されたら翻訳も削除される
+ALTER TABLE media_translations
+    ADD CONSTRAINT fk_media_translations_medias FOREIGN KEY (media_id)
+        REFERENCES medias (id) ON DELETE CASCADE;
 
 -- Insert the specified data into the categories table
 INSERT INTO categories (

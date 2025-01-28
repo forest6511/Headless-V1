@@ -6,6 +6,7 @@ import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.infra.api.admin.media.response.MediaListResponse
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
+import com.headblog.backend.infra.api.admin.media.response.TranslationResponse
 import com.headblog.backend.infra.api.admin.media.response.withFullUrls
 import com.headblog.backend.infra.config.StorageProperties
 import java.util.*
@@ -39,16 +40,18 @@ class GetMediaServiceImpl(
         val mediaDtoList = mediaList.map { mediaDto ->
             MediaResponse(
                 id = mediaDto.id,
-                title = mediaDto.title,
-                altText = mediaDto.altText,
                 uploadedBy = mediaDto.uploadedBy,
                 thumbnailUrl = mediaDto.thumbnailUrl,
                 thumbnailSize = mediaDto.thumbnailSize,
-                smallUrl = mediaDto.smallUrl,
-                smallSize = mediaDto.smallSize,
                 mediumUrl = mediaDto.mediumUrl,
                 mediumSize = mediaDto.mediumSize,
-                createdAt = mediaDto.createdAt
+                createdAt = mediaDto.createdAt,
+                translations = mediaDto.translations.map {
+                    TranslationResponse(
+                        language = it.language,
+                        title = it.title,
+                    )
+                }
             ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
         }
 

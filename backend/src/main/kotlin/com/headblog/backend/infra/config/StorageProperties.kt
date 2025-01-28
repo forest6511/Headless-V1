@@ -26,7 +26,6 @@ data class StorageProperties(
     ) {
         data class ImageSizes(
             val thumbnail: ImageSize,
-            val small: ImageSize,
             val medium: ImageSize
         ) {
             data class ImageSize(

@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Button as NextUiButton } from '@nextui-org/react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { MediaFile } from '@/types/api/media/types'
+import type { MediaFile } from '@/types/api/media/types'
 import { Copy } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { t } from '@/lib/translations'
+import { useState } from 'react'
+import { ImageModal } from './ImageModal'
 
 interface MediaDetailModalProps {
   file: MediaFile | null
@@ -24,6 +26,7 @@ export function MediaDetailModal({
   onOpenChangeAction,
 }: MediaDetailModalProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   if (!file) return null
 
@@ -33,6 +36,10 @@ export function MediaDetailModal({
       duration: 3000,
       position: 'bottom-right',
     })
+  }
+
+  const handleImageClick = (url: string) => {
+    setSelectedImage(url)
   }
 
   const formatFileSize = (size: number) => {
@@ -58,23 +65,12 @@ export function MediaDetailModal({
                   {t(currentLanguage, 'media.detail.thumbnail')}
                 </p>
                 <img
-                  src={file.thumbnailUrl}
+                  src={file.thumbnailUrl || '/placeholder.svg'}
                   alt={t(currentLanguage, 'media.detail.thumbnail')}
                   width={100}
                   height={100}
-                  className="object-cover rounded mt-1"
-                />
-              </div>
-              <div>
-                <p className="text-sm font-medium">
-                  {t(currentLanguage, 'media.detail.small')}
-                </p>
-                <img
-                  src={file.smallUrl}
-                  alt={t(currentLanguage, 'media.detail.small')}
-                  width={100}
-                  height={100}
-                  className="object-cover rounded mt-1"
+                  className="object-cover rounded mt-1 cursor-pointer"
+                  onClick={() => handleImageClick(file.thumbnailUrl)}
                 />
               </div>
               <div>
@@ -82,11 +78,12 @@ export function MediaDetailModal({
                   {t(currentLanguage, 'media.detail.medium')}
                 </p>
                 <img
-                  src={file.mediumUrl}
+                  src={file.mediumUrl || '/placeholder.svg'}
                   alt={t(currentLanguage, 'media.detail.medium')}
                   width={100}
                   height={100}
-                  className="object-cover rounded mt-1"
+                  className="object-cover rounded mt-1 cursor-pointer"
+                  onClick={() => handleImageClick(file.mediumUrl)}
                 />
               </div>
             </div>
@@ -107,10 +104,6 @@ export function MediaDetailModal({
                 {formatFileSize(file.thumbnailSize)}
               </p>
               <p className="text-sm text-muted-foreground">
-                {t(currentLanguage, 'media.detail.smallSize')}:{' '}
-                {formatFileSize(file.smallSize)}
-              </p>
-              <p className="text-sm text-muted-foreground">
                 {t(currentLanguage, 'media.detail.mediumSize')}:{' '}
                 {formatFileSize(file.mediumSize)}
               </p>
@@ -120,14 +113,12 @@ export function MediaDetailModal({
               <label className="text-sm font-medium">
                 {t(currentLanguage, 'media.detail.fileTitle')}
               </label>
-              <Input defaultValue={file.title} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">
-                {t(currentLanguage, 'media.detail.altText')}
-              </label>
-              <Textarea defaultValue={file.altText} />
+              <Input
+                defaultValue={
+                  file.translations.find((t) => t.language === currentLanguage)
+                    ?.title || ''
+                }
+              />
             </div>
 
             <div className="space-y-2">
@@ -144,22 +135,6 @@ export function MediaDetailModal({
                   variant="outline"
                   size="icon"
                   onClick={() => handleCopyUrl(file.thumbnailUrl)}
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">
-                {t(currentLanguage, 'media.detail.smallUrl')}
-              </label>
-              <div className="flex gap-2">
-                <Input value={file.smallUrl} readOnly className="bg-gray-100" />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleCopyUrl(file.smallUrl)}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -193,6 +168,11 @@ export function MediaDetailModal({
             </div>
           </div>
         </div>
+        <ImageModal
+          imageUrl={selectedImage}
+          isOpen={!!selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
       </DialogContent>
     </Dialog>
   )

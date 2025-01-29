@@ -5,5 +5,7 @@ import org.springframework.web.multipart.MultipartFile
 
 data class CreateMediaCommand(
     val file: MultipartFile,
-    val user: User
+    val user: User,
+    val language: String,
+    val title: String,
 )

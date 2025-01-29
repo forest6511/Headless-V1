@@ -70,9 +70,6 @@ storage:
       thumbnail:
         width: 150
         height: 150
-      small:
-        width: 300
-        height: 300
       medium:
         width: 1024
         height: 1024

@@ -6,51 +6,41 @@ import com.headblog.backend.shared.id.domain.IdGenerator
 
 class Media private constructor(
     val id: MediaId,
-    val title: String?,
-    val altText: String?,
     val uploadedBy: UserId,
     val thumbnail: MediaSize,
-    val small: MediaSize,
-    val medium: MediaSize
+    val medium: MediaSize,
+    val translations: List<Translation>
 ) {
     companion object {
         fun create(
             idGenerator: IdGenerator<EntityId>,
-            title: String?,
-            altText: String?,
             uploadedBy: UserId,
             thumbnail: MediaSize,
-            small: MediaSize,
-            medium: MediaSize
+            medium: MediaSize,
+            translations: List<Translation>
         ): Media {
             return Media(
                 id = MediaId(idGenerator.generate().value),
-                title = title,
-                altText = altText,
                 uploadedBy = uploadedBy,
                 thumbnail = thumbnail,
-                small = small,
-                medium = medium
+                medium = medium,
+                translations = translations,
             )
         }
 
         fun createWithId(
             id: MediaId,
-            title: String?,
-            altText: String?,
             uploadedBy: UserId,
             thumbnail: MediaSize,
-            small: MediaSize,
-            medium: MediaSize
+            medium: MediaSize,
+            translations: List<Translation>
         ): Media {
             return Media(
                 id = id,
-                title = title,
-                altText = altText,
                 uploadedBy = uploadedBy,
                 thumbnail = thumbnail,
-                small = small,
-                medium = medium
+                medium = medium,
+                translations = translations,
             )
         }
     }

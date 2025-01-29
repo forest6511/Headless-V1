@@ -14,6 +14,7 @@ import {
   Underline,
   Undo2,
   Redo2,
+  ImagePlus,
 } from 'lucide-react'
 
 import {
@@ -32,6 +33,8 @@ import {
 import { useState } from 'react'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { t } from '@/lib/translations'
+import { MediaFile } from '@/types/api/media/types'
+import { MediaSelectModal } from '@/components/tiptap/MediaSelectModal'
 
 const HIGHLIGHT_COLORS = [
   { label: 'Yellow', value: '#fef08a' },
@@ -85,6 +88,24 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       setLinkText('')
       onLinkClose()
     }
+  }
+
+  const {
+    isOpen: isMediaOpen,
+    onOpen: onMediaOpen,
+    onClose: onMediaClose,
+  } = useDisclosure()
+  const handleMediaSelect = (file: MediaFile) => {
+    editor
+      .chain()
+      .focus()
+      .setImage({
+        src: file.mediumUrl,
+        alt:
+          file.translations.find((t) => t.language === currentLanguage)
+            ?.title || '',
+      })
+      .run()
   }
 
   return (
@@ -164,6 +185,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         <ListOrdered size={20} />
       </button>
 
+      {/*
       <button
         type="button"
         onClick={onOpen}
@@ -209,6 +231,7 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      */}
 
       <button
         type="button"
@@ -273,6 +296,21 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       >
         <Quote size={20} />
       </button>
+
+      {/* メディアを選択 */}
+      <button
+        type="button"
+        onClick={onMediaOpen}
+        className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+        aria-label="メディアを選択"
+      >
+        <ImagePlus size={20} />
+      </button>
+      <MediaSelectModal
+        isOpen={isMediaOpen}
+        onClose={onMediaClose}
+        onSelect={handleMediaSelect}
+      />
 
       <Popover placement="bottom">
         <PopoverTrigger>

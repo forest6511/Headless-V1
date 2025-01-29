@@ -34,8 +34,9 @@ class CategoryQueryServiceImpl(
                 breadcrumbs = generateBreadcrumbs(category, categoryMap)
             )
         }
-        return categoryList.sortedWith(compareBy(
-            { it.slug != Slug.DEFAULT_SLUG },   // 1. "未設定" (DEFAULT_SLUG) のカテゴリを最初に
+        return categoryList.sortedWith(
+            compareBy(
+                { it.slug != Slug.DEFAULT_SLUG },   // 1. "未設定" (DEFAULT_SLUG) のカテゴリを最初に
             { it.breadcrumbs.first().id },      // 2. パンくずの親カテゴリ順
             { it.parentId }                     // 3. 子カテゴリが存在しないカテゴリを最初に
         ))

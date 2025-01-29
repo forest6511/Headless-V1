@@ -1,3 +1,4 @@
+// MediaListView.tsx
 'use client'
 
 import { MediaFile } from '@/types/api/media/types'
@@ -13,13 +14,11 @@ import { formatFileSize } from '@/lib/utils/media'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { createMediaListColumns } from '@/config/constants'
 
-// ListViewコンポーネントのプロパティの型定義
 interface ListViewProps {
   files: MediaFile[]
   onFileSelectAction: (file: MediaFile) => void
 }
 
-// リスト表示用のコンポーネント
 export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
   const columns = createMediaListColumns(currentLanguage)
@@ -44,7 +43,11 @@ export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
               <TableCell>
                 <img
                   src={file.thumbnailUrl}
-                  alt={file.title || ''}
+                  alt={
+                    file.translations.find(
+                      (t) => t.language === currentLanguage
+                    )?.title || ''
+                  }
                   width={50}
                   height={50}
                   className="object-cover rounded"
@@ -53,12 +56,16 @@ export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
                   fetchPriority="low"
                 />
               </TableCell>
-              <TableCell>{file.title}</TableCell>
+              <TableCell>
+                {
+                  file.translations.find((t) => t.language === currentLanguage)
+                    ?.title
+                }
+              </TableCell>
               <TableCell>
                 {new Date(file.createdAt).toLocaleDateString('ja-JP')}
               </TableCell>
               <TableCell>{formatFileSize(file.thumbnailSize)}</TableCell>
-              <TableCell>{formatFileSize(file.smallSize)}</TableCell>
               <TableCell>{formatFileSize(file.mediumSize)}</TableCell>
             </TableRow>
           ))}

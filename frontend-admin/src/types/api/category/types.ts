@@ -17,17 +17,6 @@ export interface UpdateCategoryFormProps extends CategoryFormCommonProps {
   initialData: UpdateCategoryData
 }
 
-export const formatCategoryOptions = (
-  categories: CategoryListResponse[],
-  language: string
-) =>
-  categories.map((category) => ({
-    key: category.id,
-    label:
-      category.translations.find((t) => t.language === language.toString())
-        ?.name ?? '',
-  }))
-
 export const formatCategoryOptionsWithoutNoSetting = (
   categories: CategoryListResponse[],
   language: string

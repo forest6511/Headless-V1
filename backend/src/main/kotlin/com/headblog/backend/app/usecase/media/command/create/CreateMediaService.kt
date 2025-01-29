@@ -1,13 +1,18 @@
 package com.headblog.backend.app.usecase.media.command.create
 
+import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.domain.model.media.ImageProcessor
+import com.headblog.backend.domain.model.media.Language
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
 import com.headblog.backend.domain.model.media.StorageService
+import com.headblog.backend.domain.model.media.Translation
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
+import com.headblog.backend.infra.api.admin.media.response.TranslationResponse
 import com.headblog.backend.infra.config.StorageProperties
+import com.headblog.backend.shared.constants.LanguageConstants
 import com.headblog.backend.shared.exceptions.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -27,7 +32,8 @@ class CreateMediaService(
     private val mediaRepository: MediaRepository,
     private val imageProcessor: ImageProcessor,
     private val storageService: StorageService,
-    private val storageProperties: StorageProperties
+    private val storageProperties: StorageProperties,
+    private val translationService: TranslationService
 ) : CreateMediaUseCase {
 
     private val logger = LoggerFactory.getLogger(CreateMediaService::class.java)
@@ -54,51 +60,51 @@ class CreateMediaService(
                 storageProperties.media.sizes.thumbnail.width,
                 storageProperties.media.sizes.thumbnail.height
             ),
-            ImageSizeConfig("s", storageProperties.media.sizes.small.width, storageProperties.media.sizes.small.height),
             ImageSizeConfig(
                 "m",
                 storageProperties.media.sizes.medium.width,
                 storageProperties.media.sizes.medium.height
-            )
+            ),
         )
-
         val mediaSizes = sizes.map { sizeConfig ->
             processAndUploadImage(fileBytes, mediaId, sizeConfig, fileName)
         }
 
+        val translations = translateTitle(command.language, command.title)
+
         val media = Media.createWithId(
             id = mediaId,
-            title = null,
-            altText = null,
             uploadedBy = command.user.id,
             thumbnail = mediaSizes[0],
-            small = mediaSizes[1],
-            medium = mediaSizes[2]
+            medium = mediaSizes[1],
+            translations = translations
         )
 
         mediaRepository.save(media)
 
         return MediaResponse(
             id = media.id.value,
-            title = media.title,
-            altText = media.altText,
             uploadedBy = media.uploadedBy.value,
             thumbnailUrl = media.thumbnail.url,
             thumbnailSize = media.thumbnail.size,
-            smallUrl = media.small.url,
-            smallSize = media.small.size,
             mediumUrl = media.medium.url,
             mediumSize = media.medium.size,
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            translations = translations.map {
+                TranslationResponse(
+                    language = it.language.value,
+                    title = it.title,
+                )
+            }
         )
     }
 
     private fun convertToWebpFileName(originalFileName: String): String {
         val extensionIndex = originalFileName.lastIndexOf(".")
         return if (extensionIndex != -1) {
-            originalFileName.substring(0, extensionIndex) + ".webp"
+            originalFileName.substring(0, extensionIndex) + ".$convertFormat"
         } else {
-            "$originalFileName.webp"
+            "$originalFileName.$convertFormat"
         }
     }
 
@@ -155,5 +161,37 @@ class CreateMediaService(
         val currentDate = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("yyyyMM")
         return currentDate.format(formatter)
+    }
+
+
+    private fun translateTitle(language: String, title: String): List<Translation> {
+        val (sourceLang, targetLang) = when (language) {
+            LanguageConstants.JA -> LanguageConstants.JA to LanguageConstants.EN
+            LanguageConstants.EN -> LanguageConstants.EN to LanguageConstants.JA
+            else -> throw AppConflictException("Unsupported language: $language")
+        }
+
+        // 翻訳の生成
+        val translatedTile = translate {
+            translationService.translateTitle(title, targetLang)
+        }
+
+        return listOf(
+            Translation(
+                language = Language.of(sourceLang),
+                title = title,
+            ),
+            Translation(
+                language = Language.of(targetLang),
+                title = translatedTile,
+            )
+        )
+    }
+
+    private fun translate(block: () -> Result<String>): String {
+        return block().getOrElse {
+            logger.error("Translation failed", it)
+            throw AppConflictException("Translation failed")
+        }
     }
 }

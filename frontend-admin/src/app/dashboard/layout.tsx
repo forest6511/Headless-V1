@@ -3,13 +3,19 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import DashboardHeader from '@/components/dashboard/DashboardHeader'
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLanguageStore } from '@/stores/admin/languageStore'
 
 export default function DashboardPageLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    // Zustand persist storeのhydrationを実行
+    useLanguageStore.persist.rehydrate()
+  }, [])
+
   return (
     <DashboardLayout>
       <div className="flex flex-col h-screen">

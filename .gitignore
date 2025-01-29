@@ -11,3 +11,4 @@ ansible/inventory/hosts
 *.retry
 backend-app.log
 backend-app.*
+TODO.md

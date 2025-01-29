@@ -173,8 +173,18 @@
       "uploadDate": "Upload Date"
     },
     "search": "Search Media",
+    "select": {
+      "title": "メディアを選択"
+    },
     "upload": {
+      "submit": "Upload",
       "title": "Add New Media File",
+      "validation": {
+        "titleRequired": "Title is required",
+        "titleTooLong": "Title must be 50 characters or less"
+      },
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter image title",
       "dropzone": {
         "text": "Drop files here to upload",
         "or": "or",

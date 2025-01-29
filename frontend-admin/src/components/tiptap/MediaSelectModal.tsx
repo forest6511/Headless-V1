@@ -1,14 +1,10 @@
 'use client'
 
 import { MediaFile } from '@/types/api/media/types'
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
-} from '@nextui-org/react'
+import { Modal, ModalContent, ModalHeader, ModalBody } from '@nextui-org/react'
 import { useMediaView } from '@/hooks/media/useMediaView'
+import { useLanguageStore } from '@/stores/admin/languageStore'
+import { t } from '@/lib/translations'
 
 interface MediaSelectModalProps {
   isOpen: boolean
@@ -22,6 +18,7 @@ export function MediaSelectModal({
   onSelect,
 }: MediaSelectModalProps) {
   const { files, containerRef, isFetching } = useMediaView(0)
+  const currentLanguage = useLanguageStore((state) => state.language)
 
   const handleSelect = (file: MediaFile) => {
     onSelect(file)
@@ -31,7 +28,7 @@ export function MediaSelectModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalContent>
-        <ModalHeader>メディアを選択</ModalHeader>
+        <ModalHeader>{t(currentLanguage, 'media.select.title')}</ModalHeader>
         <ModalBody>
           <div ref={containerRef} className="h-[60vh] overflow-auto">
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 p-4">
@@ -43,13 +40,21 @@ export function MediaSelectModal({
                 >
                   <img
                     src={file.thumbnailUrl}
-                    alt={file.title || ''}
+                    alt={
+                      file.translations.find(
+                        (t) => t.language === currentLanguage
+                      )?.title || ''
+                    }
                     className="absolute inset-0 w-full h-full object-cover rounded-lg"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
                     <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate">
-                      {file.title}
+                      {
+                        file.translations.find(
+                          (t) => t.language === currentLanguage
+                        )?.title
+                      }
                     </div>
                   </div>
                 </div>

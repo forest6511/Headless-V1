@@ -10,11 +10,12 @@ interface LanguageStore {
 export const useLanguageStore = create<LanguageStore>()(
   persist(
     (set) => ({
-      language: Languages[0].value, // default 'ja'
+      language: Languages[0].value,
       setLanguage: (language) => set({ language }),
     }),
     {
       name: 'language-storage',
+      skipHydration: true, // これを追加
     }
   )
 )

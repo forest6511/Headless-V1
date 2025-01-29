@@ -1,7 +1,8 @@
 'use client'
 
 import { MediaFile } from '@/types/api/media/types'
-// GridViewコンポーネントのプロパティの型定義
+import { useLanguageStore } from '@/stores/admin/languageStore'
+
 interface GridViewProps {
   files: MediaFile[]
   onFileSelectAction: (file: MediaFile) => void
@@ -9,6 +10,8 @@ interface GridViewProps {
 
 // グリッド表示用のコンポーネント
 export function MediaGridView({ files, onFileSelectAction }: GridViewProps) {
+  const currentLanguage = useLanguageStore((state) => state.language)
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-16">
       {files.map((file) => (
@@ -19,7 +22,10 @@ export function MediaGridView({ files, onFileSelectAction }: GridViewProps) {
         >
           <img
             src={file.thumbnailUrl}
-            alt={file.title || ''}
+            alt={
+              file.translations.find((t) => t.language === currentLanguage)
+                ?.title || ''
+            }
             className="absolute inset-0 w-full h-full object-cover rounded-lg"
             loading="lazy"
             decoding="async"
@@ -27,7 +33,10 @@ export function MediaGridView({ files, onFileSelectAction }: GridViewProps) {
           />
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
             <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-sm truncate">
-              {file.title}
+              {
+                file.translations.find((t) => t.language === currentLanguage)
+                  ?.title
+              }
             </div>
           </div>
         </div>

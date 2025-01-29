@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Upload, Loader2 } from 'lucide-react'
+import { Upload, Loader2, X } from 'lucide-react'
 import { apiClient } from '@/lib/api/core/client'
 import { toast } from 'sonner'
 import { ADMIN_API_ENDPOINTS } from '@/config/endpoints'
@@ -55,6 +55,8 @@ export function MediaUploadModal({
 }: MediaUploadModalProps) {
   const currentLanguage = useLanguageStore((state) => state.language)
   const [isDragging, setIsDragging] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
   const [uploadState, setUploadState] = useState<UploadState>({
     status: UploadStatus.IDLE,
     progress: 0,
@@ -76,6 +78,12 @@ export function MediaUploadModal({
 
   const title = watch('title')
 
+  useEffect(() => {
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url))
+    }
+  }, [previews])
+
   const validateFile = (file: File): boolean => {
     if (file.size > MAX_FILE_SIZE) {
       toast.error(t(currentLanguage, 'media.upload.error.size'))
@@ -88,30 +96,20 @@ export function MediaUploadModal({
     return true
   }
 
-  const handleFiles = async (files: File[], formData: MediaUploadData) => {
+  const createPreviews = (files: File[]) => {
+    const newPreviews = files.map((file) => URL.createObjectURL(file))
+    setPreviews((prev) => {
+      prev.forEach((url) => URL.revokeObjectURL(url))
+      return newPreviews
+    })
+  }
+
+  const handleFiles = async (files: File[]) => {
     const validFiles = files.filter(validateFile)
     if (validFiles.length === 0) return
 
-    setUploadState({ status: UploadStatus.UPLOADING, progress: 0 })
-
-    try {
-      for (const file of validFiles) {
-        await apiClient.uploadFile(
-          ADMIN_API_ENDPOINTS.MEDIA.POST,
-          file,
-          formData
-        )
-      }
-
-      setUploadState({ status: UploadStatus.SUCCESS, progress: 100 })
-      toast.success(t(currentLanguage, 'media.upload.success'))
-      onUploadComplete?.()
-      onOpenChangeAction(false)
-      reset({ language: currentLanguage, title: '' })
-    } catch (error) {
-      setUploadState({ status: UploadStatus.ERROR, progress: 0 })
-      toast.error(t(currentLanguage, 'media.upload.error.general'))
-    }
+    setSelectedFiles(validFiles)
+    createPreviews(validFiles)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -127,12 +125,53 @@ export function MediaUploadModal({
     e.preventDefault()
     setIsDragging(false)
     const files = Array.from(e.dataTransfer.files)
-    await handleSubmit((data) => handleFiles(files, data))()
+    await handleFiles(files)
   }
 
   const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    await handleSubmit((data) => handleFiles(files, data))()
+    await handleFiles(files)
+  }
+
+  const removeFile = (index: number) => {
+    const newFiles = [...selectedFiles]
+    newFiles.splice(index, 1)
+    setSelectedFiles(newFiles)
+
+    const newPreviews = [...previews]
+    URL.revokeObjectURL(newPreviews[index])
+    newPreviews.splice(index, 1)
+    setPreviews(newPreviews)
+  }
+
+  const onSubmit = async (formData: MediaUploadData) => {
+    if (selectedFiles.length === 0) {
+      toast.error(t(currentLanguage, 'media.upload.error.noFile'))
+      return
+    }
+
+    setUploadState({ status: UploadStatus.UPLOADING, progress: 0 })
+
+    try {
+      for (const file of selectedFiles) {
+        await apiClient.uploadFile(
+          ADMIN_API_ENDPOINTS.MEDIA.POST,
+          file,
+          formData
+        )
+      }
+
+      setUploadState({ status: UploadStatus.SUCCESS, progress: 100 })
+      toast.success(t(currentLanguage, 'media.upload.success'))
+      onUploadComplete?.()
+      onOpenChangeAction(false)
+      reset({ language: currentLanguage, title: '' })
+      setSelectedFiles([])
+      setPreviews([])
+    } catch (error) {
+      setUploadState({ status: UploadStatus.ERROR, progress: 0 })
+      toast.error(t(currentLanguage, 'media.upload.error.general'))
+    }
   }
 
   return (
@@ -141,7 +180,7 @@ export function MediaUploadModal({
         <DialogHeader>
           <DialogTitle>{t(currentLanguage, 'media.upload.title')}</DialogTitle>
         </DialogHeader>
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="title" className="text-sm font-medium">
               {t(currentLanguage, 'media.upload.titleLabel')}
@@ -166,10 +205,10 @@ export function MediaUploadModal({
 
           <div
             className={`
-              p-8 border-2 border-dashed rounded-lg
-              ${isDragging ? 'border-primary bg-primary/10' : 'border-muted-foreground/25'}
-              ${uploadState.status === UploadStatus.UPLOADING ? 'pointer-events-none' : ''}
-            `}
+             p-8 border-2 border-dashed rounded-lg
+             ${isDragging ? 'border-primary bg-primary/10' : 'border-muted-foreground/25'}
+             ${uploadState.status === UploadStatus.UPLOADING ? 'pointer-events-none' : ''}
+           `}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -201,6 +240,7 @@ export function MediaUploadModal({
                       onChange={handleFileInput}
                     />
                     <Button
+                      type="button"
                       variant="outline"
                       className="mt-2"
                       onClick={() =>
@@ -222,6 +262,44 @@ export function MediaUploadModal({
                 </>
               )}
             </div>
+          </div>
+
+          {/* プレビュー表示エリア */}
+          {previews.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              {previews.map((preview, index) => (
+                <div key={preview} className="relative aspect-square">
+                  <img
+                    src={preview}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+                    onClick={() => removeFile(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              type="submit"
+              disabled={
+                uploadState.status === UploadStatus.UPLOADING ||
+                selectedFiles.length === 0
+              }
+            >
+              {uploadState.status === UploadStatus.UPLOADING ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                t(currentLanguage, 'media.upload.submit')
+              )}
+            </Button>
           </div>
         </form>
       </DialogContent>

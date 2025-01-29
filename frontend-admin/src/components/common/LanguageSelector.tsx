@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import {
   Select,
   SelectTrigger,
@@ -14,10 +15,24 @@ export function LanguageSelector() {
   const language = useLanguageStore((state) => state.language)
   const setLanguage = useLanguageStore((state) => state.setLanguage)
 
+  useEffect(() => {
+    const stored = localStorage.getItem('language-storage')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (parsed.state && parsed.state.language) {
+          setLanguage(parsed.state.language)
+        }
+      } catch (e) {
+        console.error('Failed to parse stored language:', e)
+      }
+    }
+  }, [setLanguage])
+
   return (
     <Select
+      value={language}
       onValueChange={(value) => setLanguage(value as Language)}
-      defaultValue={language}
     >
       <SelectTrigger className="w-32 text-black bg-gray-100">
         <SelectValue placeholder="言語を選択" />

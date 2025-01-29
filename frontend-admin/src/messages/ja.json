@@ -173,7 +173,11 @@
       "uploadDate": "アップロード日"
     },
     "search": "メディアを検索",
+    "select": {
+      "title": "メディアを選択"
+    },
     "upload": {
+      "submit": "アップロード",
       "title": "新しいメディアファイルを追加",
       "validation": {
         "titleRequired": "タイトルは必須です",
@@ -204,7 +208,6 @@
       "createdAt": "作成日",
       "uploadedBy": "アップロード",
       "thumbnailSize": "サムネイルサイズ",
-      "smallSize": "小サイズ",
       "mediumSize": "中サイズ",
       "fileTitle": "タイトル",
       "altText": "代替テキスト",

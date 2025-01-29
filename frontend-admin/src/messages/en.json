@@ -173,7 +173,11 @@
       "uploadDate": "Upload Date"
     },
     "search": "Search Media",
+    "select": {
+      "title": "メディアを選択"
+    },
     "upload": {
+      "submit": "Upload",
       "title": "Add New Media File",
       "validation": {
         "titleRequired": "Title is required",

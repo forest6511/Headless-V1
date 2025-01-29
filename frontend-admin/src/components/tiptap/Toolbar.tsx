@@ -101,7 +101,9 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       .focus()
       .setImage({
         src: file.mediumUrl,
-        alt: file.altText || file.title || undefined,
+        alt:
+          file.translations.find((t) => t.language === currentLanguage)
+            ?.title || '',
       })
       .run()
   }

@@ -1,11 +1,14 @@
 package com.headblog.backend.infra.repository.post
 
+import com.headblog.backend.app.usecase.post.query.FeaturedImageDto
 import com.headblog.backend.app.usecase.post.query.PostDto
 import com.headblog.backend.app.usecase.post.query.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostRepository
 import com.headblog.backend.domain.model.post.Status
+import com.headblog.infra.jooq.tables.references.MEDIAS
+import com.headblog.infra.jooq.tables.references.MEDIA_TRANSLATIONS
 import com.headblog.infra.jooq.tables.references.POSTS
 import com.headblog.infra.jooq.tables.references.POST_CATEGORIES
 import com.headblog.infra.jooq.tables.references.POST_TAGS
@@ -16,6 +19,8 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
+import com.headblog.backend.app.usecase.media.query.TranslationDto as MediaTranslationDto
+
 
 @Repository
 class PostRepositoryImpl(
@@ -89,11 +94,16 @@ class PostRepositoryImpl(
             POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
             POST_TRANSLATIONS.EXCERPT,
-            POST_TRANSLATIONS.CONTENT
+            POST_TRANSLATIONS.CONTENT,
+            MEDIAS.asterisk(),
+            MEDIA_TRANSLATIONS.LANGUAGE,
+            MEDIA_TRANSLATIONS.TITLE
         )
             .from(POSTS)
             .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
             .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+            .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
+            .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
             .where(POSTS.ID.eq(id))
             .fetch()
 
@@ -141,15 +151,20 @@ class PostRepositoryImpl(
             POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
             POST_TRANSLATIONS.EXCERPT,
-            POST_TRANSLATIONS.CONTENT
+            POST_TRANSLATIONS.CONTENT,
+            MEDIAS.asterisk(),
+            MEDIA_TRANSLATIONS.LANGUAGE,
+            MEDIA_TRANSLATIONS.TITLE
         )
             .from(POSTS)
             .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
             .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+            .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
+            .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
 
         // カーソル条件がある場合 (2ページ目以降)
         cursorPostId?.let { id ->
-            query.where(POSTS.ID.lessThan(id)) // UUID の大小比較
+            query.where(POSTS.ID.lessThan(id))
         }
 
         val records = query
@@ -159,7 +174,6 @@ class PostRepositoryImpl(
 
         // 2) 同じ post_id の行をまとめる
         val grouped = records.groupBy(
-            // group by postId
             keySelector = { requireNotNull(it.get(POSTS.ID)) },
             valueTransform = { it }
         )
@@ -183,11 +197,16 @@ class PostRepositoryImpl(
             POST_TRANSLATIONS.LANGUAGE,
             POST_TRANSLATIONS.STATUS,
             POST_TRANSLATIONS.TITLE,
-            POST_TRANSLATIONS.EXCERPT
+            POST_TRANSLATIONS.EXCERPT,
+            MEDIAS.asterisk(),
+            MEDIA_TRANSLATIONS.LANGUAGE,
+            MEDIA_TRANSLATIONS.TITLE
         )
             .from(POSTS)
             .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
             .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+            .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
+            .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
             .where(POST_TRANSLATIONS.LANGUAGE.eq(language))
             .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
 
@@ -202,10 +221,26 @@ class PostRepositoryImpl(
             .fetch()
 
         return records.map { record ->
+            val featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID)
+            val featuredImage = if (featuredImageId != null && record.get(MEDIAS.ID) != null) {
+                FeaturedImageDto(
+                    id = featuredImageId,
+                    thumbnailUrl = requireNotNull(record.get(MEDIAS.THUMBNAIL_URL)),
+                    mediumUrl = requireNotNull(record.get(MEDIAS.MEDIUM_URL)),
+                    translations = listOf(
+                        MediaTranslationDto(
+                            language = requireNotNull(record.get(MEDIA_TRANSLATIONS.LANGUAGE)),
+                            title = requireNotNull(record.get(MEDIA_TRANSLATIONS.TITLE))
+                        )
+                    )
+                )
+            } else null
+
             PostDto(
                 id = requireNotNull(record.get(POSTS.ID)),
                 slug = requireNotNull(record.get(POSTS.SLUG)),
-                featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID),
+                featuredImageId = featuredImageId,
+                featuredImage = featuredImage,
                 categoryId = requireNotNull(record.get(POST_CATEGORIES.CATEGORY_ID)),
                 tags = fetchTagsForPost(record.get(POSTS.ID)!!),
                 translations = listOf(
@@ -281,7 +316,22 @@ class PostRepositoryImpl(
                 excerpt = requireNotNull(rec.get(POST_TRANSLATIONS.EXCERPT)),
                 content = requireNotNull(rec.get(POST_TRANSLATIONS.CONTENT)),
             )
-        }
+        }.distinct()
+
+        // メディア情報の取得と変換
+        val featuredImage = if (featuredImageId != null && first.get(MEDIAS.ID) != null) {
+            FeaturedImageDto(
+                id = featuredImageId,
+                thumbnailUrl = requireNotNull(first.get(MEDIAS.THUMBNAIL_URL)),
+                mediumUrl = requireNotNull(first.get(MEDIAS.MEDIUM_URL)),
+                translations = this.map { rec ->
+                    MediaTranslationDto(
+                        language = requireNotNull(rec.get(MEDIA_TRANSLATIONS.LANGUAGE)),
+                        title = requireNotNull(rec.get(MEDIA_TRANSLATIONS.TITLE))
+                    )
+                }.distinct()
+            )
+        } else null
 
         // タグ取得
         val tags = fetchTagsForPost(postId)
@@ -290,6 +340,7 @@ class PostRepositoryImpl(
             id = postId,
             slug = slug,
             featuredImageId = featuredImageId,
+            featuredImage = featuredImage,
             categoryId = categoryId,
             tags = tags,
             translations = translationList,
@@ -300,11 +351,26 @@ class PostRepositoryImpl(
 
     private fun Record.toPostDto(): PostDto {
         val postId = requireNotNull(get(POSTS.ID))
+        val featuredImageId = get(POSTS.FEATURED_IMAGE_ID)
+        val featuredImage = if (featuredImageId != null && get(MEDIAS.ID) != null) {
+            FeaturedImageDto(
+                id = featuredImageId,
+                thumbnailUrl = requireNotNull(get(MEDIAS.THUMBNAIL_URL)),
+                mediumUrl = requireNotNull(get(MEDIAS.MEDIUM_URL)),
+                translations = listOf(
+                    MediaTranslationDto(
+                        language = requireNotNull(get(MEDIA_TRANSLATIONS.LANGUAGE)),
+                        title = requireNotNull(get(MEDIA_TRANSLATIONS.TITLE))
+                    )
+                )
+            )
+        } else null
 
         return PostDto(
             id = postId,
             slug = requireNotNull(get(POSTS.SLUG)),
-            featuredImageId = get(POSTS.FEATURED_IMAGE_ID),
+            featuredImageId = featuredImageId,
+            featuredImage = featuredImage,
             categoryId = requireNotNull(get(POST_CATEGORIES.CATEGORY_ID)),
             tags = fetchTagsForPost(postId),
             translations = listOf(

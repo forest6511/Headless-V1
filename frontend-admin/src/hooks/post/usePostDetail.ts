@@ -19,6 +19,9 @@ export const convertPostResponseToFormData = (
     post.translations.find((t) => t.language === currentLanguage) ||
     post.translations[0]
 
+  // featuredImageがある場合は、mediumUrlを設定
+  const featuredImageUrl = post.featuredImage?.mediumUrl || ''
+
   return {
     id: post.id,
     language: parseLanguage(translation.language),
@@ -27,7 +30,8 @@ export const convertPostResponseToFormData = (
     content: translation.content,
     excerpt: translation.excerpt,
     status: translation.status as 'DRAFT' | 'PUBLISHED',
-    featuredImageId: post.featuredImageId,
+    featuredImageId: post.featuredImageId || '',
+    featuredImageUrl,
     categoryId: post.categoryId,
     tagNames: post.tags.map((tag) => `${tag.name}`).join(','),
   }

@@ -8,6 +8,7 @@ data class PostResponse(
     val id: UUID,
     val slug: String,
     val featuredImageId: UUID?,
+    val featuredImage: FeaturedImageResponse?,
     val categoryId: UUID,
     val tags: List<TagDto>,
     val translations: List<TranslationResponse>,

@@ -9,17 +9,20 @@ import {
   CardBody,
   Input,
   Select,
+  Button,
   SelectItem,
   Textarea,
 } from '@nextui-org/react'
 import { PostStatuses } from '@/types/api/post/types'
 import TiptapEditor from '@/components/tiptap/TiptapEditor'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCategoryList } from '@/hooks/category/useCategoryList'
 import { createCategoryOptions } from '@/lib/utils/category'
 import pretty from 'pretty'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { t } from '@/lib/translations'
+import { MediaSelectModal } from '@/components/tiptap/MediaSelectModal'
+import { MediaFile } from '@/types/api/media/types'
 
 interface PostFormProps {
   redirectPath: string
@@ -68,6 +71,27 @@ export function PostForm({
     watch,
   } = form
 
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false)
+  const [selectedImageUrl, setSelectedImageUrl] = useState('')
+  const handleMediaSelect = (file: MediaFile) => {
+    form.setValue('featuredImageId', file.id, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    })
+    setSelectedImageUrl(file.mediumUrl)
+    form.setValue('featuredImageUrl', file.mediumUrl)
+    setIsMediaModalOpen(false)
+  }
+
+  useEffect(() => {
+    if (initialData?.featuredImageUrl) {
+      setSelectedImageUrl(initialData.featuredImageUrl)
+    } else {
+      setSelectedImageUrl('') // 初期値がない場合のリセット
+    }
+  }, [initialData])
+
   useEffect(() => {
     onSubmittingChange?.(isSubmitting)
   }, [isSubmitting, onSubmittingChange])
@@ -115,6 +139,48 @@ export function PostForm({
                 </SelectItem>
               ))}
             </Select>
+            {/* メイン画像選択 */}
+            <div className="space-y-2">
+              <input type="hidden" {...register('featuredImageId')} />
+              <div>
+                <div className="mb-2">
+                  <Button
+                    size="sm"
+                    color="primary"
+                    onPress={() => setIsMediaModalOpen(true)}
+                    className="w-full"
+                  >
+                    {t(currentLanguage, 'post.form.selectImage')}
+                  </Button>
+                </div>
+                {selectedImageUrl ? (
+                  <div className="relative group">
+                    <img
+                      src={selectedImageUrl}
+                      alt="Featured image"
+                      className="w-full max-h-80 object-cover rounded-lg"
+                    />
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                    <p className="text-gray-500 text-sm">
+                      {t(currentLanguage, 'post.form.noImageSelected')}
+                    </p>
+                  </div>
+                )}
+                {errors?.featuredImageId && (
+                  <p className="text-xs text-danger mt-1">
+                    {errors.featuredImageId.message}
+                  </p>
+                )}
+              </div>
+              <MediaSelectModal
+                isOpen={isMediaModalOpen}
+                onClose={() => setIsMediaModalOpen(false)}
+                onSelect={handleMediaSelect}
+              />
+            </div>
+            {/* 更新時のみ */}
             {mode === 'update' && (
               <>
                 <Input

@@ -3,22 +3,28 @@ package com.headblog.backend.infra.api.admin.post.query
 import com.headblog.backend.app.usecase.post.query.GetPostQueryService
 import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
+import com.headblog.backend.infra.api.admin.post.response.withFullUrls
 import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
 import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import com.headblog.backend.infra.api.admin.media.response.TranslationResponse as MediaTranslationResponse
+
 
 @Service
 class GetPostQueryServiceImpl(
     private val postRepository: PostRepository,
     private val categoryRepository: CategoryRepository,
+    private val storageProperties: StorageProperties,
 ) : GetPostQueryService {
 
     private val logger = LoggerFactory.getLogger(GetPostQueryServiceImpl::class.java)
@@ -35,6 +41,19 @@ class GetPostQueryServiceImpl(
                 id = dto.id,
                 slug = dto.slug,
                 featuredImageId = dto.featuredImageId,
+                featuredImage = dto.featuredImage?.let {
+                    FeaturedImageResponse(
+                        id = it.id,
+                        thumbnailUrl = it.thumbnailUrl,
+                        mediumUrl = it.mediumUrl,
+                        translations = it.translations.map { translation ->
+                            MediaTranslationResponse(
+                                language = translation.language,
+                                title = translation.title
+                            )
+                        }
+                    ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
+                },
                 categoryId = dto.categoryId,
                 tags = dto.tags,
                 translations = dto.translations.map { toTranslationResponse(it) },
@@ -51,12 +70,26 @@ class GetPostQueryServiceImpl(
         )
     }
 
+
     override fun findPostById(postId: UUID): PostResponse {
         return postRepository.findById(postId)?.let { dto ->
             PostResponse(
                 id = dto.id,
                 slug = dto.slug,
                 featuredImageId = dto.featuredImageId,
+                featuredImage = dto.featuredImage?.let {
+                    FeaturedImageResponse(
+                        id = it.id,
+                        thumbnailUrl = it.thumbnailUrl,
+                        mediumUrl = it.mediumUrl,
+                        translations = it.translations.map { translation ->
+                            MediaTranslationResponse(
+                                language = translation.language,
+                                title = translation.title
+                            )
+                        }
+                    ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
+                },
                 categoryId = dto.categoryId,
                 tags = dto.tags,
                 translations = dto.translations.map { toTranslationResponse(it) },

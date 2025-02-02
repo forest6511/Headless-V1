@@ -27,7 +27,6 @@ class PostClientController(
             cursorPostId = cursor,
             pageSize = pageSize
         )
-        println(posts)
         return ResponseEntity.ok(posts)
     }
 

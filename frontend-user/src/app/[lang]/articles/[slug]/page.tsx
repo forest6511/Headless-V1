@@ -8,6 +8,7 @@ import { getMetadata } from '@/lib/metadata'
 import { getDictionary } from '@/lib/i18n/dictionaries'
 import { notFound } from 'next/navigation'
 import { CategoryBreadcrumbs } from '@/components/features/article/components/category-breadcrumbs'
+import { ArticlePageProps } from '@/types/article'
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: Locale; slug: string }>
@@ -32,7 +33,7 @@ export default async function ArticlePage(props: PageProps) {
   const params = await props.params
   const { lang, slug } = params
   const dictionary = await getDictionary(lang)
-  const article = await getArticle(slug, lang)
+  const article: ArticlePageProps | null = await getArticle(slug, lang)
 
   if (!article) {
     notFound()
@@ -76,6 +77,17 @@ export default async function ArticlePage(props: PageProps) {
         {/*</div>*/}
 
         <header>
+          {article.featuredImage && (
+            <div className="mb-6">
+              <img
+                src={article.featuredImage.mediumUrl}
+                alt={article.featuredImage.translations[0]?.title || article.title}
+                className="w-full max-h-96 object-cover rounded-lg"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
           <h1
             itemProp="headline"
             className="text-xl sm:text-3xl font-bold mb-4"

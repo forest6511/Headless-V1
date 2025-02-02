@@ -81,7 +81,9 @@ export default async function ArticlePage(props: PageProps) {
             <div className="mb-6">
               <img
                 src={article.featuredImage.mediumUrl}
-                alt={article.featuredImage.translations[0]?.title || article.title}
+                alt={
+                  article.featuredImage.translations[0]?.title || article.title
+                }
                 className="w-full max-h-96 object-cover rounded-lg"
                 loading="lazy"
                 decoding="async"

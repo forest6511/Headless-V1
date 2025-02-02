@@ -31,7 +31,6 @@ export function ArticleContent({
       {featuredImage && (
         <div className="flex-none w-32 h-32 sm:w-32 sm:h-32">
           <Link href={`/${lang}/articles/${slug}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={featuredImage.thumbnailUrl}
               alt={featuredImage.translations[0]?.title || title}

@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.command.create
+package com.headblog.backend.app.usecase.post.admin.create
 
 import com.headblog.backend.domain.model.post.PostId
 

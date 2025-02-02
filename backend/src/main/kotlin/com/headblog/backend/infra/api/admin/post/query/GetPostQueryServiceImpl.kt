@@ -1,17 +1,14 @@
 package com.headblog.backend.infra.api.admin.post.query
 
-import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.TranslationDto
+import com.headblog.backend.app.usecase.post.admin.query.GetPostQueryService
 import com.headblog.backend.domain.model.category.CategoryRepository
-import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
 import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
 import com.headblog.backend.infra.api.admin.post.response.withFullUrls
-import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
-import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
-import com.headblog.backend.infra.api.client.post.response.PostClientResponse
-import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
@@ -62,6 +59,12 @@ class GetPostQueryServiceImpl(
             )
         }
 
+        logger.info("=====================================")
+        logger.info("Total number of posts: ${posts.size}")
+        logger.info("Total number of posts: ${posts.size}")
+        logger.info("Total number of posts: ${posts.size}")
+        logger.info("=====================================")
+
         return PostListResponse(
             totalCount = totalCount,
             posts = posts,
@@ -99,70 +102,8 @@ class GetPostQueryServiceImpl(
         } ?: throw AppConflictException("Post not found. id: $postId")
     }
 
-    override fun findPublishedPosts(
-        language: String,
-        cursorPostId: UUID?,
-        pageSize: Int
-    ): List<PostClientResponse> {
-        val response = postRepository.findPublishedPosts(language, cursorPostId, pageSize)
-            .map { post ->
-                val translation = post.translations.first()
-                PostClientResponse(
-                    slug = post.slug,
-                    title = translation.title,
-                    description = translation.excerpt,
-                    createdAt = post.createdAt.toString(),
-                    updatedAt = post.updatedAt.toString(),
-                    tags = post.tags.map { it.slug },
-                    category = CategoryClientResponse(
-                        path = buildCategoryPath(post.categoryId, language)
-                    )
-                )
-            }
-        return response
-    }
 
-    override fun findPublishedPostBySlug(
-        language: String,
-        slug: String
-    ): PostDetailClientResponse {
-        val response = postRepository.findPublishedPostBySlug(language, slug)?.let { post ->
-            val translation = post.translations.first()
-            PostDetailClientResponse(
-                slug = post.slug,
-                title = translation.title,
-                content = translation.content,
-                description = translation.excerpt,
-                createdAt = post.createdAt.toString(),
-                updatedAt = post.updatedAt.toString(),
-                tags = post.tags.map { it.slug },
-                category = CategoryClientResponse(
-                    path = buildCategoryPath(post.categoryId, language)
-                )
-            )
-        }
-        return checkNotNull(response)
-    }
-
-
-    private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> {
-        return generateSequence(categoryId) { currentId ->
-            categoryRepository.findByIdAndLanguage(currentId, language)?.parentId
-        }
-            .mapNotNull { id ->
-                categoryRepository.findByIdAndLanguage(id, language)?.let { category ->
-                    CategoryPathDto(
-                        slug = category.slug,
-                        name = category.translations.first().name,
-                        description = category.translations.first().description,
-                    )
-                }
-            }
-            .toList()
-            .reversed()
-    }
-
-    private fun toTranslationResponse(t: com.headblog.backend.app.usecase.post.query.TranslationDto): TranslationResponse {
+    private fun toTranslationResponse(t: TranslationDto): TranslationResponse {
         return TranslationResponse(
             language = t.language,
             status = t.status,

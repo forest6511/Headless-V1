@@ -1,6 +1,7 @@
-package com.headblog.backend.domain.model.post
+package com.headblog.backend.domain.model.post.admin
 
-import com.headblog.backend.app.usecase.post.query.PostDto
+import com.headblog.backend.app.usecase.post.PostDto
+import com.headblog.backend.domain.model.post.Post
 import java.util.*
 
 interface PostRepository {
@@ -18,15 +19,4 @@ interface PostRepository {
     ): List<PostDto>
 
     fun count(): Int
-
-    fun findPublishedPosts(
-        language: String,
-        cursorPostId: UUID?,
-        pageSize: Int
-    ): List<PostDto>
-
-    fun findPublishedPostBySlug(
-        language: String,
-        slug: String,
-    ): PostDto?
 }

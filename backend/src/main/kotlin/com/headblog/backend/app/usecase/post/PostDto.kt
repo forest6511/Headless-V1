@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.query
+package com.headblog.backend.app.usecase.post
 
 
 import com.headblog.backend.app.usecase.tag.query.TagDto

@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.api.client.post
 
-import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.client.qeury.GetClientPostQueryService
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
 import java.util.*
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/client/posts")
 class PostClientController(
-    private val getPostQueryService: GetPostQueryService
+    private val getClientPostQueryService: GetClientPostQueryService
 ) {
     @GetMapping
     fun getPosts(
@@ -22,11 +22,12 @@ class PostClientController(
         @RequestParam(required = false) cursor: UUID?,
         @RequestParam(defaultValue = "10") pageSize: Int
     ): ResponseEntity<List<PostClientResponse>> {
-        val posts = getPostQueryService.findPublishedPosts(
+        val posts = getClientPostQueryService.findPublishedPosts(
             language = language,
             cursorPostId = cursor,
             pageSize = pageSize
         )
+        println(posts)
         return ResponseEntity.ok(posts)
     }
 
@@ -35,7 +36,7 @@ class PostClientController(
         @PathVariable slug: String,
         @RequestParam language: String
     ): ResponseEntity<PostDetailClientResponse> {
-        val post = getPostQueryService.findPublishedPostBySlug(
+        val post = getClientPostQueryService.findPublishedPostBySlug(
             slug = slug,
             language = language
         )

@@ -2,9 +2,9 @@ package com.headblog.backend.infra.repository.category
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
-import com.headblog.backend.app.usecase.post.query.FeaturedImageDto
-import com.headblog.backend.app.usecase.post.query.PostDto
-import com.headblog.backend.app.usecase.post.query.TranslationDto
+import com.headblog.backend.app.usecase.post.FeaturedImageDto
+import com.headblog.backend.app.usecase.post.PostDto
+import com.headblog.backend.app.usecase.post.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryRepository

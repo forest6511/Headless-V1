@@ -1,5 +1,6 @@
-package com.headblog.backend.domain.model.post
+package com.headblog.backend.domain.model.post.admin
 
+import com.headblog.backend.domain.model.post.PostId
 import com.headblog.backend.domain.model.tag.TagId
 
 interface PostTagsRepository {

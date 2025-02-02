@@ -1,4 +1,4 @@
-package com.headblog.backend.infra.repository.post
+package com.headblog.backend.infra.repository.post.admin
 
 import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.post.PostCategoryRepository

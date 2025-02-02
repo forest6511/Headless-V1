@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.query
+package com.headblog.backend.app.usecase.post
 
 data class TranslationDto(
     val language: String,

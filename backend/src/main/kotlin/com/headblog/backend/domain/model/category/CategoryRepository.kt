@@ -2,7 +2,7 @@ package com.headblog.backend.domain.model.category
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
-import com.headblog.backend.app.usecase.post.query.PostDto
+import com.headblog.backend.app.usecase.post.PostDto
 import java.util.*
 
 interface CategoryRepository {

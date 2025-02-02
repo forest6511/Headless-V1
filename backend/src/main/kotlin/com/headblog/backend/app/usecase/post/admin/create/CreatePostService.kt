@@ -1,14 +1,14 @@
-package com.headblog.backend.app.usecase.post.command.create
+package com.headblog.backend.app.usecase.post.admin.create
 
 import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
-import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostTagsRepository
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
+import com.headblog.backend.domain.model.post.admin.PostRepository
+import com.headblog.backend.domain.model.post.admin.PostTagsRepository
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository

@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.query
+package com.headblog.backend.app.usecase.post
 
 import java.util.*
 import com.headblog.backend.app.usecase.media.query.TranslationDto as MediaTranslationDto

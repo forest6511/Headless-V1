@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.command.create
+package com.headblog.backend.app.usecase.post.admin.create
 
 import java.util.*
 

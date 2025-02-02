@@ -1,14 +1,14 @@
-package com.headblog.backend.app.usecase.post.command.update
+package com.headblog.backend.app.usecase.post.admin.update
 
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
-import com.headblog.backend.domain.model.post.PostRepository
-import com.headblog.backend.domain.model.post.PostTagsRepository
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
+import com.headblog.backend.domain.model.post.admin.PostRepository
+import com.headblog.backend.domain.model.post.admin.PostTagsRepository
 import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository

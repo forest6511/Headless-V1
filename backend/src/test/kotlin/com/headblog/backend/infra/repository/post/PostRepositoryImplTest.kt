@@ -5,7 +5,7 @@ import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
-import com.headblog.backend.domain.model.post.PostRepository
+import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.shared.id.domain.EntityId

@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.post.command.update
+package com.headblog.backend.app.usecase.post.admin.update
 
 import com.headblog.backend.domain.model.post.PostId
 

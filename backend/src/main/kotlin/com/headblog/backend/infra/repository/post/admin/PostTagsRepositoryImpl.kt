@@ -1,7 +1,7 @@
-package com.headblog.backend.infra.repository.post
+package com.headblog.backend.infra.repository.post.admin
 
 import com.headblog.backend.domain.model.post.PostId
-import com.headblog.backend.domain.model.post.PostTagsRepository
+import com.headblog.backend.domain.model.post.admin.PostTagsRepository
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.infra.jooq.tables.references.POST_TAGS
 import org.jooq.DSLContext

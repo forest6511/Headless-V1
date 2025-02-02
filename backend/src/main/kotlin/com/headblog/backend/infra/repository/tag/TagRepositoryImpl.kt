@@ -1,8 +1,8 @@
 package com.headblog.backend.infra.repository.tag
 
-import com.headblog.backend.app.usecase.post.query.FeaturedImageDto
-import com.headblog.backend.app.usecase.post.query.PostDto
-import com.headblog.backend.app.usecase.post.query.TranslationDto
+import com.headblog.backend.app.usecase.post.FeaturedImageDto
+import com.headblog.backend.app.usecase.post.PostDto
+import com.headblog.backend.app.usecase.post.TranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.tag.Tag

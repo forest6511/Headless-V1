@@ -2,7 +2,7 @@
 type CategoryPath = {
   slug: string
   name: string
-  description?: string
+  description?: string | null
 }
 
 type Category = {

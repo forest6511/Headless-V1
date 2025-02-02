@@ -12,7 +12,7 @@ data class PostDto(
     val featuredImage: FeaturedImageDto?,
     val categoryId: UUID,
     val tags: List<TagDto>,
-    val translations: List<TranslationDto>,
+    val translations: List<PostTranslationDto>,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )

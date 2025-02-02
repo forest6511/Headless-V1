@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.domain.model.category.Category
-import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository

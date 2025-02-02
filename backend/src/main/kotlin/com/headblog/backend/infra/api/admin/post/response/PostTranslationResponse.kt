@@ -1,6 +1,6 @@
-package com.headblog.backend.app.usecase.post
+package com.headblog.backend.infra.api.admin.post.response
 
-data class TranslationDto(
+data class PostTranslationResponse(
     val language: String,
     val status: String,
     val title: String,

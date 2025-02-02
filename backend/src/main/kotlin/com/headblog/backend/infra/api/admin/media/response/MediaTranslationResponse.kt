@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.api.admin.media.response
 
-data class TranslationResponse(
+data class MediaTranslationResponse(
     val language: String,
     val title: String,
 )

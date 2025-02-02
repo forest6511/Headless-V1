@@ -10,7 +10,7 @@ import com.headblog.backend.domain.model.media.MediaSize
 import com.headblog.backend.domain.model.media.StorageService
 import com.headblog.backend.domain.model.media.Translation
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
-import com.headblog.backend.infra.api.admin.media.response.TranslationResponse
+import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.constants.LanguageConstants
 import com.headblog.backend.shared.exceptions.AppConflictException
@@ -91,7 +91,7 @@ class CreateMediaService(
             mediumSize = media.medium.size,
             createdAt = LocalDateTime.now(),
             translations = translations.map {
-                TranslationResponse(
+                MediaTranslationResponse(
                     language = it.language.value,
                     title = it.title,
                 )

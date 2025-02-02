@@ -12,5 +12,5 @@ data class MediaDto(
     val mediumUrl: String,
     val mediumSize: Long,
     val createdAt: LocalDateTime,
-    val translations: List<TranslationDto>,
+    val translations: List<MediaTranslationDto>,
 )

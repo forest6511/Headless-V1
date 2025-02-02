@@ -7,7 +7,7 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 
-object PostTagQueryHelper {
+object TagQueryHelper {
     fun fetchTagsForPost(dsl: DSLContext, postId: UUID): List<TagDto> {
         return dsl.select(TAGS.ID, TAGS.NAME, TAGS.SLUG)
             .from(TAGS)

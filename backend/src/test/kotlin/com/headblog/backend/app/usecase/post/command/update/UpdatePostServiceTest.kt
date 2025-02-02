@@ -3,7 +3,7 @@ package com.headblog.backend.app.usecase.post.command.update
 import com.headblog.backend.app.usecase.post.admin.update.UpdatePostCommand
 import com.headblog.backend.app.usecase.post.admin.update.UpdatePostService
 import com.headblog.backend.domain.model.category.Category
-import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.post.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository

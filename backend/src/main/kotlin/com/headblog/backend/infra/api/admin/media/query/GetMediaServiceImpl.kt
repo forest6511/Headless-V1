@@ -6,7 +6,7 @@ import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.infra.api.admin.media.response.MediaListResponse
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
-import com.headblog.backend.infra.api.admin.media.response.TranslationResponse
+import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.api.admin.media.response.withFullUrls
 import com.headblog.backend.infra.config.StorageProperties
 import java.util.*
@@ -47,7 +47,7 @@ class GetMediaServiceImpl(
                 mediumSize = mediaDto.mediumSize,
                 createdAt = mediaDto.createdAt,
                 translations = mediaDto.translations.map {
-                    TranslationResponse(
+                    MediaTranslationResponse(
                         language = it.language,
                         title = it.title,
                     )

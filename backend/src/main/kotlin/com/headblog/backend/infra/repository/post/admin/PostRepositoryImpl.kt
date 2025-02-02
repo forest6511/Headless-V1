@@ -1,11 +1,12 @@
 package com.headblog.backend.infra.repository.post.admin
 
+import com.headblog.backend.app.usecase.media.query.MediaTranslationDto
 import com.headblog.backend.app.usecase.post.FeaturedImageDto
 import com.headblog.backend.app.usecase.post.PostDto
-import com.headblog.backend.app.usecase.post.TranslationDto
+import com.headblog.backend.app.usecase.post.PostTranslationDto
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.admin.PostRepository
-import com.headblog.backend.infra.repository.post.PostTagQueryHelper
+import com.headblog.backend.infra.repository.post.TagQueryHelper
 import com.headblog.infra.jooq.tables.references.MEDIAS
 import com.headblog.infra.jooq.tables.references.MEDIA_TRANSLATIONS
 import com.headblog.infra.jooq.tables.references.POSTS
@@ -16,7 +17,6 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
-import com.headblog.backend.app.usecase.media.query.TranslationDto as MediaTranslationDto
 
 
 @Repository
@@ -202,7 +202,7 @@ class PostRepositoryImpl(
         // 全レコードを翻訳ごとにまとめる
         val translationList = this.map { rec ->
             val lang = requireNotNull(rec.get(POST_TRANSLATIONS.LANGUAGE))
-            TranslationDto(
+            PostTranslationDto(
                 language = lang,
                 status = requireNotNull(rec.get(POST_TRANSLATIONS.STATUS)),
                 title = requireNotNull(rec.get(POST_TRANSLATIONS.TITLE)),
@@ -227,7 +227,7 @@ class PostRepositoryImpl(
         } else null
 
         // タグ取得
-        val tags = PostTagQueryHelper.fetchTagsForPost(dsl, postId)
+        val tags = TagQueryHelper.fetchTagsForPost(dsl, postId)
 
         return PostDto(
             id = postId,

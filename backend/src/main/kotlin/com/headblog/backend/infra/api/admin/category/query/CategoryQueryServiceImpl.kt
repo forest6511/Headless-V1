@@ -6,8 +6,8 @@ import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryListDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import com.headblog.backend.app.usecase.category.query.GetCategoryQueryService
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Slug
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import java.util.*
 import org.springframework.stereotype.Service
 

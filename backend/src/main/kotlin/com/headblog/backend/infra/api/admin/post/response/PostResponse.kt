@@ -11,7 +11,7 @@ data class PostResponse(
     val featuredImage: FeaturedImageResponse?,
     val categoryId: UUID,
     val tags: List<TagDto>,
-    val translations: List<TranslationResponse>,
+    val translations: List<PostTranslationResponse>,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 )

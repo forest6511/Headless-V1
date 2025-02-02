@@ -1,8 +1,9 @@
 package com.headblog.backend.infra.repository.tag
 
+import com.headblog.backend.app.usecase.media.query.MediaTranslationDto
 import com.headblog.backend.app.usecase.post.FeaturedImageDto
 import com.headblog.backend.app.usecase.post.PostDto
-import com.headblog.backend.app.usecase.post.TranslationDto
+import com.headblog.backend.app.usecase.post.PostTranslationDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.tag.Tag
@@ -19,7 +20,6 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
-import com.headblog.backend.app.usecase.media.query.TranslationDto as MediaTranslationDto
 
 
 @Repository
@@ -119,7 +119,7 @@ class TagRepositoryImpl(
                 categoryId = requireNotNull(record.get(POST_CATEGORIES.CATEGORY_ID)),
                 tags = fetchTagsForPost(requireNotNull(record.get(POSTS.ID))),
                 translations = listOf(
-                    TranslationDto(
+                    PostTranslationDto(
                         language = language,
                         status = requireNotNull(record.get(POST_TRANSLATIONS.STATUS)),
                         title = requireNotNull(record.get(POST_TRANSLATIONS.TITLE)),

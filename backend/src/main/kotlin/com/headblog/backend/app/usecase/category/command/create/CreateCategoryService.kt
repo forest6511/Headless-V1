@@ -3,9 +3,9 @@ package com.headblog.backend.app.usecase.category.command.create
 import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryId
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Language
 import com.headblog.backend.domain.model.category.Translation
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.shared.constants.LanguageConstants
 import com.headblog.backend.shared.exceptions.AppConflictException
 import com.headblog.backend.shared.id.domain.EntityId

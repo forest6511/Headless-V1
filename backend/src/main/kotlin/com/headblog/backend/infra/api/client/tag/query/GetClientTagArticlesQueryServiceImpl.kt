@@ -1,12 +1,16 @@
 package com.headblog.backend.infra.api.client.tag.query
 
 import com.headblog.backend.app.usecase.tag.query.GetClientTagArticlesQueryService
-import com.headblog.backend.domain.model.category.CategoryRepository
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.tag.TagRepository
+import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
+import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
+import com.headblog.backend.infra.api.admin.post.response.withFullUrls
 import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
 import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
 import com.headblog.backend.infra.api.client.tag.response.TagClientResponse
+import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.springframework.stereotype.Service
@@ -15,16 +19,13 @@ import org.springframework.stereotype.Service
 class GetClientTagArticlesQueryServiceImpl(
     private val tagRepository: TagRepository,
     private val categoryRepository: CategoryRepository,
+    private val storageProperties: StorageProperties,
 ) : GetClientTagArticlesQueryService {
     override fun getTagArticles(
         name: String,
         language: String,
         pageSize: Int
     ): TagClientResponse {
-
-        println("1-----------------------start")
-        println("1-----------------------start")
-        println("1-----------------------start")
         // タグ情報の取得
         val tagDto = tagRepository.findByName(name)
             ?: throw AppConflictException("Tag not found: $name")
@@ -41,6 +42,19 @@ class GetClientTagArticlesQueryServiceImpl(
                 createdAt = post.createdAt.toString(),
                 updatedAt = post.updatedAt.toString(),
                 tags = post.tags.map { it.name },
+                featuredImage = post.featuredImage?.let {
+                    FeaturedImageResponse(
+                        id = it.id,
+                        thumbnailUrl = it.thumbnailUrl,
+                        mediumUrl = it.mediumUrl,
+                        translations = it.translations.map { translation ->
+                            MediaTranslationResponse(
+                                language = translation.language,
+                                title = translation.title
+                            )
+                        }
+                    ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
+                },
                 category = CategoryClientResponse(
                     path = buildCategoryPath(post.categoryId, language)
                 )

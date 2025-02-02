@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.admin.post.response
 
+import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import java.util.*
-import com.headblog.backend.infra.api.admin.media.response.TranslationResponse as MediaTranslationResponse
 
 data class FeaturedImageResponse(
     val id: UUID,

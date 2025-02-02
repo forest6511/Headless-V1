@@ -1,26 +1,24 @@
 package com.headblog.backend.infra.api.admin.post.query
 
-import com.headblog.backend.app.usecase.post.TranslationDto
+import com.headblog.backend.app.usecase.post.PostTranslationDto
 import com.headblog.backend.app.usecase.post.admin.query.GetPostQueryService
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.post.admin.PostRepository
+import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse
 import com.headblog.backend.infra.api.admin.post.response.PostResponse
-import com.headblog.backend.infra.api.admin.post.response.TranslationResponse
+import com.headblog.backend.infra.api.admin.post.response.PostTranslationResponse
 import com.headblog.backend.infra.api.admin.post.response.withFullUrls
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import com.headblog.backend.infra.api.admin.media.response.TranslationResponse as MediaTranslationResponse
 
 
 @Service
 class GetPostQueryServiceImpl(
     private val postRepository: PostRepository,
-    private val categoryRepository: CategoryRepository,
     private val storageProperties: StorageProperties,
 ) : GetPostQueryService {
 
@@ -103,8 +101,8 @@ class GetPostQueryServiceImpl(
     }
 
 
-    private fun toTranslationResponse(t: TranslationDto): TranslationResponse {
-        return TranslationResponse(
+    private fun toTranslationResponse(t: PostTranslationDto): PostTranslationResponse {
+        return PostTranslationResponse(
             language = t.language,
             status = t.status,
             title = t.title,

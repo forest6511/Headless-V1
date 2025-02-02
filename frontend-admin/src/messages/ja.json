@@ -116,11 +116,14 @@
       "status": "ステータス",
       "slug": "スラッグ",
       "excerpt": "抜粋",
+      "featuredImageId": "メイン画像",
+      "selectImage": "メイン画像を選択",
       "placeholders": {
         "title": "記事のタイトルを入力",
         "hashtag": "#をつけてカンマ形式で入力. ex #beauty, #diet",
         "slug": "URLの一部として使用されます",
-        "excerpt": "記事の要約を入力してください"
+        "excerpt": "記事の要約を入力してください",
+        "featuredImageId": "メイン画像を選択してください"
       }
     },
     "toast": {
@@ -158,6 +161,9 @@
       "excerpt": {
         "required": "抜粋は必須です",
         "tooLong": "抜粋は500文字以内で入力してください"
+      },
+      "featuredImageId": {
+        "required": "メイン画像は必須です"
       }
     },
     "preview": "プレビュー 文字数:"

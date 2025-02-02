@@ -19,6 +19,7 @@ export function ArticleCard(props: ArticleCardProps & { lang: Locale }) {
           title={props.title}
           description={props.description}
           tags={props.tags}
+          featuredImage={props.featuredImage}
         />
         {/* <ArticleMetrics reactions={props.reactions} comments={props.comments} /> */}
       </div>

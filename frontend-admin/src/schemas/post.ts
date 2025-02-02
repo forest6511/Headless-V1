@@ -3,6 +3,17 @@ import { Language } from '@/types/api/common/types'
 import { t } from '@/lib/translations'
 import { PostStatuses } from '@/types/api/post/types'
 
+interface BasePostFormData {
+  language: Language
+  title: string
+  content: string
+  status: 'DRAFT' | 'PUBLISHED'
+  featuredImageId: string
+  featuredImageUrl?: string
+  categoryId: string
+  tagNames?: string
+}
+
 export const createBasePostSchema = (language: Language) =>
   z.object({
     language: z.custom<Language>(),
@@ -24,10 +35,14 @@ export const createBasePostSchema = (language: Language) =>
         message: t(language, 'post.validation.status.tooLong'),
       }),
     featuredImageId: z
-      .string()
-      .uuid(t(language, 'post.validation.image.invalidId'))
-      .transform((val) => (val === '' ? null : val))
-      .nullish(),
+      .string({
+        required_error: t(language, 'post.validation.featuredImageId.required'),
+        invalid_type_error: t(
+          language,
+          'post.validation.featuredImageId.required'
+        ),
+      })
+      .min(1, t(language, 'post.validation.featuredImageId.required')),
     categoryId: z
       .string()
       .min(1, t(language, 'post.validation.category.required'))
@@ -72,4 +87,4 @@ export type UpdatePostFormData = z.infer<
 >
 
 // フォーム共通の型定義
-export type PostFormData = CreatePostFormData & Partial<UpdatePostFormData>
+export type PostFormData = BasePostFormData & Partial<UpdatePostFormData>

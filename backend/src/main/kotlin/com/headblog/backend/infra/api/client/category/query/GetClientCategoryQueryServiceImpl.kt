@@ -2,8 +2,8 @@ package com.headblog.backend.infra.api.client.category.query
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.GetClientCategoryQueryService
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Slug
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.infra.api.client.category.response.HierarchicalCategoryResponse
 import com.headblog.backend.shared.exceptions.AppConflictException
 import org.springframework.cache.annotation.Cacheable

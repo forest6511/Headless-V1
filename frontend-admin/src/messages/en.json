@@ -116,11 +116,14 @@
       "status": "Status",
       "slug": "Slug",
       "excerpt": "Excerpt",
+      "featuredImageId": "Main image",
+      "selectImage": "Select main image",
       "placeholders": {
         "title": "Enter post title",
         "hashtag": "Enter comma-separated hashtags with #, e.g. #beauty, #diet",
         "slug": "Used as part of the URL",
-        "excerpt": "Enter a summary of the article"
+        "excerpt": "Enter a summary of the article",
+        "featuredImageId": "Select the main image"
       }
     },
     "toast": {
@@ -158,6 +161,9 @@
       "excerpt": {
         "required": "Excerpt is required",
         "tooLong": "Excerpt must be 500 characters or less"
+      },
+      "featuredImageId": {
+        "required": "Main image is required"
       }
     },
     "preview": "Preview - Character count:"

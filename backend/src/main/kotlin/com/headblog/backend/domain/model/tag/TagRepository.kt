@@ -1,6 +1,6 @@
 package com.headblog.backend.domain.model.tag
 
-import com.headblog.backend.app.usecase.post.query.PostDto
+import com.headblog.backend.app.usecase.post.PostDto
 import com.headblog.backend.app.usecase.tag.query.TagDto
 import java.util.*
 

@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.repository.media
 
 import com.headblog.backend.app.usecase.media.query.MediaDto
-import com.headblog.backend.app.usecase.media.query.TranslationDto
+import com.headblog.backend.app.usecase.media.query.MediaTranslationDto
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
@@ -130,7 +130,7 @@ class MediaRepositoryImpl(
             mediumSize = checkNotNull(firstRecord.get(MEDIAS.MEDIUM_SIZE)),
             createdAt = checkNotNull(firstRecord.get(MEDIAS.CREATED_AT)),
             translations = map { record ->
-                TranslationDto(
+                MediaTranslationDto(
                     language = checkNotNull(record.get(MEDIA_TRANSLATIONS.LANGUAGE)),
                     title = checkNotNull(record.get(MEDIA_TRANSLATIONS.TITLE))
                 )

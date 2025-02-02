@@ -1,11 +1,11 @@
 package com.headblog.backend.infra.api.admin.post
 
-import com.headblog.backend.app.usecase.post.command.create.CreatePostCommand
-import com.headblog.backend.app.usecase.post.command.create.CreatePostUseCase
-import com.headblog.backend.app.usecase.post.command.delete.DeletePostUseCase
-import com.headblog.backend.app.usecase.post.command.update.UpdatePostCommand
-import com.headblog.backend.app.usecase.post.command.update.UpdatePostUseCase
-import com.headblog.backend.app.usecase.post.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.admin.create.CreatePostCommand
+import com.headblog.backend.app.usecase.post.admin.create.CreatePostUseCase
+import com.headblog.backend.app.usecase.post.admin.delete.DeletePostUseCase
+import com.headblog.backend.app.usecase.post.admin.query.GetPostQueryService
+import com.headblog.backend.app.usecase.post.admin.update.UpdatePostCommand
+import com.headblog.backend.app.usecase.post.admin.update.UpdatePostUseCase
 import com.headblog.backend.infra.api.admin.post.request.CreatePostRequest
 import com.headblog.backend.infra.api.admin.post.request.UpdatePostRequest
 import com.headblog.backend.infra.api.admin.post.response.PostListResponse

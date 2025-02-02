@@ -2,9 +2,9 @@ package com.headblog.backend.app.usecase.category.command.update
 
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryId
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Language
 import com.headblog.backend.domain.model.category.Translation
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.shared.exceptions.AppConflictException
 import java.util.*
 import org.slf4j.LoggerFactory

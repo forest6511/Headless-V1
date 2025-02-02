@@ -6,8 +6,8 @@ import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.CategoryListDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import com.headblog.backend.app.usecase.category.query.GetCategoryQueryService
-import com.headblog.backend.domain.model.category.CategoryRepository
 import com.headblog.backend.domain.model.category.Slug
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import java.util.*
 import org.springframework.stereotype.Service
 
@@ -37,9 +37,9 @@ class CategoryQueryServiceImpl(
         return categoryList.sortedWith(
             compareBy(
                 { it.slug != Slug.DEFAULT_SLUG },   // 1. "未設定" (DEFAULT_SLUG) のカテゴリを最初に
-            { it.breadcrumbs.first().id },      // 2. パンくずの親カテゴリ順
-            { it.parentId }                     // 3. 子カテゴリが存在しないカテゴリを最初に
-        ))
+                { it.breadcrumbs.first().id },      // 2. パンくずの親カテゴリ順
+                { it.parentId }                     // 3. 子カテゴリが存在しないカテゴリを最初に
+            ))
     }
 
     private fun generateBreadcrumbs(

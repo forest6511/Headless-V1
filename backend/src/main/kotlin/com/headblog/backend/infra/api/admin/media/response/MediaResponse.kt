@@ -11,5 +11,5 @@ data class MediaResponse(
     val mediumUrl: String,
     val mediumSize: Long,
     val createdAt: LocalDateTime,
-    val translations: List<TranslationResponse>,
+    val translations: List<MediaTranslationResponse>,
 )

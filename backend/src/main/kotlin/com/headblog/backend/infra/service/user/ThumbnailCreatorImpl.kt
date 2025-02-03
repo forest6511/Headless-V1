@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.service.user
 
-import com.headblog.backend.domain.model.user.Language
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.user.ThumbnailGenerator
 import java.awt.Color
 import java.awt.Font

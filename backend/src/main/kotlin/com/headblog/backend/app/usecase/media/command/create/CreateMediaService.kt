@@ -1,8 +1,8 @@
 package com.headblog.backend.app.usecase.media.command.create
 
 import com.headblog.backend.app.usecase.translation.TranslationService
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.media.ImageProcessor
-import com.headblog.backend.domain.model.media.Language
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository

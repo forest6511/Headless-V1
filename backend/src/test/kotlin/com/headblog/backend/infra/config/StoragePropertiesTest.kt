@@ -37,8 +37,8 @@ class StoragePropertiesTest {
     fun `should load image size configuration correctly`() {
         val sizes = storageProperties.media.sizes
         with(sizes.thumbnail) {
-            assertEquals(width, 100)
-            assertEquals(height, 100)
+            assertEquals(width, 150)
+            assertEquals(height, 150)
         }
         with(sizes.medium) {
             assertEquals(width, 800)

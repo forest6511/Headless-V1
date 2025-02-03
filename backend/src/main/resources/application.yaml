@@ -70,6 +70,8 @@ storage:
       thumbnail:
         width: 150
         height: 150
+        quality: 55    # サムネイル用の低品質
       medium:
-        width: 1024
-        height: 1024
+        width: 800
+        height: 800
+        quality: 65    # 表示用の中品質

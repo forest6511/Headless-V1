@@ -44,7 +44,8 @@ class GetPostQueryServiceImpl(
 
 
     override fun findPostById(postId: UUID): PostResponse {
-        return postRepository.findById(postId)?.let { dto -> toPostResponse(dto)
+        return postRepository.findById(postId)?.let { dto ->
+            toPostResponse(dto)
         } ?: throw AppConflictException("Post not found. id: $postId")
     }
 

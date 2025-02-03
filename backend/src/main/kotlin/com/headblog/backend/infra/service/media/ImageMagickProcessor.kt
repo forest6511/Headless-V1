@@ -20,10 +20,12 @@ class ImageMagickProcessor : ImageProcessor {
         input: InputStream,
         width: Int,
         height: Int,
+        quality: Int,
         format: String
     ): ByteArray {
         return processImageInternal(input, format) {
             resize(width, height, ">") // サイズ指定あり
+            quality(quality.toDouble()) // 品質設定
         }
     }
 
@@ -53,8 +55,7 @@ class ImageMagickProcessor : ImageProcessor {
             val operation = IMOperation().apply {
                 addImage(tempInput.toString()) // 入力画像ファイルを指定
                 autoOrient() // EXIFデータに基づいて画像の向きを自動調整
-                strip() // メタデータを削除しファイルサイズを削減
-                quality(72.0) // 出力画像の品質を70%に設定
+                strip() // メタデータを削除しファイルサイズを削減≈
                 format(format) // 出力フォーマットを指定
                 configureOperation() // カスタム設定（リサイズあり/なし）
                 addImage(tempOutput.toString()) // 出力画像ファイルを指定

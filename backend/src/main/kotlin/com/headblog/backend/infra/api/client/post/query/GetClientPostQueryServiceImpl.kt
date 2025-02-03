@@ -1,15 +1,14 @@
 package com.headblog.backend.infra.api.client.post.query
 
 import com.headblog.backend.app.usecase.post.client.qeury.GetClientPostQueryService
-import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.post.client.PostClientRepository
 import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
 import com.headblog.backend.infra.api.admin.post.response.withFullUrls
 import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
-import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.infra.api.client.post.response.PostDetailClientResponse
+import com.headblog.backend.infra.api.common.query.CategoryPathBuilder
 import com.headblog.backend.infra.config.StorageProperties
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class GetClientPostQueryServiceImpl(
     private val postClientRepository: PostClientRepository,
-    private val categoryRepository: CategoryRepository,
+    private val categoryPathBuilder: CategoryPathBuilder,
     private val storageProperties: StorageProperties,
 ) : GetClientPostQueryService {
 
@@ -53,7 +52,7 @@ class GetClientPostQueryServiceImpl(
                         ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
                     },
                     category = CategoryClientResponse(
-                        path = buildCategoryPath(post.categoryId, language)
+                        path = categoryPathBuilder.buildPath(post.categoryId, language)
                     )
                 )
             }
@@ -88,27 +87,10 @@ class GetClientPostQueryServiceImpl(
                     ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
                 },
                 category = CategoryClientResponse(
-                    path = buildCategoryPath(post.categoryId, language)
+                    path = categoryPathBuilder.buildPath(post.categoryId, language)
                 )
             )
         }
         return checkNotNull(response)
-    }
-
-    private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> {
-        return generateSequence(categoryId) { currentId ->
-            categoryRepository.findByIdAndLanguage(currentId, language)?.parentId
-        }
-            .mapNotNull { id ->
-                categoryRepository.findByIdAndLanguage(id, language)?.let { category ->
-                    CategoryPathDto(
-                        slug = category.slug,
-                        name = category.translations.first().name,
-                        description = category.translations.first().description,
-                    )
-                }
-            }
-            .toList()
-            .reversed()
     }
 }

@@ -3,6 +3,7 @@ package com.headblog.backend.infra.api.client.category.query
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.category.query.GetClientCategoryArticlesQueryService
 import com.headblog.backend.app.usecase.post.PostDto
+import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.category.client.CategoryClientRepository
 import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.api.admin.post.response.FeaturedImageResponse
@@ -11,17 +12,18 @@ import com.headblog.backend.infra.api.client.category.response.CategoryDetailCli
 import com.headblog.backend.infra.api.client.category.response.CategoryWithArticlesClientResponse
 import com.headblog.backend.infra.api.client.category.response.ParentCategoryClientResponse
 import com.headblog.backend.infra.api.client.post.response.CategoryClientResponse
-import com.headblog.backend.infra.api.client.post.response.CategoryPathDto
 import com.headblog.backend.infra.api.client.post.response.PostClientResponse
+import com.headblog.backend.infra.api.common.query.CategoryPathBuilder
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
-import java.util.*
 import org.springframework.stereotype.Service
 
 @Service
 class GetClientCategoryArticlesQueryServiceImpl(
     private val categoryClientRepository: CategoryClientRepository,
+    private val categoryRepository: CategoryRepository,
     private val storageProperties: StorageProperties,
+    private val categoryPathBuilder: CategoryPathBuilder
 ) : GetClientCategoryArticlesQueryService {
 
     // translations.first()の安全なアクセスを提供し、存在しない場合は適切なエラーをスロー
@@ -77,7 +79,7 @@ class GetClientCategoryArticlesQueryServiceImpl(
         name = firstTranslation.name,
         description = firstTranslation.description,
         parent = parentId?.let { parentId ->
-            categoryClientRepository.findByIdAndLanguage(parentId, language)?.toParentResponse()
+            categoryRepository.findByIdAndLanguage(parentId, language)?.toParentResponse()
         }
     )
 
@@ -111,24 +113,7 @@ class GetClientCategoryArticlesQueryServiceImpl(
             ).withFullUrls(storageProperties.cloudflare.r2.publicEndpoint)
         },
         category = CategoryClientResponse(
-            path = buildCategoryPath(categoryId, language)
+            path = categoryPathBuilder.buildPath(categoryId, language)
         )
     )
-
-    // カテゴリIDからカテゴリパス（親から子への階層）を作成
-    private fun buildCategoryPath(categoryId: UUID, language: String): List<CategoryPathDto> =
-        generateSequence(categoryId) { currentId ->
-            categoryClientRepository.findByIdAndLanguage(currentId, language)?.parentId
-        }
-            .mapNotNull { id ->
-                categoryClientRepository.findByIdAndLanguage(id, language)?.run {
-                    CategoryPathDto(
-                        slug = slug,
-                        name = firstTranslation.name,
-                        description = firstTranslation.description,
-                    )
-                }
-            }
-            .toList()
-            .reversed()
 }

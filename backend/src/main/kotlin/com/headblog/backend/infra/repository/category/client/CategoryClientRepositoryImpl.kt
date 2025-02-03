@@ -27,34 +27,6 @@ class CategoryClientRepositoryImpl(
     private val dsl: DSLContext
 ) : CategoryClientRepository {
 
-    override fun findByIdAndLanguage(id: UUID, language: String): CategoryDto? {
-        return dsl.select()
-            .from(CATEGORIES)
-            .innerJoin(CATEGORY_TRANSLATIONS)
-            .on(CATEGORIES.ID.eq(CATEGORY_TRANSLATIONS.CATEGORY_ID))
-            .where(CATEGORIES.ID.eq(id))
-            .and(CATEGORY_TRANSLATIONS.LANGUAGE.eq(language))
-            .fetchOne()
-            ?.let { record ->
-                CategoryDto(
-                    id = requireNotNull(record[CATEGORIES.ID]),
-                    slug = requireNotNull(record[CATEGORIES.SLUG]),
-                    parentId = record[CATEGORIES.PARENT_ID],
-                    translations = listOf(
-                        TranslationDto(
-                            language = language,
-                            name = requireNotNull(record[CATEGORY_TRANSLATIONS.NAME]),
-                            description = record[CATEGORY_TRANSLATIONS.DESCRIPTION],
-                            createdAt = requireNotNull(record[CATEGORY_TRANSLATIONS.CREATED_AT]),
-                            updatedAt = requireNotNull(record[CATEGORY_TRANSLATIONS.UPDATED_AT])
-                        )
-                    ),
-                    createdAt = requireNotNull(record[CATEGORIES.CREATED_AT]),
-                    updatedAt = requireNotNull(record[CATEGORIES.UPDATED_AT])
-                )
-            }
-    }
-
     override fun findPublishedPostsByCategorySlug(
         slug: String,
         language: String,

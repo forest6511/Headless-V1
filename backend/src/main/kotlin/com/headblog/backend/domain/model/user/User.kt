@@ -1,5 +1,6 @@
 package com.headblog.backend.domain.model.user
 
+import com.headblog.backend.domain.model.common.Language
 import java.time.LocalDateTime
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

@@ -2,12 +2,12 @@ package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
-import com.headblog.backend.domain.model.post.Language
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
-import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.Translation
+import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
-import com.headblog.backend.domain.model.category.Language as CategoryLanguage
 import com.headblog.backend.domain.model.category.Translation as CategoryTranslation
 
 @SpringBootTest
@@ -181,7 +180,7 @@ class PostRepositoryImplTest {
         language: String,
         name: String,
         description: String? = null
-    ): CategoryTranslation = CategoryTranslation(CategoryLanguage.of(language), name, description)
+    ): CategoryTranslation = CategoryTranslation(Language.of(language), name, description)
 
     private fun createTranslation(
         language: String,

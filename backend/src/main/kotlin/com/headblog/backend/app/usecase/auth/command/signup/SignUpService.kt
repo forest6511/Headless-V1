@@ -1,8 +1,8 @@
 package com.headblog.backend.app.usecase.auth.command.signup
 
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.media.StorageService
 import com.headblog.backend.domain.model.user.Email
-import com.headblog.backend.domain.model.user.Language
 import com.headblog.backend.domain.model.user.ThumbnailGenerator
 import com.headblog.backend.domain.model.user.ThumbnailKey
 import com.headblog.backend.domain.model.user.User

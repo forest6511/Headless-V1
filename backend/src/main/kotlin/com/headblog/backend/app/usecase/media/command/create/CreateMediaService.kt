@@ -1,8 +1,8 @@
 package com.headblog.backend.app.usecase.media.command.create
 
 import com.headblog.backend.app.usecase.translation.TranslationService
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.media.ImageProcessor
-import com.headblog.backend.domain.model.media.Language
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
@@ -58,12 +58,14 @@ class CreateMediaService(
             ImageSizeConfig(
                 "t",
                 storageProperties.media.sizes.thumbnail.width,
-                storageProperties.media.sizes.thumbnail.height
+                storageProperties.media.sizes.thumbnail.height,
+                storageProperties.media.sizes.thumbnail.quality
             ),
             ImageSizeConfig(
                 "m",
                 storageProperties.media.sizes.medium.width,
-                storageProperties.media.sizes.medium.height
+                storageProperties.media.sizes.medium.height,
+                storageProperties.media.sizes.medium.quality
             ),
         )
         val mediaSizes = sizes.map { sizeConfig ->
@@ -114,11 +116,16 @@ class CreateMediaService(
         sizeConfig: ImageSizeConfig,
         fileName: String
     ): MediaSize {
-        val processedImage = if (sizeConfig.width != null && sizeConfig.height != null) {
+        val processedImage = if (
+            sizeConfig.width != null &&
+            sizeConfig.height != null &&
+            sizeConfig.quality != null
+        ) {
             imageProcessor.processImage(
                 ByteArrayInputStream(fileBytes),
                 sizeConfig.width,
                 sizeConfig.height,
+                sizeConfig.quality,
                 format = convertFormat
             )
         } else {
@@ -154,7 +161,8 @@ class CreateMediaService(
     data class ImageSizeConfig(
         val prefix: String,
         val width: Int?,
-        val height: Int?
+        val height: Int?,
+        val quality: Int?
     )
 
     fun getCurrentYearMonth(): String {

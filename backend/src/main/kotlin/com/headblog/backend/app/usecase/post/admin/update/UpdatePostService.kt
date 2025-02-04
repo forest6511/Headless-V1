@@ -1,7 +1,7 @@
 package com.headblog.backend.app.usecase.post.admin.update
 
 import com.headblog.backend.app.usecase.tag.query.TagDto
-import com.headblog.backend.domain.model.post.Language
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId

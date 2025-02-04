@@ -1,6 +1,6 @@
 package com.headblog.backend.infra.repository.media
 
-import com.headblog.backend.domain.model.media.Language
+import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository

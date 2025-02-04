@@ -30,7 +30,8 @@ data class StorageProperties(
         ) {
             data class ImageSize(
                 val width: Int,
-                val height: Int
+                val height: Int,
+                val quality: Int
             )
         }
     }

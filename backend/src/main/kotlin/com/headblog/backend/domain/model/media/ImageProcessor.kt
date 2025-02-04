@@ -7,6 +7,7 @@ interface ImageProcessor {
         input: InputStream,
         width: Int,
         height: Int,
+        quality: Int,
         format: String = "webp"
     ): ByteArray
 

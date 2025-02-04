@@ -2,11 +2,8 @@ package com.headblog.backend.domain.model.category.client
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.app.usecase.post.PostDto
-import java.util.*
 
 interface CategoryClientRepository {
-    fun findByIdAndLanguage(id: UUID, language: String): CategoryDto?
-
     // 特定のカテゴリの記事を取得
     fun findPublishedPostsByCategorySlug(
         slug: String,

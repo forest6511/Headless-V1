@@ -6,7 +6,7 @@ import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.Status
-import com.headblog.backend.domain.model.post.Translation
+import com.headblog.backend.domain.model.post.PostTranslation
 import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -188,5 +188,5 @@ class PostRepositoryImplTest {
         title: String,
         excerpt: String = "要約 $title",
         content: String = "本文 $title"
-    ): Translation = Translation(Language.of(language), Status.of(status), title, excerpt, content)
+    ): PostTranslation = PostTranslation(Language.of(language), Status.of(status), title, excerpt, content)
 }

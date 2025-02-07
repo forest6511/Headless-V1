@@ -3,7 +3,7 @@ package com.headblog.backend.app.usecase.category.command.create
 import com.headblog.backend.app.usecase.translation.TranslationService
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryId
-import com.headblog.backend.domain.model.category.Translation
+import com.headblog.backend.domain.model.category.CategoryTranslation
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.shared.constants.LanguageConstants
@@ -60,12 +60,12 @@ class CreateCategoryService(
             slug = slug,
             parentId = command.parentId,
             translations = listOf(
-                Translation(
+                CategoryTranslation(
                     language = Language.of(sourceLang),
                     name = command.name,
                     description = command.description
                 ),
-                Translation(
+                CategoryTranslation(
                     language = Language.of(targetLang),
                     name = translatedName,
                     description = translatedDescription

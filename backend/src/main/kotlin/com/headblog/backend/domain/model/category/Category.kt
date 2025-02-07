@@ -11,7 +11,7 @@ class Category private constructor(
     val slug: Slug,
     val parentId: CategoryId?,
     val createdAt: LocalDateTime,
-    val translations: List<Translation>
+    val translations: List<CategoryTranslation>
 ) {
     companion object {
         private fun validateParentId(id: CategoryId, parentId: CategoryId?) {
@@ -25,7 +25,7 @@ class Category private constructor(
             slug: Slug,
             parentId: CategoryId?,
             createdAt: LocalDateTime,
-            translations: List<Translation>
+            translations: List<CategoryTranslation>
         ): Category {
             validateParentId(id, parentId)
             return Category(id, slug, parentId, createdAt, translations)
@@ -35,7 +35,7 @@ class Category private constructor(
             id: IdGenerator<EntityId>,
             slug: String,
             parentId: UUID? = null,
-            translations: List<Translation>
+            translations: List<CategoryTranslation>
         ): Category {
             return createInstance(
                 id = CategoryId(id.generate().value),
@@ -51,7 +51,7 @@ class Category private constructor(
             slug: String,
             parentId: UUID? = null,
             createdAt: LocalDateTime,
-            translations: List<Translation>
+            translations: List<CategoryTranslation>
         ): Category {
             return createInstance(
                 id = CategoryId(id),

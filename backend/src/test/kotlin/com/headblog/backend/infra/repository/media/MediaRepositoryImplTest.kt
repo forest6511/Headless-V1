@@ -5,7 +5,7 @@ import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
-import com.headblog.backend.domain.model.media.Translation
+import com.headblog.backend.domain.model.media.MediaTranslation
 import com.headblog.backend.domain.model.user.User
 import com.headblog.backend.domain.model.user.UserId
 import com.headblog.backend.domain.model.user.UserRepository
@@ -214,11 +214,11 @@ class MediaRepositoryImplTest {
                     size = 800L * i
                 ),
                 translations = listOf(
-                    Translation(
+                    MediaTranslation(
                         Language.of(LanguageConstants.JA),
                         "test-$i"
                     ),
-                    Translation(
+                    MediaTranslation(
                         Language.of(LanguageConstants.EN),
                         "test-$i"
                     )

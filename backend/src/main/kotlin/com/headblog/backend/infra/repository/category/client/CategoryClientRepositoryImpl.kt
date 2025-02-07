@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.repository.category.client
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.TranslationDto
+import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto
 import com.headblog.backend.app.usecase.media.query.MediaTranslationDto
 import com.headblog.backend.app.usecase.post.FeaturedImageDto
 import com.headblog.backend.app.usecase.post.PostDto
@@ -227,7 +227,7 @@ class CategoryClientRepositoryImpl(
             slug = requireNotNull(this[CATEGORIES.SLUG]),
             parentId = this[CATEGORIES.PARENT_ID],
             translations = listOf(
-                TranslationDto(
+                CategoryTranslationDto(
                     language = language,
                     name = requireNotNull(this[CATEGORY_TRANSLATIONS.NAME]),
                     description = this[CATEGORY_TRANSLATIONS.DESCRIPTION],

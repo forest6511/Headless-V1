@@ -7,8 +7,8 @@ import com.headblog.backend.domain.model.media.Media
 import com.headblog.backend.domain.model.media.MediaId
 import com.headblog.backend.domain.model.media.MediaRepository
 import com.headblog.backend.domain.model.media.MediaSize
+import com.headblog.backend.domain.model.media.MediaTranslation
 import com.headblog.backend.domain.model.media.StorageService
-import com.headblog.backend.domain.model.media.Translation
 import com.headblog.backend.infra.api.admin.media.response.MediaResponse
 import com.headblog.backend.infra.api.admin.media.response.MediaTranslationResponse
 import com.headblog.backend.infra.config.StorageProperties
@@ -172,7 +172,7 @@ class CreateMediaService(
     }
 
 
-    private fun translateTitle(language: String, title: String): List<Translation> {
+    private fun translateTitle(language: String, title: String): List<MediaTranslation> {
         val (sourceLang, targetLang) = when (language) {
             LanguageConstants.JA -> LanguageConstants.JA to LanguageConstants.EN
             LanguageConstants.EN -> LanguageConstants.EN to LanguageConstants.JA
@@ -185,11 +185,11 @@ class CreateMediaService(
         }
 
         return listOf(
-            Translation(
+            MediaTranslation(
                 language = Language.of(sourceLang),
                 title = title,
             ),
-            Translation(
+            MediaTranslation(
                 language = Language.of(targetLang),
                 title = translatedTile,
             )
@@ -198,8 +198,8 @@ class CreateMediaService(
 
     private fun translate(block: () -> Result<String>): String {
         return block().getOrElse {
-            logger.error("Translation failed", it)
-            throw AppConflictException("Translation failed")
+            logger.error("MediaTranslation failed", it)
+            throw AppConflictException("MediaTranslation failed")
         }
     }
 }

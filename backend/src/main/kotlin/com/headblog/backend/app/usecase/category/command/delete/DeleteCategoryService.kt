@@ -3,8 +3,8 @@ package com.headblog.backend.app.usecase.category.command.delete
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.CategoryId
+import com.headblog.backend.domain.model.category.CategoryTranslation
 import com.headblog.backend.domain.model.category.Slug
-import com.headblog.backend.domain.model.category.Translation
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.PostCategoryRepository
@@ -41,7 +41,7 @@ class DeleteCategoryService(
             parentId = categoryDto.parentId,
             createdAt = categoryDto.createdAt,
             translations = categoryDto.translations.map {
-                Translation(
+                CategoryTranslation(
                     language = Language.of(it.language),
                     name = it.name,
                     description = it.description
@@ -83,7 +83,7 @@ class DeleteCategoryService(
             parentId = replacementCategory.parentId,
             createdAt = replacementCategory.createdAt,
             translations = replacementCategory.translations.map {
-                Translation(
+                CategoryTranslation(
                     language = Language.of(it.language),
                     name = it.name,
                     description = it.description
@@ -99,7 +99,7 @@ class DeleteCategoryService(
                 parentId = it.parentId,
                 createdAt = it.createdAt,
                 translations = it.translations.map { translation ->
-                    Translation(
+                    CategoryTranslation(
                         language = Language.of(translation.language),
                         name = translation.name,
                         description = translation.description

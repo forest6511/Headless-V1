@@ -2,7 +2,7 @@ package com.headblog.backend.infra.repository.category
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
 import com.headblog.backend.domain.model.category.Category
-import com.headblog.backend.domain.model.category.Translation
+import com.headblog.backend.domain.model.category.CategoryTranslation
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.shared.id.domain.EntityId
@@ -80,7 +80,7 @@ class CategoryRepositoryImplTest {
 
     private fun createCategory(
         slug: String,
-        translations: List<Translation>,
+        translations: List<CategoryTranslation>,
         parentId: UUID? = null
     ): Category = Category.create(idGenerator, slug, parentId, translations)
 
@@ -88,7 +88,7 @@ class CategoryRepositoryImplTest {
         language: String,
         name: String,
         description: String? = null
-    ): Translation = Translation(Language.of(language), name, description)
+    ): CategoryTranslation = CategoryTranslation(Language.of(language), name, description)
 
     private fun assertCategoryEquals(expected: Category, actual: CategoryDto?) {
         assertNotNull(actual)

@@ -32,10 +32,10 @@ class GeminiTranslationService(
 
         return try {
             geminiClient.generateContent(prompt).also {
-                logger.debug("Translation completed successfully")
+                logger.debug("MediaTranslation completed successfully")
             }
         } catch (e: Exception) {
-            logger.error("Translation failed", e)
+            logger.error("MediaTranslation failed", e)
             Result.failure(e)
         }
     }

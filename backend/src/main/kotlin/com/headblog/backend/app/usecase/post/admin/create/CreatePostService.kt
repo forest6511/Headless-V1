@@ -5,8 +5,8 @@ import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
 import com.headblog.backend.domain.model.post.PostId
+import com.headblog.backend.domain.model.post.PostTranslation
 import com.headblog.backend.domain.model.post.Status
-import com.headblog.backend.domain.model.post.Translation
 import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.domain.model.post.admin.PostTagsRepository
 import com.headblog.backend.domain.model.tag.Tag
@@ -83,14 +83,14 @@ class CreatePostService(
             featuredImageId = command.featuredImageId,
             categoryId = command.categoryId,
             translations = listOf(
-                Translation(
+                PostTranslation(
                     language = Language.of(sourceLang),
                     status = Status.of(command.status),
                     title = command.title,
                     content = command.content,
                     excerpt = sourceSummary
                 ),
-                Translation(
+                PostTranslation(
                     language = Language.of(targetLang),
                     // 投稿記事作成時は、翻訳確認の為にステータスはDRAFT
                     status = Status.DRAFT,

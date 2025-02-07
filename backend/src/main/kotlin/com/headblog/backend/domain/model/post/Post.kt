@@ -10,7 +10,7 @@ class Post private constructor(
     val slug: Slug,
     val featuredImageId: UUID?,
     val categoryId: CategoryId,
-    val translations: List<Translation>,
+    val translations: List<PostTranslation>,
 ) {
     companion object {
 
@@ -19,7 +19,7 @@ class Post private constructor(
             slug: String,
             featuredImageId: UUID?,
             categoryId: UUID,
-            translations: List<Translation>,
+            translations: List<PostTranslation>,
         ): Post {
             return Post(
                 id = PostId(id.generate().value),
@@ -35,7 +35,7 @@ class Post private constructor(
             slug: String,
             featuredImageId: UUID?,
             categoryId: UUID,
-            translations: List<Translation>,
+            translations: List<PostTranslation>,
         ): Post {
             return Post(
                 id = PostId(id),

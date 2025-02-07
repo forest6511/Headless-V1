@@ -9,7 +9,7 @@ class Media private constructor(
     val uploadedBy: UserId,
     val thumbnail: MediaSize,
     val medium: MediaSize,
-    val translations: List<Translation>
+    val translations: List<MediaTranslation>
 ) {
     companion object {
         fun create(
@@ -17,7 +17,7 @@ class Media private constructor(
             uploadedBy: UserId,
             thumbnail: MediaSize,
             medium: MediaSize,
-            translations: List<Translation>
+            translations: List<MediaTranslation>
         ): Media {
             return Media(
                 id = MediaId(idGenerator.generate().value),
@@ -33,7 +33,7 @@ class Media private constructor(
             uploadedBy: UserId,
             thumbnail: MediaSize,
             medium: MediaSize,
-            translations: List<Translation>
+            translations: List<MediaTranslation>
         ): Media {
             return Media(
                 id = id,

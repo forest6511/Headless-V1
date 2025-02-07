@@ -2,7 +2,7 @@ package com.headblog.backend.app.usecase.category.command.update
 
 import com.headblog.backend.app.usecase.category.command.delete.DeleteCategoryService
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.TranslationDto
+import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto
 import com.headblog.backend.domain.model.category.CategoryId
 import com.headblog.backend.domain.model.category.Slug
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
@@ -31,8 +31,8 @@ class DeleteCategoryServiceTest {
         // GIVEN: カテゴリーとデフォルトカテゴリーが存在する
         val categoryId = UUID.randomUUID()
         val defaultCategoryId = UUID.randomUUID()
-        val defaultTranslation = TranslationDto("ja", "デフォルト", null, now, now)
-        val translation = TranslationDto("ja", "テスト", "説明", now, now)
+        val defaultTranslation = CategoryTranslationDto("ja", "デフォルト", null, now, now)
+        val translation = CategoryTranslationDto("ja", "テスト", "説明", now, now)
 
         val targetDto = CategoryDto(
             id = categoryId,
@@ -85,7 +85,7 @@ class DeleteCategoryServiceTest {
     fun `should throw exception when trying to delete default category`() {
         // GIVEN: デフォルトカテゴリーを削除しようとする
         val defaultCategoryId = UUID.randomUUID()
-        val translation = TranslationDto("ja", "デフォルト", null, LocalDateTime.now(), LocalDateTime.now())
+        val translation = CategoryTranslationDto("ja", "デフォルト", null, LocalDateTime.now(), LocalDateTime.now())
         val defaultDto = CategoryDto(
             id = defaultCategoryId,
             slug = Slug.DEFAULT_SLUG,

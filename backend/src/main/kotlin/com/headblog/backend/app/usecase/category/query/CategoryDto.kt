@@ -7,7 +7,7 @@ data class CategoryDto(
     val id: UUID,
     val slug: String,
     val parentId: UUID?,
-    val translations: List<TranslationDto>,
+    val translations: List<CategoryTranslationDto>,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 )

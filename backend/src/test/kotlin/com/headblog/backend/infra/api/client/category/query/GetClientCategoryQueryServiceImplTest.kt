@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.client.category.query
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.TranslationDto
+import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto
 import com.headblog.backend.domain.model.category.Slug
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import io.mockk.every
@@ -31,14 +31,14 @@ class GetClientCategoryQueryServiceImplTest {
                 slug = "it",
                 parentId = null,
                 translations = listOf(
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "ja",
                         name = "IT",
                         description = "ITに関する記事",
                         createdAt = NOW,
                         updatedAt = NOW
                     ),
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "en",
                         name = "IT",
                         description = "Articles about Information Technology",
@@ -54,14 +54,14 @@ class GetClientCategoryQueryServiceImplTest {
                 slug = Slug.DEFAULT_SLUG,  // "uncategorized"
                 parentId = null,
                 translations = listOf(
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "ja",
                         name = "未設定",
                         description = "未設定のカテゴリー",
                         createdAt = NOW,
                         updatedAt = NOW
                     ),
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "en",
                         name = "Uncategorized",
                         description = "Uncategorized category",
@@ -77,14 +77,14 @@ class GetClientCategoryQueryServiceImplTest {
                 slug = "programming",
                 parentId = IT_CATEGORY_ID,
                 translations = listOf(
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "ja",
                         name = "プログラミング",
                         description = "プログラミング関連の記事",
                         createdAt = NOW,
                         updatedAt = NOW
                     ),
-                    TranslationDto(
+                    CategoryTranslationDto(
                         language = "en",
                         name = "Programming",
                         description = "Articles about programming",

@@ -11,7 +11,7 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
-import com.headblog.backend.app.usecase.category.query.TranslationDto as CategoryTranslationDto
+import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto as CategoryTranslationDto
 
 @Repository
 class CategoryRepositoryImpl(

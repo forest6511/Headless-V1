@@ -1,6 +1,7 @@
 package com.headblog.backend.infra.repository.category.admin
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
+import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto
 import com.headblog.backend.app.usecase.category.query.CategoryWithPostIdsDto
 import com.headblog.backend.domain.model.category.Category
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
@@ -11,7 +12,6 @@ import java.util.*
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.springframework.stereotype.Repository
-import com.headblog.backend.app.usecase.category.query.CategoryTranslationDto as CategoryTranslationDto
 
 @Repository
 class CategoryRepositoryImpl(

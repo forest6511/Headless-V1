@@ -1,12 +1,13 @@
 package com.headblog.backend.infra.repository.post
 
 import com.headblog.backend.domain.model.category.Category
+import com.headblog.backend.domain.model.category.CategoryTranslation
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.common.Language
 import com.headblog.backend.domain.model.post.Post
 import com.headblog.backend.domain.model.post.PostCategoryRepository
-import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.PostTranslation
+import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.admin.PostRepository
 import com.headblog.backend.shared.id.domain.EntityId
 import com.headblog.backend.shared.id.domain.IdGenerator
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
-import com.headblog.backend.domain.model.category.CategoryTranslation
 
 @SpringBootTest
 @Transactional

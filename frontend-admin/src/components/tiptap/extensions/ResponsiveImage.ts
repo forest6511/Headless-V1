@@ -3,12 +3,17 @@
 import Image from '@tiptap/extension-image'
 import { mergeAttributes } from '@tiptap/core'
 
+const DEFAULT_CLASS_NAME = 'cms'
+
 export const ResponsiveImage = Image.extend({
   name: 'responsiveImage',
 
   addAttributes() {
     return {
       ...this.parent?.(),
+      class: {
+        default: DEFAULT_CLASS_NAME,
+      },
       srcset: {
         default: null,
         parseHTML: (element) => element.getAttribute('srcset'),
@@ -79,6 +84,11 @@ export const ResponsiveImage = Image.extend({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+    const mergedAttributes = mergeAttributes(
+      this.options.HTMLAttributes,
+      HTMLAttributes,
+      { class: DEFAULT_CLASS_NAME }
+    )
+    return ['img', mergedAttributes]
   },
 })

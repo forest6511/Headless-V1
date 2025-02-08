@@ -40,7 +40,7 @@ export const createMediaListColumns = (language: Language) =>
     { name: t(language, 'media.columns.uploadDate'), uid: 'uploadDate' },
     { name: t(language, 'media.columns.thumbnailSize'), uid: 'thumbnailSize' },
     { name: t(language, 'media.columns.smallSize'), uid: 'smallSize' },
-    { name: t(language, 'media.columns.mediumSize'), uid: 'mediumSize' },
+    { name: t(language, 'media.columns.largeSize'), uid: 'largeSize' },
   ] as const
 
 // メディアグリッドの定数設定

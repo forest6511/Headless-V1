@@ -12,7 +12,8 @@ type Category = {
 export type FeaturedImage = {
   id: string
   thumbnailUrl: string
-  mediumUrl: string
+  smallUrl: string
+  largeUrl: string
   translations: {
     language: string
     title: string

@@ -6,7 +6,8 @@ export interface MediaTranslation {
 export interface FeaturedImage {
   id: string
   thumbnailUrl: string
-  mediumUrl: string
+  smallUrl: string
+  largeUrl: string
   translations: MediaTranslation[]
 }
 

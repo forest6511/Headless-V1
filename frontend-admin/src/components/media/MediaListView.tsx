@@ -65,7 +65,8 @@ export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
                 {new Date(file.createdAt).toLocaleDateString('ja-JP')}
               </TableCell>
               <TableCell>{formatFileSize(file.thumbnailSize)}</TableCell>
-              <TableCell>{formatFileSize(file.mediumSize)}</TableCell>
+              <TableCell>{formatFileSize(file.smallSize)}</TableCell>
+              <TableCell>{formatFileSize(file.largeSize)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

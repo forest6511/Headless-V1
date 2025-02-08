@@ -62,8 +62,8 @@ storage:
         height: 640
         quality: 70    # モバイル表示用の高品質
       large:
-        width: 1200    # PC向け
-        height: 1200
+        width: 800    # PC向け
+        height: 800
         quality: 75    # 大画面表示用の高品質
 
 logging:

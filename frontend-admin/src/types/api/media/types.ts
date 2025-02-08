@@ -8,8 +8,10 @@ export interface MediaFile {
   uploadedBy: string
   thumbnailUrl: string
   thumbnailSize: number
-  mediumUrl: string
-  mediumSize: number
+  smallUrl: string
+  smallSize: number
+  largeUrl: string
+  largeSize: number
   createdAt: string
   translations: TranslationFile[]
 }

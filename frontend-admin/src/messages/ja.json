@@ -210,16 +210,17 @@
       "title": "メディアの詳細",
       "thumbnail": "サムネイル",
       "small": "小サイズ",
-      "medium": "中サイズ",
+      "large": "大サイズ",
       "createdAt": "作成日",
       "uploadedBy": "アップロード",
       "thumbnailSize": "サムネイルサイズ",
-      "mediumSize": "中サイズ",
+      "smallSize": "小サイズ",
+      "largeSize": "大サイズ",
       "fileTitle": "タイトル",
       "altText": "代替テキスト",
       "thumbnailUrl": "サムネイルURL",
       "smallUrl": "小サイズURL",
-      "mediumUrl": "中サイズURL",
+      "largeUrl": "大サイズURL",
       "update": "更新する",
       "copySuccess": "URLをコピーしました"
     },
@@ -229,7 +230,7 @@
       "uploadDate": "アップロード日",
       "thumbnailSize": "サムネイルサイズ",
       "smallSize": "小サイズ",
-      "mediumSize": "中サイズ"
+      "largeSize": "大サイズ"
     }
   },
   "editor": {

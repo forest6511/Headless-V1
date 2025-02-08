@@ -210,17 +210,17 @@
       "title": "Media Details",
       "thumbnail": "Thumbnail",
       "small": "Small",
-      "medium": "Medium",
+      "large": "Large",
       "createdAt": "Created",
       "uploadedBy": "Uploaded by",
       "thumbnailSize": "Thumbnail size",
       "smallSize": "Small size",
-      "mediumSize": "Medium size",
+      "largeSize": "Large size",
       "fileTitle": "Title",
       "altText": "Alt Text",
       "thumbnailUrl": "Thumbnail URL",
       "smallUrl": "Small URL",
-      "mediumUrl": "Medium URL",
+      "largeUrl": "Large URL",
       "update": "Update",
       "copySuccess": "URL copied to clipboard"
     },
@@ -230,7 +230,7 @@
       "uploadDate": "Upload Date",
       "thumbnailSize": "Thumbnail Size",
       "smallSize": "Small Size",
-      "mediumSize": "Medium Size"
+      "largeSize": "Large Size"
     }
   },
   "editor": {

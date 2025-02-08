@@ -2,11 +2,11 @@
 
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Image from '@tiptap/extension-image'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { common, createLowlight } from 'lowlight'
 import { useEffect, useState } from 'react'
-import Toolbar, { ResponsiveImage } from './Toolbar'
+import Toolbar from './toolbar/Toolbar'
+import { ResponsiveImage } from '@/components/tiptap/extensions'
 import { Heading } from '@tiptap/extension-heading'
 import { Bold } from '@tiptap/extension-bold'
 import { OrderedList } from '@tiptap/extension-ordered-list'
@@ -17,7 +17,6 @@ import { Link } from '@tiptap/extension-link'
 import { Blockquote } from '@tiptap/extension-blockquote'
 import { Highlight } from '@tiptap/extension-highlight'
 import { Underline } from '@tiptap/extension-underline'
-// History拡張機能のインポートを削除
 
 const lowlight = createLowlight(common)
 

@@ -49,3 +49,11 @@ export const MEDIA_GRID_CONFIG = {
   SCROLL_THRESHOLD: 2200, // スクロール時の追加読み込みの閾値 (値を大きくするとよりスムーズになる)
   DEBOUNCE_DELAY: 25, // スクロールイベントのデバウンス遅延 (値を小さくすると遅延なし)
 }
+
+export const HIGHLIGHT_COLORS = [
+  { label: 'Yellow', value: '#fef08a' },
+  { label: 'Green', value: '#bbf7d0' },
+  { label: 'Blue', value: '#bfdbfe' },
+  { label: 'Pink', value: '#fecdd3' },
+  { label: 'Purple', value: '#e9d5ff' },
+]

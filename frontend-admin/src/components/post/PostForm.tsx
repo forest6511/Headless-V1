@@ -21,7 +21,7 @@ import { createCategoryOptions } from '@/lib/utils/category'
 import pretty from 'pretty'
 import { useLanguageStore } from '@/stores/admin/languageStore'
 import { t } from '@/lib/translations'
-import { MediaSelectModal } from '@/components/tiptap/MediaSelectModal'
+import { MediaSelectModal } from '@/components/tiptap/toolbar/components/MediaSelectModal'
 import { MediaFile } from '@/types/api/media/types'
 
 interface PostFormProps {

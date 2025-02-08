@@ -74,8 +74,8 @@ storage:
       small:
         width: 640     # スマートフォン向け
         height: 640
-        quality: 70    # モバイル表示用の高品質
+        quality: 65    # モバイル表示用の高品質
       large:
         width: 800    # PC向け
         height: 800
-        quality: 75    # 大画面表示用の高品質
+        quality: 70    # 大画面表示用の高品質

@@ -43,8 +43,10 @@ class GetMediaServiceImpl(
                 uploadedBy = mediaDto.uploadedBy,
                 thumbnailUrl = mediaDto.thumbnailUrl,
                 thumbnailSize = mediaDto.thumbnailSize,
-                mediumUrl = mediaDto.mediumUrl,
-                mediumSize = mediaDto.mediumSize,
+                smallUrl = mediaDto.smallUrl,
+                smallSize = mediaDto.smallSize,
+                largeUrl = mediaDto.largeUrl,
+                largeSize = mediaDto.largeSize,
                 createdAt = mediaDto.createdAt,
                 translations = mediaDto.translations.map {
                     MediaTranslationResponse(

@@ -35,7 +35,6 @@ export function ArticleContent({
               src={featuredImage.thumbnailUrl}
               alt={featuredImage.translations[0]?.title || title}
               className="w-full h-full object-cover rounded-lg"
-              loading="lazy"
               decoding="async"
               fetchPriority="low"
             />

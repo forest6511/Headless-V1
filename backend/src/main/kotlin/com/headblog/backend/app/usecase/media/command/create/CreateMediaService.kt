@@ -62,10 +62,16 @@ class CreateMediaService(
                 storageProperties.media.sizes.thumbnail.quality
             ),
             ImageSizeConfig(
-                "m",
-                storageProperties.media.sizes.medium.width,
-                storageProperties.media.sizes.medium.height,
-                storageProperties.media.sizes.medium.quality
+                "s",
+                storageProperties.media.sizes.small.width,
+                storageProperties.media.sizes.small.height,
+                storageProperties.media.sizes.small.quality
+            ),
+            ImageSizeConfig(
+                "l",
+                storageProperties.media.sizes.large.width,
+                storageProperties.media.sizes.large.height,
+                storageProperties.media.sizes.large.quality
             ),
         )
         val mediaSizes = sizes.map { sizeConfig ->
@@ -78,7 +84,8 @@ class CreateMediaService(
             id = mediaId,
             uploadedBy = command.user.id,
             thumbnail = mediaSizes[0],
-            medium = mediaSizes[1],
+            small = mediaSizes[1],
+            large = mediaSizes[2],
             translations = translations
         )
 
@@ -89,8 +96,10 @@ class CreateMediaService(
             uploadedBy = media.uploadedBy.value,
             thumbnailUrl = media.thumbnail.url,
             thumbnailSize = media.thumbnail.size,
-            mediumUrl = media.medium.url,
-            mediumSize = media.medium.size,
+            smallUrl = media.small.url,
+            smallSize = media.small.size,
+            largeUrl = media.large.url,
+            largeSize = media.large.size,
             createdAt = LocalDateTime.now(),
             translations = translations.map {
                 MediaTranslationResponse(
@@ -138,7 +147,7 @@ class CreateMediaService(
         val yearMonth = getCurrentYearMonth()
         val key = "media/$yearMonth/${mediaId.value}-${sizeConfig.prefix}-$fileName"
         storageService.uploadFile(key, processedImage, uploadFormat)
-        return MediaSize(key, processedImage.size.toLong())
+        return MediaSize(key, processedImage.size)
     }
 
     private fun toBytes(size: String): Long {

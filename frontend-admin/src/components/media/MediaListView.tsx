@@ -51,7 +51,6 @@ export function MediaListView({ files, onFileSelectAction }: ListViewProps) {
                   width={50}
                   height={50}
                   className="object-cover rounded"
-                  loading="lazy"
                   decoding="async"
                   fetchPriority="low"
                 />

@@ -42,7 +42,8 @@ class GetClientPostQueryServiceImpl(
                         FeaturedImageResponse(
                             id = it.id,
                             thumbnailUrl = it.thumbnailUrl,
-                            mediumUrl = it.mediumUrl,
+                            smallUrl = it.smallUrl,
+                            largeUrl = it.largeUrl,
                             translations = it.translations.map { translation ->
                                 MediaTranslationResponse(
                                     language = translation.language,
@@ -77,7 +78,8 @@ class GetClientPostQueryServiceImpl(
                     FeaturedImageResponse(
                         id = it.id,
                         thumbnailUrl = it.thumbnailUrl,
-                        mediumUrl = it.mediumUrl,
+                        smallUrl = it.smallUrl,
+                        largeUrl = it.largeUrl,
                         translations = it.translations.map { translation ->
                             MediaTranslationResponse(
                                 language = translation.language,

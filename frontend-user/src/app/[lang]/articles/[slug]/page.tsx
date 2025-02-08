@@ -85,7 +85,6 @@ export default async function ArticlePage(props: PageProps) {
                   article.featuredImage.translations[0]?.title || article.title
                 }
                 className="w-full max-h-96 object-cover rounded-lg"
-                loading="lazy"
                 decoding="async"
               />
             </div>

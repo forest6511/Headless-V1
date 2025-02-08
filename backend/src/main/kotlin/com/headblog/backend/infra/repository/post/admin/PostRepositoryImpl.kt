@@ -216,7 +216,8 @@ class PostRepositoryImpl(
             FeaturedImageDto(
                 id = featuredImageId,
                 thumbnailUrl = requireNotNull(first.get(MEDIAS.THUMBNAIL_URL)),
-                mediumUrl = requireNotNull(first.get(MEDIAS.MEDIUM_URL)),
+                smallUrl = requireNotNull(first.get(MEDIAS.SMALL_URL)),
+                largeUrl = requireNotNull(first.get(MEDIAS.LARGE_URL)),
                 translations = this.map { rec ->
                     MediaTranslationDto(
                         language = requireNotNull(rec.get(MEDIA_TRANSLATIONS.LANGUAGE)),

@@ -40,9 +40,13 @@ class StoragePropertiesTest {
             assertEquals(width, 150)
             assertEquals(height, 150)
         }
-        with(sizes.medium) {
-            assertEquals(width, 800)
-            assertEquals(height, 800)
+        with(sizes.small) {
+            assertEquals(width, 640)
+            assertEquals(height, 640)
+        }
+        with(sizes.large) {
+            assertEquals(width, 1200)
+            assertEquals(height, 1200)
         }
     }
 }

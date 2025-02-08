@@ -37,7 +37,8 @@ object PostRecordMapper {
             FeaturedImageDto(
                 id = featuredImageId,
                 thumbnailUrl = requireNotNull(get(MEDIAS.THUMBNAIL_URL)),
-                mediumUrl = requireNotNull(get(MEDIAS.MEDIUM_URL)),
+                smallUrl = requireNotNull(get(MEDIAS.SMALL_URL)),
+                largeUrl = requireNotNull(get(MEDIAS.LARGE_URL)),
                 translations = listOf(toMediaTranslationDto())
             )
         } else null

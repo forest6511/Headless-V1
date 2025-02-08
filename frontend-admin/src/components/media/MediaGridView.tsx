@@ -27,7 +27,6 @@ export function MediaGridView({ files, onFileSelectAction }: GridViewProps) {
                 ?.title || ''
             }
             className="absolute inset-0 w-full h-full object-cover rounded-lg"
-            loading="lazy"
             decoding="async"
             fetchPriority="high"
           />

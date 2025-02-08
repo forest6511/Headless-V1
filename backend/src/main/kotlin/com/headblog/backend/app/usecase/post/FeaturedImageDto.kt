@@ -6,6 +6,7 @@ import java.util.*
 data class FeaturedImageDto(
     val id: UUID,
     val thumbnailUrl: String,
-    val mediumUrl: String,
+    val smallUrl: String,
+    val largeUrl: String,
     val translations: List<MediaTranslationDto>
 )

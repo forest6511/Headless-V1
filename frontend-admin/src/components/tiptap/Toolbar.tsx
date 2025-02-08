@@ -1,10 +1,11 @@
 import { Editor } from '@tiptap/react'
+import { mergeAttributes, Node } from '@tiptap/core'
+import Image from '@tiptap/extension-image'
 import {
   Bold,
   Italic,
   List,
   ListOrdered,
-  ImageIcon,
   Code,
   Heading3,
   Heading2,
@@ -44,38 +45,99 @@ const HIGHLIGHT_COLORS = [
   { label: 'Purple', value: '#e9d5ff' },
 ]
 
+export const ResponsiveImage = Image.extend({
+  name: 'responsiveImage',
+
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      srcset: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('srcset'),
+        renderHTML: (attributes) => {
+          if (!attributes.srcset) {
+            return {}
+          }
+          return {
+            srcset: attributes.srcset,
+          }
+        },
+      },
+      sizes: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('sizes'),
+        renderHTML: (attributes) => {
+          if (!attributes.sizes) {
+            return {}
+          }
+          return {
+            sizes: attributes.sizes,
+          }
+        },
+      },
+      loading: {
+        default: 'eager',
+        parseHTML: (element) => element.getAttribute('loading'),
+        renderHTML: (attributes) => {
+          return {
+            loading: attributes.loading,
+          }
+        },
+      },
+      decoding: {
+        default: 'async',
+        parseHTML: (element) => element.getAttribute('decoding'),
+        renderHTML: (attributes) => {
+          return {
+            decoding: attributes.decoding,
+          }
+        },
+      },
+      width: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('width'),
+        renderHTML: (attributes) => {
+          if (!attributes.width) {
+            return {}
+          }
+          return {
+            width: attributes.width,
+          }
+        },
+      },
+      height: {
+        default: null,
+        parseHTML: (element) => element.getAttribute('height'),
+        renderHTML: (attributes) => {
+          if (!attributes.height) {
+            return {}
+          }
+          return {
+            height: attributes.height,
+          }
+        },
+      },
+    }
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+  },
+})
+
 const Toolbar = ({ editor }: { editor: Editor }) => {
   if (!editor) {
     return null
   }
 
   const currentLanguage = useLanguageStore((state) => state.language)
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isOpen: isLinkOpen,
     onOpen: onLinkOpen,
     onClose: onLinkClose,
   } = useDisclosure()
-  const [imageUrl, setImageUrl] = useState('')
-  const [imageAlt, setImageAlt] = useState('')
   const [linkUrl, setLinkUrl] = useState('')
   const [linkText, setLinkText] = useState('')
-
-  const handleAddImage = () => {
-    if (imageUrl) {
-      editor
-        .chain()
-        .focus()
-        .setImage({
-          src: imageUrl,
-          alt: imageAlt || undefined,
-        })
-        .run()
-      setImageUrl('')
-      setImageAlt('')
-      onClose()
-    }
-  }
 
   const handleAddLink = () => {
     if (linkUrl) {
@@ -99,11 +161,18 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
     editor
       .chain()
       .focus()
-      .setImage({
-        src: file.largeUrl,
-        alt:
-          file.translations.find((t) => t.language === currentLanguage)
-            ?.title || '',
+      .insertContent({
+        type: 'responsiveImage',
+        attrs: {
+          src: file.smallUrl,
+          srcset: `${file.smallUrl} 640w, ${file.largeUrl} 800w`,
+          sizes: '(max-width: 640px) 640px, 800px',
+          alt:
+            file.translations.find((t) => t.language === currentLanguage)
+              ?.title || '',
+          loading: 'lazy',
+          decoding: 'async',
+        },
       })
       .run()
   }

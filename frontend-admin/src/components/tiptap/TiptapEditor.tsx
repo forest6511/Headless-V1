@@ -6,7 +6,7 @@ import Image from '@tiptap/extension-image'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { common, createLowlight } from 'lowlight'
 import { useEffect, useState } from 'react'
-import Toolbar from './Toolbar'
+import Toolbar, { ResponsiveImage } from './Toolbar'
 import { Heading } from '@tiptap/extension-heading'
 import { Bold } from '@tiptap/extension-bold'
 import { OrderedList } from '@tiptap/extension-ordered-list'
@@ -78,12 +78,6 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
-      Image.configure({
-        inline: true,
-        HTMLAttributes: {
-          class: `${CSS_CLASS_NAME_PREFIX}`,
-        },
-      }),
       Link.configure({
         HTMLAttributes: {
           class: `${CSS_CLASS_NAME_PREFIX}`,
@@ -100,6 +94,7 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
+      ResponsiveImage,
       Highlight.configure({
         multicolor: true,
         HTMLAttributes: {

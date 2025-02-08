@@ -207,11 +207,15 @@ class MediaRepositoryImplTest {
                 uploadedBy = userId,
                 thumbnail = MediaSize(
                     url = "thumbnail-$i.jpg",
-                    size = 100L * i
+                    size = 100 * i
                 ),
-                medium = MediaSize(
-                    url = "medium-$i.jpg",
-                    size = 800L * i
+                small = MediaSize(
+                    url = "small-$i.jpg",
+                    size = 800 * i
+                ),
+                large = MediaSize(
+                    url = "large-$i.jpg",
+                    size = 1200 * i
                 ),
                 translations = listOf(
                     MediaTranslation(

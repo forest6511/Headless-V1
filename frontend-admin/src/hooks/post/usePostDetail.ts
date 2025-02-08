@@ -20,7 +20,7 @@ export const convertPostResponseToFormData = (
     post.translations[0]
 
   // featuredImageがある場合は、mediumUrlを設定
-  const featuredImageUrl = post.featuredImage?.mediumUrl || ''
+  const featuredImageUrl = post.featuredImage?.largeUrl || ''
 
   return {
     id: post.id,

@@ -6,15 +6,16 @@ import java.util.*
 data class FeaturedImageResponse(
     val id: UUID,
     val thumbnailUrl: String,
-    val mediumUrl: String,
-    // media.response.TranslationResponse
+    val smallUrl: String,
+    val largeUrl: String,
     val translations: List<MediaTranslationResponse>
 )
 
 fun FeaturedImageResponse.withFullUrls(mediaBaseUrl: String): FeaturedImageResponse {
     return copy(
         thumbnailUrl = thumbnailUrl.prependBaseUrl(mediaBaseUrl),
-        mediumUrl = mediumUrl.prependBaseUrl(mediaBaseUrl)
+        smallUrl = smallUrl.prependBaseUrl(mediaBaseUrl),
+        largeUrl = largeUrl.prependBaseUrl(mediaBaseUrl)
     )
 }
 

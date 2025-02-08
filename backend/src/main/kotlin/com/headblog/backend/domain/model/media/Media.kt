@@ -8,7 +8,8 @@ class Media private constructor(
     val id: MediaId,
     val uploadedBy: UserId,
     val thumbnail: MediaSize,
-    val medium: MediaSize,
+    val small: MediaSize,
+    val large: MediaSize,
     val translations: List<MediaTranslation>
 ) {
     companion object {
@@ -16,14 +17,16 @@ class Media private constructor(
             idGenerator: IdGenerator<EntityId>,
             uploadedBy: UserId,
             thumbnail: MediaSize,
-            medium: MediaSize,
+            small: MediaSize,
+            large: MediaSize,
             translations: List<MediaTranslation>
         ): Media {
             return Media(
                 id = MediaId(idGenerator.generate().value),
                 uploadedBy = uploadedBy,
                 thumbnail = thumbnail,
-                medium = medium,
+                small = small,
+                large = large,
                 translations = translations,
             )
         }
@@ -32,14 +35,16 @@ class Media private constructor(
             id: MediaId,
             uploadedBy: UserId,
             thumbnail: MediaSize,
-            medium: MediaSize,
+            small: MediaSize,
+            large: MediaSize,
             translations: List<MediaTranslation>
         ): Media {
             return Media(
                 id = id,
                 uploadedBy = uploadedBy,
                 thumbnail = thumbnail,
-                medium = medium,
+                small = small,
+                large = large,
                 translations = translations,
             )
         }

@@ -23,8 +23,10 @@ class MediaRepositoryImpl(
             .set(MEDIAS.UPLOADED_BY, media.uploadedBy.value)
             .set(MEDIAS.THUMBNAIL_URL, media.thumbnail.url)
             .set(MEDIAS.THUMBNAIL_SIZE, media.thumbnail.size)
-            .set(MEDIAS.MEDIUM_URL, media.medium.url)
-            .set(MEDIAS.MEDIUM_SIZE, media.medium.size)
+            .set(MEDIAS.SMALL_URL, media.small.url)
+            .set(MEDIAS.SMALL_SIZE, media.small.size)
+            .set(MEDIAS.LARGE_URL, media.large.url)
+            .set(MEDIAS.LARGE_SIZE, media.large.size)
             .execute()
 
         media.translations.forEach { translation ->
@@ -42,8 +44,10 @@ class MediaRepositoryImpl(
         val mediaResult = dsl.update(MEDIAS)
             .set(MEDIAS.THUMBNAIL_URL, media.thumbnail.url)
             .set(MEDIAS.THUMBNAIL_SIZE, media.thumbnail.size)
-            .set(MEDIAS.MEDIUM_URL, media.medium.url)
-            .set(MEDIAS.MEDIUM_SIZE, media.medium.size)
+            .set(MEDIAS.SMALL_URL, media.small.url)
+            .set(MEDIAS.SMALL_SIZE, media.small.size)
+            .set(MEDIAS.LARGE_URL, media.large.url)
+            .set(MEDIAS.LARGE_SIZE, media.large.size)
             .where(MEDIAS.ID.eq(media.id.value))
             .execute()
 
@@ -126,8 +130,10 @@ class MediaRepositoryImpl(
             uploadedBy = checkNotNull(firstRecord.get(MEDIAS.UPLOADED_BY)),
             thumbnailUrl = checkNotNull(firstRecord.get(MEDIAS.THUMBNAIL_URL)),
             thumbnailSize = checkNotNull(firstRecord.get(MEDIAS.THUMBNAIL_SIZE)),
-            mediumUrl = checkNotNull(firstRecord.get(MEDIAS.MEDIUM_URL)),
-            mediumSize = checkNotNull(firstRecord.get(MEDIAS.MEDIUM_SIZE)),
+            smallUrl = checkNotNull(firstRecord.get(MEDIAS.SMALL_URL)),
+            smallSize = checkNotNull(firstRecord.get(MEDIAS.SMALL_SIZE)),
+            largeUrl = checkNotNull(firstRecord.get(MEDIAS.LARGE_URL)),
+            largeSize = checkNotNull(firstRecord.get(MEDIAS.LARGE_SIZE)),
             createdAt = checkNotNull(firstRecord.get(MEDIAS.CREATED_AT)),
             translations = map { record ->
                 MediaTranslationDto(

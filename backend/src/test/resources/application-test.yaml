@@ -57,10 +57,14 @@ storage:
         width: 150
         height: 150
         quality: 55    # サムネイル用の低品質
-      medium:
-        width: 800
+      small:
+        width: 640     # スマートフォン向け
+        height: 640
+        quality: 70    # モバイル表示用の高品質
+      large:
+        width: 800    # PC向け
         height: 800
-        quality: 65    # 表示用の中品質
+        quality: 75    # 大画面表示用の高品質
 
 logging:
   level:

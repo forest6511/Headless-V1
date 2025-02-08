@@ -1,10 +1,9 @@
 package com.headblog.backend.infra.repository.post.client
 
-import com.headblog.backend.app.usecase.media.query.MediaTranslationDto
-import com.headblog.backend.app.usecase.post.FeaturedImageDto
 import com.headblog.backend.app.usecase.post.PostDto
 import com.headblog.backend.domain.model.post.Status
 import com.headblog.backend.domain.model.post.client.PostClientRepository
+import com.headblog.backend.infra.repository.media.MediaQueryHelper
 import com.headblog.backend.infra.repository.post.PostRecordMapper
 import com.headblog.backend.infra.repository.post.TagQueryHelper
 import com.headblog.infra.jooq.tables.references.MEDIAS
@@ -48,26 +47,11 @@ class PostClientRepositoryImpl(
         val records = query.orderBy(POSTS.ID.desc()).limit(pageSize + 1).fetch()
 
         return records.map { record ->
-            val featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID)
-            val featuredImage = if (featuredImageId != null && record.get(MEDIAS.ID) != null) {
-                FeaturedImageDto(
-                    id = featuredImageId,
-                    thumbnailUrl = requireNotNull(record.get(MEDIAS.THUMBNAIL_URL)),
-                    mediumUrl = requireNotNull(record.get(MEDIAS.MEDIUM_URL)),
-                    translations = listOf(
-                        MediaTranslationDto(
-                            language = requireNotNull(record.get(MEDIA_TRANSLATIONS.LANGUAGE)),
-                            title = requireNotNull(record.get(MEDIA_TRANSLATIONS.TITLE))
-                        )
-                    )
-                )
-            } else null
-
             PostDto(
                 id = requireNotNull(record.get(POSTS.ID)),
                 slug = requireNotNull(record.get(POSTS.SLUG)),
-                featuredImageId = featuredImageId,
-                featuredImage = featuredImage,
+                featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID),
+                featuredImage = MediaQueryHelper.createFeaturedImageDto(record),
                 categoryId = requireNotNull(record.get(POST_CATEGORIES.CATEGORY_ID)),
                 tags = TagQueryHelper.fetchTagsForPost(dsl, checkNotNull(record.get(POSTS.ID))),
                 translations = listOf(

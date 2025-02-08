@@ -80,13 +80,17 @@ export default async function ArticlePage(props: PageProps) {
           {article.featuredImage && (
             <div className="mb-6">
               <img
-                src={article.featuredImage.mediumUrl}
+                src={article.featuredImage.largeUrl}
+                srcSet={`${article.featuredImage.smallUrl} 640w, ${article.featuredImage.largeUrl} 1200w`}
+                sizes="(max-width: 640px) 640px, 1200px"
                 alt={
                   article.featuredImage.translations[0]?.title || article.title
                 }
                 className="w-full max-h-96 object-cover rounded-lg"
-                loading="lazy"
                 decoding="async"
+                loading="eager"
+                width={800}
+                height={800}
               />
             </div>
           )}

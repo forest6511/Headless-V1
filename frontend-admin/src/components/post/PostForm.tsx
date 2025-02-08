@@ -79,8 +79,8 @@ export function PostForm({
       shouldDirty: true,
       shouldTouch: true,
     })
-    setSelectedImageUrl(file.mediumUrl)
-    form.setValue('featuredImageUrl', file.mediumUrl)
+    setSelectedImageUrl(file.largeUrl)
+    form.setValue('featuredImageUrl', file.largeUrl)
     setIsMediaModalOpen(false)
   }
 

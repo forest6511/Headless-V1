@@ -59,16 +59,19 @@ COMMENT ON COLUMN refresh_tokens.expires_at IS 'Expiry time of the refresh token
 COMMENT ON COLUMN refresh_tokens.created_at IS 'Timestamp when the refresh token was created';
 
 -- Media table
+-- Media table
 CREATE TABLE medias
 (
-    id           uuid PRIMARY KEY,
-    title        varchar(255),
-    uploaded_by  uuid REFERENCES users (id),
+    id             uuid PRIMARY KEY,
+    title          varchar(255),
+    uploaded_by    uuid REFERENCES users (id),
     thumbnail_url  varchar(255) NOT NULL,
-    thumbnail_size bigint       NOT NULL,
-    medium_url   varchar(255) NOT NULL,
-    medium_size  bigint       NOT NULL,
-    created_at   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    thumbnail_size integer      NOT NULL,
+    small_url      varchar(255) NOT NULL,
+    small_size     integer      NOT NULL,
+    large_url      varchar(255) NOT NULL,
+    large_size     integer      NOT NULL,
+    created_at     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE medias IS 'Table for storing media files like images and videos with multiple size URLs and their sizes';
@@ -76,8 +79,10 @@ COMMENT ON TABLE medias IS 'Table for storing media files like images and videos
 COMMENT ON COLUMN medias.id IS 'Unique identifier for each media file';
 COMMENT ON COLUMN medias.title IS 'Optional title or description for the media file';
 COMMENT ON COLUMN medias.uploaded_by IS 'UUID of the user who uploaded the media file, referencing the users table';
-COMMENT ON COLUMN medias.medium_url IS 'URL of the medium version of the media file';
-COMMENT ON COLUMN medias.medium_size IS 'File size of the medium version in bytes';
+COMMENT ON COLUMN medias.small_url IS 'URL of the small version of the media file';
+COMMENT ON COLUMN medias.small_size IS 'File size of the small version in bytes';
+COMMENT ON COLUMN medias.large_url IS 'URL of the large version of the media file';
+COMMENT ON COLUMN medias.large_size IS 'File size of the large version in bytes';
 COMMENT ON COLUMN medias.created_at IS 'Timestamp when the media file was uploaded';
 
 -- Media Translations table

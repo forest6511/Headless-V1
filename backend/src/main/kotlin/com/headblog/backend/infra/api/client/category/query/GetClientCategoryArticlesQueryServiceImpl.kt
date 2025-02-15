@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.client.category.query
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.GetClientCategoryArticlesQueryService
+import com.headblog.backend.app.usecase.category.client.qeury.GetClientCategoryArticlesQueryService
 import com.headblog.backend.app.usecase.post.PostDto
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.category.client.CategoryClientRepository
@@ -16,6 +16,7 @@ import com.headblog.backend.infra.api.client.post.response.PostClientResponse
 import com.headblog.backend.infra.api.common.query.CategoryPathBuilder
 import com.headblog.backend.infra.config.StorageProperties
 import com.headblog.backend.shared.exceptions.AppConflictException
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,6 +26,8 @@ class GetClientCategoryArticlesQueryServiceImpl(
     private val storageProperties: StorageProperties,
     private val categoryPathBuilder: CategoryPathBuilder
 ) : GetClientCategoryArticlesQueryService {
+
+    private val logger = LoggerFactory.getLogger(GetClientCategoryArticlesQueryServiceImpl::class.java)
 
     // translations.first()の安全なアクセスを提供し、存在しない場合は適切なエラーをスロー
     private val CategoryDto.firstTranslation

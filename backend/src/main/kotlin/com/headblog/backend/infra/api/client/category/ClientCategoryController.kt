@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.client.category
 
-import com.headblog.backend.app.usecase.category.query.GetClientCategoryArticlesQueryService
-import com.headblog.backend.app.usecase.category.query.GetClientCategoryQueryService
+import com.headblog.backend.app.usecase.category.client.qeury.GetClientCategoryArticlesQueryService
+import com.headblog.backend.app.usecase.category.client.qeury.GetClientCategoryQueryService
 import com.headblog.backend.infra.api.client.category.response.CategoryWithArticlesClientResponse
 import com.headblog.backend.infra.api.client.category.response.HierarchicalCategoryResponse
 import org.springframework.http.ResponseEntity

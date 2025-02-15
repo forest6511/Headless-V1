@@ -15,7 +15,7 @@ import org.jooq.Record
 
 object PostRecordMapper {
 
-    fun Record.toPostDto(dsl: DSLContext): PostDto {
+    fun Record.toPostDto(dsl: DSLContext, includeContent: Boolean = false): PostDto {
         val postId = requireNotNull(get(POSTS.ID))
         val featuredImageId = get(POSTS.FEATURED_IMAGE_ID)
 
@@ -51,13 +51,13 @@ object PostRecordMapper {
         )
     }
 
-    private fun Record.toTranslationDto(): PostTranslationDto {
+    private fun Record.toTranslationDto(includeContent: Boolean = false): PostTranslationDto {
         return PostTranslationDto(
             language = requireNotNull(get(POST_TRANSLATIONS.LANGUAGE)),
             status = requireNotNull(get(POST_TRANSLATIONS.STATUS)),
             title = requireNotNull(get(POST_TRANSLATIONS.TITLE)),
             excerpt = requireNotNull(get(POST_TRANSLATIONS.EXCERPT)),
-            content = requireNotNull(get(POST_TRANSLATIONS.CONTENT))
+            content = if(includeContent){ requireNotNull(get(POST_TRANSLATIONS.CONTENT)) } else  ""
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.headblog.backend.app.usecase.category.query
+package com.headblog.backend.app.usecase.category.client.qeury
 
 import com.headblog.backend.infra.api.client.category.response.CategoryWithArticlesClientResponse
 

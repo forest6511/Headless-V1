@@ -1,7 +1,7 @@
 package com.headblog.backend.infra.api.client.category.query
 
 import com.headblog.backend.app.usecase.category.query.CategoryDto
-import com.headblog.backend.app.usecase.category.query.GetClientCategoryArticlesQueryService
+import com.headblog.backend.app.usecase.category.client.qeury.GetClientCategoryArticlesQueryService
 import com.headblog.backend.app.usecase.post.PostDto
 import com.headblog.backend.domain.model.category.admin.CategoryRepository
 import com.headblog.backend.domain.model.category.client.CategoryClientRepository

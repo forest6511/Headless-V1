@@ -8,6 +8,7 @@ import com.headblog.backend.domain.model.tag.Tag
 import com.headblog.backend.domain.model.tag.TagId
 import com.headblog.backend.domain.model.tag.TagRepository
 import com.headblog.backend.infra.repository.media.MediaQueryHelper
+import com.headblog.backend.infra.repository.post.PostRecordMapper
 import com.headblog.infra.jooq.tables.references.MEDIAS
 import com.headblog.infra.jooq.tables.references.MEDIA_TRANSLATIONS
 import com.headblog.infra.jooq.tables.references.POSTS
@@ -87,7 +88,10 @@ class TagRepositoryImpl(
             .innerJoin(TAGS).on(POST_TAGS.TAG_ID.eq(TAGS.ID))
             .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
             .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
-            .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
+            .leftJoin(MEDIA_TRANSLATIONS).on(
+                MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID)
+                    .and(MEDIA_TRANSLATIONS.LANGUAGE.eq(language))
+            )
             .where(TAGS.NAME.eq(name))
             .and(POST_TRANSLATIONS.LANGUAGE.eq(language))
             .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
@@ -95,35 +99,8 @@ class TagRepositoryImpl(
             .limit(pageSize)
 
         return query.fetch().map { record ->
-            PostDto(
-                id = requireNotNull(record.get(POSTS.ID)),
-                slug = requireNotNull(record.get(POSTS.SLUG)),
-                featuredImageId = record.get(POSTS.FEATURED_IMAGE_ID),
-                featuredImage = MediaQueryHelper.createFeaturedImageDto(record),
-                categoryId = requireNotNull(record.get(POST_CATEGORIES.CATEGORY_ID)),
-                tags = fetchTagsForPost(requireNotNull(record.get(POSTS.ID))),
-                translations = listOf(
-                    PostTranslationDto(
-                        language = language,
-                        status = requireNotNull(record.get(POST_TRANSLATIONS.STATUS)),
-                        title = requireNotNull(record.get(POST_TRANSLATIONS.TITLE)),
-                        excerpt = requireNotNull(record.get(POST_TRANSLATIONS.EXCERPT)),
-                        content = "" // 記事一覧なのでcontentは不要
-                    )
-                ),
-                createdAt = requireNotNull(record.get(POSTS.CREATED_AT)),
-                updatedAt = requireNotNull(record.get(POSTS.UPDATED_AT))
-            )
+            PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
         }
-    }
-
-    private fun fetchTagsForPost(postId: UUID): List<TagDto> {
-        return dsl.select(TAGS.ID, TAGS.NAME, TAGS.SLUG)
-            .from(TAGS)
-            .join(POST_TAGS).on(TAGS.ID.eq(POST_TAGS.TAG_ID))
-            .where(POST_TAGS.POST_ID.eq(postId))
-            .fetch()
-            .map { it.toTagDto() }
     }
 
     private fun Record.toTagDto(): TagDto {

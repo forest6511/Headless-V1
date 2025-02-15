@@ -57,7 +57,7 @@ object PostRecordMapper {
             status = requireNotNull(get(POST_TRANSLATIONS.STATUS)),
             title = requireNotNull(get(POST_TRANSLATIONS.TITLE)),
             excerpt = requireNotNull(get(POST_TRANSLATIONS.EXCERPT)),
-            content = get(POST_TRANSLATIONS.CONTENT).let { requireNotNull(it).takeIf { includeContent } ?: "" }
+            content = if(includeContent){ requireNotNull(get(POST_TRANSLATIONS.CONTENT)) } else  ""
         )
     }
 }

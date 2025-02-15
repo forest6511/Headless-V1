@@ -22,52 +22,30 @@ class CategoryClientRepositoryImpl(
     private val dsl: DSLContext
 ) : CategoryClientRepository {
 
-    override fun findPublishedPostsByCategorySlug(
-        slug: String,
-        language: String,
-        pageSize: Int
-    ): List<PostDto> {
-        val query = dsl.select(
-            POSTS.asterisk(),
-            POST_CATEGORIES.CATEGORY_ID,
-            POST_TRANSLATIONS.LANGUAGE,
-            POST_TRANSLATIONS.STATUS,
-            POST_TRANSLATIONS.TITLE,
-            POST_TRANSLATIONS.EXCERPT,
-            MEDIAS.asterisk(),
-            MEDIA_TRANSLATIONS.LANGUAGE,
-            MEDIA_TRANSLATIONS.TITLE
+    private fun buildBasePostQuery(language: String) = dsl.select(
+        POSTS.asterisk(),
+        POST_CATEGORIES.CATEGORY_ID,
+        POST_TRANSLATIONS.LANGUAGE,
+        POST_TRANSLATIONS.STATUS,
+        POST_TRANSLATIONS.TITLE,
+        POST_TRANSLATIONS.EXCERPT,
+        MEDIAS.asterisk(),
+        MEDIA_TRANSLATIONS.LANGUAGE,
+        MEDIA_TRANSLATIONS.TITLE
+    )
+        .from(POSTS)
+        .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
+        .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
+        .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
+        .leftJoin(MEDIA_TRANSLATIONS).on(
+            MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID)
+                .and(MEDIA_TRANSLATIONS.LANGUAGE.eq(language))
         )
-            .from(POSTS)
-            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
-            .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
-            .innerJoin(CATEGORIES).on(POST_CATEGORIES.CATEGORY_ID.eq(CATEGORIES.ID))
-            .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
-            .leftJoin(MEDIA_TRANSLATIONS).on(
-                MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID)
-                    .and(MEDIA_TRANSLATIONS.LANGUAGE.eq(language))
-            )
-            .where(CATEGORIES.SLUG.eq(slug))
-            .and(POST_TRANSLATIONS.LANGUAGE.eq(language))
-            .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
-            .orderBy(POSTS.CREATED_AT.desc())
-            .limit(pageSize)
 
-        return query.fetch().map { record ->
-            PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
-        }
-    }
-
-    override fun findPublishedPostsByParentCategorySlug(
-        parentSlug: String,
-        language: String,
-        pageSize: Int
-    ): List<PostDto> {
-        // 親カテゴリとその子カテゴリのIDを取得するサブクエリ
-        val categoryIds = dsl.select(CATEGORIES.ID)
+    private fun getCategoryIdsForParentSlug(parentSlug: String) =
+        dsl.select(CATEGORIES.ID)
             .from(CATEGORIES)
             .where(CATEGORIES.SLUG.eq(parentSlug))
-            // 親カテゴリを親に持つ子カテゴリを取得
             .unionAll(
                 dsl.select(CATEGORIES.ID)
                     .from(CATEGORIES)
@@ -80,33 +58,41 @@ class CategoryClientRepositoryImpl(
                     )
             )
 
-        // 記事を取得するメインクエリ
-        val query = dsl.select(
-            POSTS.asterisk(),
-            POST_CATEGORIES.CATEGORY_ID,
-            POST_TRANSLATIONS.LANGUAGE,
-            POST_TRANSLATIONS.STATUS,
-            POST_TRANSLATIONS.TITLE,
-            POST_TRANSLATIONS.EXCERPT,
-            MEDIAS.asterisk(),
-            MEDIA_TRANSLATIONS.LANGUAGE,
-            MEDIA_TRANSLATIONS.TITLE
-        )
-            .from(POSTS)
-            .innerJoin(POST_CATEGORIES).on(POSTS.ID.eq(POST_CATEGORIES.POST_ID))
-            .innerJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
-            .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
-            .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
-            .and(MEDIA_TRANSLATIONS.LANGUAGE.eq(language))
+    override fun findPublishedPostsByCategorySlug(
+        slug: String,
+        language: String,
+        pageSize: Int
+    ): List<PostDto> {
+        return buildBasePostQuery(language)
+            .innerJoin(CATEGORIES).on(POST_CATEGORIES.CATEGORY_ID.eq(CATEGORIES.ID))
+            .where(CATEGORIES.SLUG.eq(slug))
+            .and(POST_TRANSLATIONS.LANGUAGE.eq(language))
+            .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
+            .orderBy(POSTS.CREATED_AT.desc())
+            .limit(pageSize)
+            .fetch()
+            .map { record ->
+                PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
+            }
+    }
+
+    override fun findPublishedPostsByParentCategorySlug(
+        parentSlug: String,
+        language: String,
+        pageSize: Int
+    ): List<PostDto> {
+        val categoryIds = getCategoryIdsForParentSlug(parentSlug)
+
+        return buildBasePostQuery(language)
             .where(POST_CATEGORIES.CATEGORY_ID.`in`(categoryIds))
             .and(POST_TRANSLATIONS.LANGUAGE.eq(language))
             .and(POST_TRANSLATIONS.STATUS.eq(Status.PUBLISHED.name))
             .orderBy(POSTS.CREATED_AT.desc())
             .limit(pageSize)
-
-        return query.fetch().map { record ->
-            PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
-        }
+            .fetch()
+            .map { record ->
+                PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
+            }
     }
 
     override fun findCategoryByPath(slugs: List<String>, language: String): CategoryDto? {

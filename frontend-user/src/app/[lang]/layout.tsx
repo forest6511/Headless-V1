@@ -8,6 +8,8 @@ import type React from 'react'
 import { getMetadata } from '@/lib/metadata'
 import type { Locale } from '@/types/i18n'
 import { getCategories } from '@/lib/api/category'
+import {  GoogleAnalytics } from '@next/third-parties/google'
+
 
 // Inter フォントの設定（Latin文字サブセット、スワップ表示）
 const inter = Inter({
@@ -86,6 +88,7 @@ export default async function RootLayout(props: RootLayoutProps) {
           {/* <Footer /> */}
         </div>
       </body>
+      <GoogleAnalytics gaId="G-94SCXSW03K" />
     </html>
   )
 }

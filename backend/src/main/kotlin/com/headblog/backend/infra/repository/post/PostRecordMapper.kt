@@ -15,7 +15,7 @@ import org.jooq.Record
 
 object PostRecordMapper {
 
-    fun Record.toPostDto(dsl: DSLContext, includeContent: Boolean = false): PostDto {
+    fun Record.toPostDto(dsl: DSLContext, includeContent: Boolean = true): PostDto {
         val postId = requireNotNull(get(POSTS.ID))
         val featuredImageId = get(POSTS.FEATURED_IMAGE_ID)
 
@@ -26,7 +26,7 @@ object PostRecordMapper {
             featuredImage = toFeaturedImageDto(featuredImageId),
             categoryId = requireNotNull(get(POST_CATEGORIES.CATEGORY_ID)),
             tags = TagQueryHelper.fetchTagsForPost(dsl, postId),
-            translations = listOf(toTranslationDto()),
+            translations = listOf(toTranslationDto(includeContent)),
             createdAt = requireNotNull(get(POSTS.CREATED_AT)),
             updatedAt = requireNotNull(get(POSTS.UPDATED_AT))
         )

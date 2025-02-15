@@ -72,7 +72,7 @@ class CategoryClientRepositoryImpl(
             .limit(pageSize)
             .fetch()
             .map { record ->
-                PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
+                PostRecordMapper.run { record.toPostDto(dsl, includeContent = false) }
             }
     }
 
@@ -91,7 +91,7 @@ class CategoryClientRepositoryImpl(
             .limit(pageSize)
             .fetch()
             .map { record ->
-                PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
+                PostRecordMapper.run { record.toPostDto(dsl, includeContent = false) }
             }
     }
 

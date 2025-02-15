@@ -99,7 +99,7 @@ class TagRepositoryImpl(
             .limit(pageSize)
 
         return query.fetch().map { record ->
-            PostRecordMapper.run { record.toPostDto(dsl, includeContent = true) }
+            PostRecordMapper.run { record.toPostDto(dsl, includeContent = false) }
         }
     }
 

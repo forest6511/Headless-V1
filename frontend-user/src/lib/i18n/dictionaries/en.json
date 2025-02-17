@@ -7,6 +7,15 @@
     "articles": "Articles",
     "notFound": "Article not found",
     "lastUpdated": "Last updated",
-    "fetchError": "Failed to fetch articles. Please try again later."
+    "fetchError": "Failed to fetch articles. Please try again later.",
+    "contactUs": "Contact Us"
+  },
+  "button": {
+    "submit": "Submit"
+  },
+  "contactUs": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message"
   }
 }

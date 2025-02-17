@@ -9,6 +9,9 @@ import { getMetadata } from '@/lib/metadata'
 import type { Locale } from '@/types/i18n'
 import { getCategories } from '@/lib/api/category'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { Footer } from '@/components/layouts/footer'
+import { getDictionary } from '@/lib/i18n/dictionaries'
+import Script from 'next/script'
 
 // Inter フォントの設定（Latin文字サブセット、スワップ表示）
 const inter = Inter({
@@ -45,8 +48,9 @@ export default async function RootLayout(props: RootLayoutProps) {
 
   const { children } = props
 
-  const { lang } = await Promise.resolve(params)
+  const { lang } = params
   const categories = await getCategories(lang)
+  const dictionary = await getDictionary(params.lang)
 
   return (
     <html
@@ -82,12 +86,14 @@ export default async function RootLayout(props: RootLayoutProps) {
               </div>
             </div>
           </div>
-
-          {/* 将来のフッター実装用にコメントを残す */}
-          {/* <Footer /> */}
+          <Footer dictionary={dictionary} lang={params.lang} />
         </div>
       </body>
       <GoogleAnalytics gaId="G-94SCXSW03K" />
+      <Script
+        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+        strategy="afterInteractive"
+      />
     </html>
   )
 }

@@ -7,10 +7,11 @@
     "articles": "記事一覧",
     "notFound": "記事が見つかりません",
     "lastUpdated": "最終更新",
-    "fetchError": "記事の取得に失敗しました。しばらく経ってからお試しください。"
-  },
-  "footer": {
+    "fetchError": "記事の取得に失敗しました。しばらく経ってからお試しください。",
     "contactUs": "お問い合わせ"
+  },
+  "button": {
+    "submit": "送信"
   },
   "contactUs": {
     "name": "氏名",

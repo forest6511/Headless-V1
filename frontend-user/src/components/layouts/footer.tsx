@@ -1,10 +1,12 @@
-import type { Dictionary } from '@/types/i18n'
+import type { Dictionary, Locale } from '@/types/i18n'
+import Link from 'next/link'
 
 type FooterProps = {
   dictionary: Dictionary
+  lang: Locale
 }
 
-export function Footer({ dictionary }: FooterProps) {
+export function Footer({ dictionary, lang }: FooterProps) {
   return (
     <footer className="bg-gray-100 mt-12">
       <div className="container mx-auto px-4 py-8">
@@ -16,33 +18,33 @@ export function Footer({ dictionary }: FooterProps) {
             {/*</p>*/}
           </div>
           <div>
-          {/*  <h3 className="font-bold mb-4">カテゴリー</h3>*/}
-          {/*  <ul className="space-y-2">*/}
-          {/*    <li>*/}
-          {/*      <a*/}
-          {/*        href="#"*/}
-          {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
-          {/*      >*/}
-          {/*        プログラミング*/}
-          {/*      </a>*/}
-          {/*    </li>*/}
-          {/*    <li>*/}
-          {/*      <a*/}
-          {/*        href="#"*/}
-          {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
-          {/*      >*/}
-          {/*        インフラ*/}
-          {/*      </a>*/}
-          {/*    </li>*/}
-          {/*    <li>*/}
-          {/*      <a*/}
-          {/*        href="#"*/}
-          {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
-          {/*      >*/}
-          {/*        デザイン*/}
-          {/*      </a>*/}
-          {/*    </li>*/}
-          {/*  </ul>*/}
+            {/*  <h3 className="font-bold mb-4">カテゴリー</h3>*/}
+            {/*  <ul className="space-y-2">*/}
+            {/*    <li>*/}
+            {/*      <a*/}
+            {/*        href="#"*/}
+            {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
+            {/*      >*/}
+            {/*        プログラミング*/}
+            {/*      </a>*/}
+            {/*    </li>*/}
+            {/*    <li>*/}
+            {/*      <a*/}
+            {/*        href="#"*/}
+            {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
+            {/*      >*/}
+            {/*        インフラ*/}
+            {/*      </a>*/}
+            {/*    </li>*/}
+            {/*    <li>*/}
+            {/*      <a*/}
+            {/*        href="#"*/}
+            {/*        className="text-sm text-gray-600 hover:text-gray-900"*/}
+            {/*      >*/}
+            {/*        デザイン*/}
+            {/*      </a>*/}
+            {/*    </li>*/}
+            {/*  </ul>*/}
           </div>
           <div>
             <h3 className="font-bold mb-4">Information</h3>
@@ -64,12 +66,12 @@ export function Footer({ dictionary }: FooterProps) {
               {/*  </a>*/}
               {/*</li>*/}
               <li>
-                <a
-                  href="#"
+                <Link
+                  href={`/${lang}/contact`}
                   className="text-sm text-gray-600 hover:text-gray-900"
                 >
-                  {dictionary.footer.contactUs}
-                </a>
+                  {dictionary.common.contactUs}
+                </Link>
               </li>
             </ul>
           </div>

@@ -21,9 +21,10 @@ export type Dictionary = {
     notFound: string
     lastUpdated: string
     fetchError: string
-  }
-  footer: {
     contactUs: string
+  }
+  button: {
+    submit: string
   }
   contactUs: {
     name: string

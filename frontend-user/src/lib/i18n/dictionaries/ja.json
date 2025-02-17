@@ -8,5 +8,13 @@
     "notFound": "記事が見つかりません",
     "lastUpdated": "最終更新",
     "fetchError": "記事の取得に失敗しました。しばらく経ってからお試しください。"
+  },
+  "footer": {
+    "contactUs": "お問い合わせ"
+  },
+  "contactUs": {
+    "name": "氏名",
+    "email": "Email",
+    "message": "コメント"
   }
 }

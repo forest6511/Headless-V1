@@ -8,5 +8,13 @@
     "notFound": "Article not found",
     "lastUpdated": "Last updated",
     "fetchError": "Failed to fetch articles. Please try again later."
+  },
+  "footer": {
+    "contactUs": "Contact Us"
+  },
+  "contactUs": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message"
   }
 }

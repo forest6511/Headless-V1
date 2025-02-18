@@ -90,10 +90,6 @@ export default async function RootLayout(props: RootLayoutProps) {
         </div>
       </body>
       <GoogleAnalytics gaId="G-94SCXSW03K" />
-      <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
-        strategy="afterInteractive"
-      />
     </html>
   )
 }

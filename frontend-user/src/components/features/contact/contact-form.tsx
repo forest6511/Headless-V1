@@ -1,25 +1,22 @@
 // components/features/contact/contact-form.tsx
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Dictionary, Locale } from '@/types/i18n'
 import { useFormValidation } from '@/hooks/contact/useFormValidation'
+import { useRecaptcha } from '@/hooks/contact/useRecaptcha'
 
 type ContactFormProps = {
   dictionary: Dictionary
   lang: Locale
 }
 
-declare global {
-  interface Window {
-    grecaptcha: {
-      ready: (cb: () => void) => void
-      execute: (siteKey: string, options: { action: string }) => Promise<string>
-    }
-  }
-}
+// 型定義を追加
+type ValidationErrorKeys = 'form' | 'submit' | 'recaptcha'
+type ValidationErrors = Record<ValidationErrorKeys, boolean>
+type ErrorHandlers = Record<ValidationErrorKeys, () => void>
 
 export function ContactForm({ dictionary, lang }: ContactFormProps) {
   const [formData, setFormData] = useState({
@@ -32,105 +29,58 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
     'idle' | 'loading' | 'success' | 'error'
   >('idle')
   const [statusMessage, setStatusMessage] = useState<string>('')
-  const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false)
-
-  useEffect(() => {
-    const initializeRecaptcha = async () => {
-      try {
-        if (typeof window === 'undefined') {
-          console.log('Window is undefined')
-          return
-        }
-
-        const waitForGrecaptcha = () => {
-          return new Promise<void>((resolve, reject) => {
-            if (window.grecaptcha) {
-              console.log('reCAPTCHA object found, initializing...')
-              window.grecaptcha.ready(() => {
-                console.log('reCAPTCHA initialized successfully')
-                resolve()
-              })
-            } else {
-              console.log('reCAPTCHA object not found, retrying...')
-              const timeoutId = setTimeout(() => {
-                waitForGrecaptcha().then(resolve).catch(reject)
-              }, 100)
-
-              setTimeout(() => {
-                clearTimeout(timeoutId)
-                reject(new Error('reCAPTCHA initialization timeout'))
-              }, 10000)
-            }
-          })
-        }
-
-        await waitForGrecaptcha()
-        setIsRecaptchaLoaded(true)
-        console.log('reCAPTCHA ready for use')
-      } catch (error) {
-        console.error('Failed to initialize reCAPTCHA:', error)
-        setIsRecaptchaLoaded(false)
-        setStatus('error')
-        setStatusMessage(dictionary.contactUs.errors.recaptchaNotInitialized)
-      }
-    }
-
-    initializeRecaptcha()
-  }, [dictionary.contactUs.errors.recaptchaNotInitialized])
 
   const { errors, validateForm, resetErrors } = useFormValidation(dictionary)
+  const { isRecaptchaLoaded, executeRecaptcha } = useRecaptcha(
+    dictionary.contactUs.errors.recaptchaNotInitialized
+  )
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!canSubmit) {
-      setStatus('error')
-      setStatusMessage(dictionary.contactUs.errors.tooManyRequests)
-      return
+    // 型付けされたバリデーションエラーオブジェクト
+    const validationErrors: ValidationErrors = {
+      form: !validateForm(formData),
+      submit: !canSubmit,
+      recaptcha: !isRecaptchaLoaded,
     }
 
-    // validateForm の呼び出しを修正
-    if (!validateForm(formData)) {
-      return
+    // 型付けされたエラーハンドラー
+    const errorHandlers: ErrorHandlers = {
+      form: () => {}, // フォームエラーは既にuseFormValidationで処理
+      submit: () => {
+        setStatus('error')
+        setStatusMessage(dictionary.contactUs.errors.tooManyRequests)
+      },
+      recaptcha: () => {
+        setStatus('error')
+        setStatusMessage(dictionary.contactUs.errors.recaptchaNotInitialized)
+      },
     }
 
-    if (!isRecaptchaLoaded) {
-      setStatus('error')
-      setStatusMessage(dictionary.contactUs.errors.recaptchaNotInitialized)
+    // エラーチェックと処理
+    const errorKeys = (
+      Object.keys(validationErrors) as ValidationErrorKeys[]
+    ).filter((key) => validationErrors[key])
+
+    if (errorKeys.length > 0) {
+      errorKeys.forEach((key) => errorHandlers[key]())
       return
     }
 
     // 送信を5秒間無効化
     setCanSubmit(false)
-    setTimeout(() => {
-      setCanSubmit(true)
-    }, 5000)
+    setTimeout(() => setCanSubmit(true), 5000)
 
     setStatus('loading')
     setStatusMessage(dictionary.contactUs.sending)
 
     try {
-      console.log('Attempting to execute reCAPTCHA...')
-      let token: string | undefined
-
-      if (!window.grecaptcha) {
-        console.error('reCAPTCHA not loaded')
-        throw new Error(dictionary.contactUs.errors.recaptchaNotInitialized)
-      }
-
-      try {
-        token = await window.grecaptcha.execute(
-          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
-          { action: 'submit' }
-        )
-        console.log('reCAPTCHA token obtained:', token.substring(0, 10) + '...')
-      } catch (recaptchaError) {
-        console.error('reCAPTCHA execution error:', recaptchaError)
-        throw new Error(dictionary.contactUs.errors.recaptchaFailed)
-      }
+      const token = await executeRecaptcha(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!
+      )
 
       if (!token) {
-        console.error('No reCAPTCHA token obtained')
         throw new Error(dictionary.contactUs.errors.recaptchaFailed)
       }
 
@@ -153,17 +103,18 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
       setStatus('success')
       setStatusMessage(data.message)
       setFormData({ name: '', email: '', message: '' })
-      resetErrors() // エラーをリセット
+      resetErrors()
     } catch (error) {
       console.error('Form submission error:', error)
       setStatus('error')
       setStatusMessage(
         error instanceof Error
           ? error.message
-          : '送信に失敗しました。しばらく経ってから再度お試しください。'
+          : dictionary.contactUs.errors.submitFailed
       )
     }
   }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>

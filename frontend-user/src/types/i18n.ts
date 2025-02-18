@@ -29,6 +29,7 @@ export type Dictionary = {
     email: string
     message: string
     sending: string
+    waitMessage: string
     recaptchaLoading: string
     validation: {
       nameRequired: string
@@ -40,6 +41,7 @@ export type Dictionary = {
       messageTooLong: string
     }
     errors: {
+      tooManyRequests: string
       recaptchaRequired: string
       recaptchaNotInitialized: string
       recaptchaFailed: string

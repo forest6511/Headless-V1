@@ -18,6 +18,7 @@
     "email": "メールアドレス",
     "message": "メッセージ",
     "sending": "送信中...",
+    "waitMessage": "送信待機中...",
     "recaptchaLoading": "セキュリティチェックを読み込み中...",
     "validation": {
       "nameRequired": "お名前を入力してください",
@@ -29,6 +30,7 @@
       "messageTooLong": "メッセージは1000文字以内で入力してください"
     },
     "errors": {
+      "tooManyRequests": "送信が完了しました。次の送信までしばらくお待ちください",
       "recaptchaRequired": "セキュリティ認証が必要です",
       "recaptchaNotInitialized": "セキュリティチェックの読み込みに失敗しました。ページを更新してください。",
       "recaptchaFailed": "セキュリティ認証に失敗しました。もう一度お試しください",

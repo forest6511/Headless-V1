@@ -18,6 +18,7 @@
     "email": "Email",
     "message": "Message",
     "sending": "Sending...",
+    "waitMessage": "Please wait...",
     "recaptchaLoading": "Loading security check...",
     "validation": {
       "nameRequired": "Name is required",
@@ -29,6 +30,7 @@
       "messageTooLong": "Message must be less than 1000 characters"
     },
     "errors": {
+      "tooManyRequests": "Message sent. Please wait a moment before sending another one",
       "recaptchaRequired": "Security verification is required",
       "recaptchaNotInitialized": "Security check failed to load. Please refresh the page.",
       "recaptchaFailed": "Security verification failed. Please try again",

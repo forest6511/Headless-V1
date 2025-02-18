@@ -32,6 +32,7 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
     email: '',
     message: '',
   })
+  const [canSubmit, setCanSubmit] = useState(true)
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'success' | 'error'
@@ -117,17 +118,27 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!canSubmit) {
+      setStatus('error')
+      setStatusMessage(dictionary.contactUs.errors.tooManyRequests)
+      return
+    }
+
     if (!validateForm()) {
       return
     }
 
     if (!isRecaptchaLoaded) {
       setStatus('error')
-      setStatusMessage(
-        'reCAPTCHA の読み込みに失敗しました。ページを更新してください。'
-      )
+      setStatusMessage(dictionary.contactUs.errors.recaptchaNotInitialized)
       return
     }
+
+    // 送信を5秒間無効化
+    setCanSubmit(false)
+    setTimeout(() => {
+      setCanSubmit(true)
+    }, 5000)
 
     setStatus('loading')
     setStatusMessage(dictionary.contactUs.sending)
@@ -239,30 +250,37 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
         )}
       </div>
       {/* ステータスメッセージの表示 */}
-      {status !== 'idle' && statusMessage && ( // statusMessageが存在する場合のみ表示
-        <div
-          className={`p-4 rounded ${
-            status === 'success'
-              ? 'bg-green-100 text-green-700'
-              : status === 'error'
-                ? 'bg-red-100 text-red-700'
-                : 'bg-blue-100 text-blue-700'
-          }`}
-        >
-          {statusMessage}
-        </div>
-      )}
+      {status !== 'idle' &&
+        statusMessage && ( // statusMessageが存在する場合のみ表示
+          <div
+            className={`p-4 rounded ${
+              status === 'success'
+                ? 'bg-green-100 text-green-700'
+                : status === 'error'
+                  ? 'bg-red-100 text-red-700'
+                  : 'bg-blue-100 text-blue-700'
+            }`}
+          >
+            {statusMessage}
+          </div>
+        )}
       <input type="hidden" name="lang" value={lang} />
       <Button
         type="submit"
-        disabled={status === 'loading' || !isRecaptchaLoaded}
-        className={`${status === 'loading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={status === 'loading' || !isRecaptchaLoaded || !canSubmit}
+        className={`${
+          status === 'loading' || !canSubmit
+            ? 'opacity-50 cursor-not-allowed'
+            : ''
+        }`}
       >
         {status === 'loading'
           ? dictionary.contactUs.sending
           : !isRecaptchaLoaded
             ? dictionary.contactUs.recaptchaLoading
-            : dictionary.button.submit}
+            : !canSubmit
+              ? dictionary.contactUs.waitMessage
+              : dictionary.button.submit}
       </Button>
     </form>
   )

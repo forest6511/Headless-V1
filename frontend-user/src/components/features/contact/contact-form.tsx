@@ -130,6 +130,7 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
     }
 
     setStatus('loading')
+    setStatusMessage(dictionary.contactUs.sending)
 
     try {
       console.log('Attempting to execute reCAPTCHA...')
@@ -238,7 +239,7 @@ export function ContactForm({ dictionary, lang }: ContactFormProps) {
         )}
       </div>
       {/* ステータスメッセージの表示 */}
-      {status !== 'idle' && (
+      {status !== 'idle' && statusMessage && ( // statusMessageが存在する場合のみ表示
         <div
           className={`p-4 rounded ${
             status === 'success'

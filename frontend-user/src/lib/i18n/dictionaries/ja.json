@@ -15,7 +15,30 @@
   },
   "contactUs": {
     "name": "氏名",
-    "email": "Email",
-    "message": "コメント"
+    "email": "メールアドレス",
+    "message": "メッセージ",
+    "sending": "送信中...",
+    "waitMessage": "送信待機中...",
+    "recaptchaLoading": "セキュリティチェックを読み込み中...",
+    "validation": {
+      "nameRequired": "お名前を入力してください",
+      "nameTooLong": "お名前は50文字以内で入力してください",
+      "emailRequired": "メールアドレスを入力してください",
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "messageRequired": "メッセージを入力してください",
+      "messageTooShort": "メッセージは10文字以上で入力してください",
+      "messageTooLong": "メッセージは1000文字以内で入力してください"
+    },
+    "errors": {
+      "tooManyRequests": "送信が完了しました。次の送信までしばらくお待ちください",
+      "recaptchaRequired": "セキュリティ認証が必要です",
+      "recaptchaNotInitialized": "セキュリティチェックの読み込みに失敗しました。ページを更新してください。",
+      "recaptchaFailed": "セキュリティ認証に失敗しました。もう一度お試しください",
+      "requiredFields": "必須項目をすべて入力してください",
+      "unexpected": "予期せぬエラーが発生しました。しばらく経ってから再度お試しください",
+      "submitFailed": "送信に失敗しました"
+    },
+    "success": "お問い合わせを受け付けました",
+    "emailSubject": "新しいお問い合わせ: {name}様より"
   }
 }

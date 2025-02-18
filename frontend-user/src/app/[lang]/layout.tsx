@@ -11,7 +11,6 @@ import { getCategories } from '@/lib/api/category'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Footer } from '@/components/layouts/footer'
 import { getDictionary } from '@/lib/i18n/dictionaries'
-import Script from 'next/script'
 
 // Inter フォントの設定（Latin文字サブセット、スワップ表示）
 const inter = Inter({
@@ -90,10 +89,6 @@ export default async function RootLayout(props: RootLayoutProps) {
         </div>
       </body>
       <GoogleAnalytics gaId="G-94SCXSW03K" />
-      <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
-        strategy="afterInteractive"
-      />
     </html>
   )
 }

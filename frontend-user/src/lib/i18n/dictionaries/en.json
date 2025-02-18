@@ -16,6 +16,29 @@
   "contactUs": {
     "name": "Name",
     "email": "Email",
-    "message": "Message"
+    "message": "Message",
+    "sending": "Sending...",
+    "waitMessage": "Please wait...",
+    "recaptchaLoading": "Loading security check...",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name must be less than 50 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "messageRequired": "Message is required",
+      "messageTooShort": "Message must be at least 10 characters",
+      "messageTooLong": "Message must be less than 1000 characters"
+    },
+    "errors": {
+      "tooManyRequests": "Message sent. Please wait a moment before sending another one",
+      "recaptchaRequired": "Security verification is required",
+      "recaptchaNotInitialized": "Security check failed to load. Please refresh the page.",
+      "recaptchaFailed": "Security verification failed. Please try again",
+      "requiredFields": "Please fill in all required fields",
+      "unexpected": "An unexpected error occurred. Please try again later",
+      "submitFailed": "Failed to submit the form"
+    },
+    "success": "Message sent successfully",
+    "emailSubject": "New Contact Form Submission from {name}"
   }
 }

@@ -145,7 +145,7 @@ class CreateMediaService(
         }
 
         val yearMonth = getCurrentYearMonth()
-        val key = "media/$yearMonth/${mediaId.value}-${sizeConfig.prefix}-$fileName"
+        val key = "media/$yearMonth/${mediaId.value}-${sizeConfig.prefix}-${sizeConfig.width}x${sizeConfig.height}-$fileName"
         storageService.uploadFile(key, processedImage, uploadFormat)
         return MediaSize(key, processedImage.size)
     }

@@ -80,17 +80,21 @@ export default async function ArticlePage(props: PageProps) {
           {article.featuredImage && (
             <div className="mb-6">
               <img
-                src={article.featuredImage.largeUrl}
-                srcSet={`${article.featuredImage.smallUrl} 640w, ${article.featuredImage.largeUrl} 1200w`}
-                sizes="(max-width: 640px) 640px, 1200px"
+                src={article.featuredImage.smallUrl} // デフォルトをsmallUrlに変更
+                srcSet={`${article.featuredImage.smallUrl} ${article.featuredImage.smallUrl.includes('375') ? '375' : '640'}w,${article.featuredImage.largeUrl} ${article.featuredImage.largeUrl.includes('800') ? '800' : '1200'}w`}
+                sizes={
+                  article.featuredImage.smallUrl.includes('375')
+                    ? '(max-width: 375px) 375px, 800px'
+                    : '(max-width: 640px) 640px, 1200px'
+                }
                 alt={
                   article.featuredImage.translations[0]?.title || article.title
                 }
                 className="w-full max-h-96 object-cover rounded-lg"
                 decoding="async"
                 loading="eager"
-                width={800}
-                height={800}
+                width="100%" // 固定値から相対値に変更
+                height="auto" // 固定値から相対値に変更
               />
             </div>
           )}

@@ -8,8 +8,9 @@ export const siteConfig = {
   i18n: {
     ja: {
       name: LOCALE_NAMES.ja,
-      title: 'テックブログ',
-      description: '最新のテクノロジー情報をお届けします',
+      title: 'テック・旅・ライフ ジャーナル',
+      description:
+        'IT・旅行・生活情報を発信するブログ。最新のテクノロジーから世界各地の旅情報、日々のライフハックまで、エンジニア目線で深掘りします',
       nav: {
         home: 'ホーム',
         articles: '記事一覧',
@@ -18,8 +19,9 @@ export const siteConfig = {
     },
     en: {
       name: LOCALE_NAMES.en,
-      title: 'Tech Blog',
-      description: 'Delivering the latest technology information',
+      title: 'Tech, Travel & Life Journal',
+      description:
+        'A blog about IT, travel, and life insights. From cutting-edge technology to global travel tips and daily life hacks, exploring the world through the lens of an engineer.',
       nav: {
         home: 'Home',
         articles: 'Articles',

@@ -23,7 +23,7 @@ export function LanguageSwitch({ currentLang }: LanguageSwitchProps) {
       defaultValue={currentLang}
       onValueChange={(value) => router.push(`/${value}`)}
     >
-      <SelectTrigger className="w-32">
+      <SelectTrigger className="w-32" aria-label="Language selector">
         <SelectValue placeholder="Select language" />
       </SelectTrigger>
       <SelectContent>

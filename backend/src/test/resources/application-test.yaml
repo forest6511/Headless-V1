@@ -57,10 +57,10 @@ storage:
         width: 150
         height: 150
         quality: 55    # サムネイル用の低品質
-      small:
-        width: 640     # スマートフォン向け
-        height: 640
-        quality: 70    # モバイル表示用の高品質
+      small:           # スマートフォン向けを最適化
+        width: 375     # iPhone等の一般的なスマートフォン画面幅に合わせる
+        height: 375    # または16:9なら height: 211
+        quality: 65    # 品質は現状維持
       large:
         width: 800    # PC向け
         height: 800

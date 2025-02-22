@@ -3,6 +3,8 @@ server {
   listen 443 ssl;
   server_name {{ lookup('env', 'BACKEND_HOST_NAME') }};
 
+  client_max_body_size 20M;
+
   ssl_certificate /etc/letsencrypt/live/{{ lookup('env', 'BACKEND_HOST_NAME') }}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{ lookup('env', 'BACKEND_HOST_NAME') }}/privkey.pem;
 

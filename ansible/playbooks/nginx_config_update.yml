@@ -1,0 +1,16 @@
+- name: Update Nginx Configuration
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Update nginx site configuration
+      template:
+        src: "../templates/nginx/backend.conf.j2"
+        dest: /etc/nginx/sites-available/backend.conf
+        mode: '0644'
+      notify: Reload nginx
+
+  handlers:
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded

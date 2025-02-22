@@ -84,7 +84,7 @@ export default async function ArticlePage(props: PageProps) {
                 srcSet={`${article.featuredImage.smallUrl} 375w, ${article.featuredImage.largeUrl} 800w`}
                 sizes="(max-width: 375px) 375px, 800px"
                 alt={article.featuredImage.translations[0]?.title || article.title}
-                className="w-full max-h-[600px] object-cover rounded-lg"
+                className="w-full max-h-[800px] object-cover rounded-lg"
                 decoding="async"
                 loading="eager"
                 width={800}

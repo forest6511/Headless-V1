@@ -50,8 +50,10 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         type: 'responsiveImage',
         attrs: {
           src: file.smallUrl,
-          srcset: `${file.smallUrl} 640w, ${file.largeUrl} 800w`,
-          sizes: '(max-width: 640px) 640px, 800px',
+          // 375px幅と800px幅の画像を指定
+          srcset: `${file.smallUrl} 375w, ${file.largeUrl} 800w`,
+          // 画面幅に応じて適切なサイズを選択
+          sizes: '(max-width: 375px) 375px, 800px',
           alt:
             file.translations.find((t) => t.language === currentLanguage)
               ?.title || '',

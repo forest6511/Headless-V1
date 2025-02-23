@@ -124,7 +124,7 @@ export default async function ArticlePage(props: PageProps) {
 
         <div
           itemProp="articleBody"
-          className="prose prose-lg max-w-none mb-3"
+          className="prose prose-sm sm:prose-base lg:prose-lg max-w-full overflow-hidden mb-3 break-anywhere"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 

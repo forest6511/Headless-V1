@@ -140,7 +140,19 @@ class PostRepositoryImpl(
         cursorPostId: UUID?,
         pageSize: Int
     ): List<PostDto> {
-        // 1) ベースクエリ
+        // 1) まず必要な post_id を取得
+        val postIds = dsl.select(POSTS.ID)
+            .from(POSTS)
+            .apply {
+                cursorPostId?.let { id ->
+                    where(POSTS.ID.lessThan(id))
+                }
+            }
+            .orderBy(POSTS.ID.desc())
+            .limit(pageSize + 1)
+            .fetch(POSTS.ID)
+
+        // 2) 取得した post_id に基づいて詳細情報を取得
         val query = dsl.select(
             POSTS.asterisk(),
             POST_CATEGORIES.CATEGORY_ID,
@@ -158,18 +170,13 @@ class PostRepositoryImpl(
             .leftJoin(POST_TRANSLATIONS).on(POSTS.ID.eq(POST_TRANSLATIONS.POST_ID))
             .leftJoin(MEDIAS).on(POSTS.FEATURED_IMAGE_ID.eq(MEDIAS.ID))
             .leftJoin(MEDIA_TRANSLATIONS).on(MEDIAS.ID.eq(MEDIA_TRANSLATIONS.MEDIA_ID))
-
-        // カーソル条件がある場合 (2ページ目以降)
-        cursorPostId?.let { id ->
-            query.where(POSTS.ID.lessThan(id))
-        }
-
-        val records = query
+            .where(POSTS.ID.`in`(postIds))
             .orderBy(POSTS.ID.desc())
-            .limit(pageSize + 1)
-            .fetch()
 
-        // 2) 同じ post_id の行をまとめる
+        // クエリを実行して結果を取得
+        val records = query.fetch()
+
+        // 同じ post_id の行をまとめる
         val grouped = records.groupBy(
             keySelector = { requireNotNull(it.get(POSTS.ID)) },
             valueTransform = { it }

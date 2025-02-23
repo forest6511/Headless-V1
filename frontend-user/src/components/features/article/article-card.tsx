@@ -6,7 +6,7 @@ import { Locale } from '@/types/i18n'
 
 export function ArticleCard(props: ArticleCardProps & { lang: Locale }) {
   return (
-    <article className="border-y sm:border sm:rounded-md mb-3 last:mb-0 sm:mb-4">
+    <article className="border rounded-md mb-3 last:mb-0 sm:mb-4">
       <div className="p-4 sm:p-6">
         <ArticleHeader
           // author={props.author}

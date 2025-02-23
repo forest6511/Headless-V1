@@ -42,16 +42,16 @@ export function ArticleContent({
         </div>
       )}
 
-      <div className="flex-1 space-y-2 min-w-0">
+      <div className="flex-1 space-y-2 min-w-0 max-w-full">
         <Link href={`/${lang}/articles/${slug}`}>
-          <h2 className="text-xl sm:text-2xl font-bold hover:text-blue-600 break-words">
+          <h2 className="text-xl sm:text-2xl font-bold hover:text-blue-600 break-anywhere">
             {title}
           </h2>
         </Link>
         <div className="mt-2">
           <TagList category={category} tags={tags} lang={lang} />
         </div>
-        <p className="text-muted-foreground break-words">{description}</p>
+        <p className="text-muted-foreground break-anywhere">{description}</p>
       </div>
     </div>
   )

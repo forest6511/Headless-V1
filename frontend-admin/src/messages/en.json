@@ -262,7 +262,25 @@
       "highlight": "Highlight",
       "underline": "Underline",
       "cancel": "Cancel",
-      "add": "Add"
+      "add": "Add",
+      "table": {
+        "button": "Table",
+        "insertTable": "Insert table",
+        "addColumnBefore": "Add column before",
+        "addColumnAfter": "Add column after",
+        "deleteColumn": "Delete column",
+        "addRowBefore": "Add row before",
+        "addRowAfter": "Add row after",
+        "deleteRow": "Delete row",
+        "deleteTable": "Delete table",
+        "mergeCells": "Merge cells",
+        "splitCell": "Split cell",
+        "toggleHeaderColumn": "Toggle header column",
+        "toggleHeaderRow": "Toggle header row",
+        "toggleHeaderCell": "Toggle header cell",
+        "mergeOrSplit": "Merge or split",
+        "fixTables": "Fix tables"
+      }
     }
   }
 }

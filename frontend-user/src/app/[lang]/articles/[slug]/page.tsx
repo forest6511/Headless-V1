@@ -39,6 +39,18 @@ export default async function ArticlePage(props: PageProps) {
     notFound()
   }
 
+  // 既存のHTMLをラップして処理する関数
+  const processHtml = (htmlContent: string) => {
+    let processedHtml = htmlContent.replace(
+      /<table\s+class="cms"(.*?)>/g,
+      '<div class="table-wrapper"><table class="cms"$1>'
+    )
+
+    processedHtml = processedHtml.replace(/<\/table>/g, '</table></div>')
+
+    return processedHtml
+  }
+
   const formattedDate = formatDate(article.updatedAt, lang)
 
   return (
@@ -125,7 +137,7 @@ export default async function ArticlePage(props: PageProps) {
         <div
           itemProp="articleBody"
           className="prose prose-sm sm:prose-base lg:prose-lg max-w-full overflow-hidden mb-3 break-anywhere"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: processHtml(article.content) }}
         />
 
         {/* 記事アクションのコメントアウト部分 - そのまま維持 */}

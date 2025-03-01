@@ -262,7 +262,25 @@
       "highlight": "ハイライト",
       "underline": "下線",
       "cancel": "キャンセル",
-      "add": "追加"
+      "add": "追加",
+      "table": {
+        "button": "テーブル",
+        "insertTable": "テーブルを挿入",
+        "addColumnBefore": "前に列を追加",
+        "addColumnAfter": "後に列を追加",
+        "deleteColumn": "列を削除",
+        "addRowBefore": "前に行を追加",
+        "addRowAfter": "後に行を追加",
+        "deleteRow": "行を削除",
+        "deleteTable": "テーブルを削除",
+        "mergeCells": "セルを結合",
+        "splitCell": "セルを分割",
+        "toggleHeaderColumn": "ヘッダー列を切替",
+        "toggleHeaderRow": "ヘッダー行を切替",
+        "toggleHeaderCell": "ヘッダーセルを切替",
+        "mergeOrSplit": "結合または分割",
+        "fixTables": "テーブルを修正"
+      }
     }
   }
 }

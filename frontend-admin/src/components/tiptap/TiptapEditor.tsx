@@ -17,6 +17,10 @@ import { Link } from '@tiptap/extension-link'
 import { Blockquote } from '@tiptap/extension-blockquote'
 import { Highlight } from '@tiptap/extension-highlight'
 import { Underline } from '@tiptap/extension-underline'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableHeader } from '@tiptap/extension-table-header'
+import { TableCell } from '@tiptap/extension-table-cell'
 
 const lowlight = createLowlight(common)
 
@@ -105,7 +109,30 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
           class: `${CSS_CLASS_NAME_PREFIX}`,
         },
       }),
-      // 別途追加していたHistory拡張機能を削除
+      Table.configure({
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+        resizable: true, // テーブルをリサイズ可能に
+        handleWidth: 5, // リサイズハンドルの幅
+        cellMinWidth: 100, // セルの最小幅（ピクセル）
+        lastColumnResizable: true, // 最後の列もリサイズ可能に
+      }),
+      TableRow.configure({
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+      }),
+      TableHeader.configure({
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+      }),
+      TableCell.configure({
+        HTMLAttributes: {
+          class: `${CSS_CLASS_NAME_PREFIX}`,
+        },
+      }),
     ],
     autofocus: true,
     content: value || EMPTY_CONTENT,
@@ -121,11 +148,6 @@ const TiptapEditor = ({ value, onChange }: TiptapEditorProps) => {
       html = html.replace(
         /<li[^>]*><p[^>]*>(.*?)<\/p><\/li>/g,
         `<li class="${CSS_CLASS_NAME_PREFIX}">$1</li>`
-      )
-
-      html = html.replace(
-        /<blockquote[^>]*><p[^>]*>(.*?)<\/p><\/blockquote>/g,
-        `<blockquote class="${CSS_CLASS_NAME_PREFIX}">$1</blockquote>`
       )
 
       const textLength = editor.getText().replace(/\n/g, '').length

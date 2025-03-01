@@ -18,14 +18,14 @@ interface ArticleContentProps {
 }
 
 export function ArticleContent({
-                                 lang,
-                                 title,
-                                 slug,
-                                 description,
-                                 tags,
-                                 featuredImage,
-                                 category,
-                               }: ArticleContentProps) {
+  lang,
+  title,
+  slug,
+  description,
+  tags,
+  featuredImage,
+  category,
+}: ArticleContentProps) {
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
@@ -33,7 +33,7 @@ export function ArticleContent({
           <div className="flex-none w-32 h-32 sm:w-32 sm:h-32">
             <Link href={`/${lang}/articles/${slug}`}>
               <img
-                src={featuredImage.thumbnailUrl || "/placeholder.svg"}
+                src={featuredImage.thumbnailUrl || '/placeholder.svg'}
                 alt={featuredImage.translations[0]?.title || title}
                 className="w-full h-full object-cover rounded-lg"
                 decoding="async"

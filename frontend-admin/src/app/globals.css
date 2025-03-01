@@ -110,7 +110,7 @@ img.cms {
 blockquote.cms {
   border-left: 4px solid #ccc; /* 左側のボーダーで引用を強調 */
   background-color: #f9f9f9; /* 引用部分の背景色を薄いグレーに */
-  padding: 1rem 1.5rem; /* 内側の余白 */
+  padding: 1rem 1.5rem 0.5rem 1.5rem; /* 上 右 下 左 の順 */
   margin: 1rem 0; /* 上下の余白 */
   font-style: italic; /* 斜体で引用を表現 */
   color: #555; /* テキスト色を少し薄いグレーに */
@@ -126,6 +126,79 @@ img.cms {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   width: 100%;
+}
+
+/* テーブル全体のスタイル */
+table.cms {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e5e7eb;
+  table-layout: fixed;
+  max-width: 100%;
+  position: relative;
+}
+
+/* テーブルラッパー */
+.tableWrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* リサイズカーソル設定 */
+.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
+
+/* リサイズハンドル - 両方のクラス名に対応 */
+.tableColumnResizer,
+.column-resize-handle {
+  background-color: #3b82f6;
+  bottom: 0;
+  position: absolute;
+  right: -2px;
+  top: 0;
+  width: 4px;
+  z-index: 20;
+  opacity: 0.5; /* 常に少し見えるように */
+  transition: opacity 0.2s;
+}
+
+/* ホバー時のハンドル強調 */
+.tableColumnResizer:hover,
+.tableColumnResizer.dragging,
+.column-resize-handle:hover,
+.column-resize-handle.dragging {
+  opacity: 1;
+  width: 5px;
+  background-color: #2563eb;
+}
+
+/* セルの位置設定 */
+td.cms,
+th.cms {
+  position: relative;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+}
+
+/* テーブルヘッダー */
+thead.cms {
+  background-color: #f3f4f6;
+}
+
+/* 奇数行の背景色 */
+tr.cms:nth-child(odd) {
+  background-color: #f9fafb;
+}
+
+/* セル内の段落マージンを削除 */
+td.cms p,
+th.cms p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
 }
 
 @layer base {

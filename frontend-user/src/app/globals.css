@@ -65,6 +65,11 @@
   }
 }
 
+.break-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 p.cms {
   font-size: 1.125rem;
   margin-bottom: 1rem;
@@ -183,7 +188,45 @@ img.cms {
   aspect-ratio: unset !important;
 }
 
-.break-anywhere {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+/* テーブル全体のスタイル */
+table.cms {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e5e7eb;
+  table-layout: fixed;
+  max-width: 100%;
+  position: relative;
+}
+
+/* テーブルラッパー */
+.table-wrapper {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* セルの位置設定 */
+td.cms,
+th.cms {
+  position: relative;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+}
+
+/* テーブルヘッダー */
+thead.cms {
+  background-color: #f3f4f6;
+}
+
+/* 奇数行の背景色 */
+tr.cms:nth-child(odd) {
+  background-color: #f9fafb;
+}
+
+/* セル内の段落マージンを削除 */
+td.cms p,
+th.cms p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
 }

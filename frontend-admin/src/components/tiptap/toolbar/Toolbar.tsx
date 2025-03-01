@@ -23,6 +23,7 @@ import { MediaSelectModal } from '@/components/tiptap/toolbar/components/MediaSe
 import { ToolbarButton } from '@/components/tiptap/toolbar/components/ToolbarButtonProps'
 import { LinkModal } from '@/components/tiptap/toolbar/components/LinkModal'
 import { HighlightPopover } from '@/components/tiptap/toolbar/components/HighlightPopover'
+import { TableMenu } from '@/components/tiptap/toolbar/components/TableMenu'
 
 const Toolbar = ({ editor }: { editor: Editor }) => {
   if (!editor) {
@@ -167,6 +168,8 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
         icon={<Underline size={20} />}
         ariaLabel={t(currentLanguage, 'editor.toolbar.underline')}
       />
+
+      <TableMenu editor={editor} />
     </div>
   )
 }
